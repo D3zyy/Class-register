@@ -1,4 +1,3 @@
-process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 const express = require("express");
 const app = express();
 const mysql = require('mysql2');
@@ -9,6 +8,7 @@ const bodyParser = require("body-parser");
 const encoder = bodyParser.urlencoded();
 const session = require('express-session');
 const cookieParser = require("cookie-parser");
+const { query, Router } = require("express");
 
 app.use(cookieParser());
 app.set('view engine', 'ejs');
@@ -27,7 +27,7 @@ host : "localhost",
 user : "root",
 password : "password",
 port : "3306",
-database :  "tridnice"
+database :  "tridnice",
 
 });
 
@@ -36,23 +36,30 @@ connection.connect(function(err) {
   console.log("Connected to the database!");
 });
 
-
+let roleID;
 
 app.post('/', function(request, response) {
 	
 	let username = request.body.username;
 	let password = request.body.password;
 	
-	if (username && password) {
 	
-		connection.query('SELECT * FROM users WHERE username = ? AND password = ?', [username, password], function(error, results, fields) {
+	if (username && password) {
+	    
+
+		connection.query('SELECT username,password,id_role  FROM users WHERE username = ? AND password = ? ' , [username, password], function(error, results) {
 			
 			if (error) throw error;
 			
 			if (results.length > 0) {
-			
+				
+				roleID = results[0].id_role;             
 				request.session.loggedin = true;
 				request.session.username = username;
+
+				
+				
+			
 		
 				response.redirect('/mainPage');
 			} else {
@@ -60,6 +67,7 @@ app.post('/', function(request, response) {
 			}			
 			response.end();
 		});
+		
 	} else {
 		response.send('Please enter Username and Password!');
 		response.end();
@@ -71,14 +79,15 @@ app.get("/", (req, res) => {
 	req.session.loggedin === false
 		req.session.username = null;
 
-  
+   
  res.render("index", {stav : 'Log in', name : req.session.username } );
 });
 
 app.get("/mainPage", (req, res) => {
   
   if (req.session.loggedin) {
-    res.render("mainPage", {stav : 'Log out' , name : req.session.username });	
+    res.render("mainPage", {stav : 'Log out' , name : req.session.username  , role : roleID});	
+	
 	} else { 
 		
     res.redirect('/');

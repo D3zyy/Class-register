@@ -2,6 +2,7 @@
 margin: 0px;
 padding: 0px;
 }
+
 li {
     display: inline;
 }
@@ -11,6 +12,7 @@ li {
 }
 /* Add a black background color to the top navigation */
 ul {
+  text-align: center;
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -19,14 +21,17 @@ ul {
 }
 
 li {
+  text-align: center;
   float: left;
 }
 
-li a {
+
+a {
   display: block;
   color: white;
   text-align: center;
   padding: 14px 16px;
+
   text-decoration: none;
 }
 
