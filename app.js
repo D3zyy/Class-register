@@ -10,6 +10,8 @@ const session = require('express-session');
 const cookieParser = require("cookie-parser");
 const { query, Router } = require("express");
 
+
+
 app.use(cookieParser());
 app.set('view engine', 'ejs');
 app.use('/public', express.static("public"))
