@@ -18,7 +18,7 @@ app.use('/public', express.static("public"))
 app.use(express.urlencoded({extended:true}));
 app.use(session({
 	secret: 'secret',
-	cookie: { maxAge: 5000 },
+	cookie: { maxAge: 50000 },
 	resave: false,
 	saveUninitialized: false
 
@@ -55,7 +55,8 @@ app.post('/', function(request, response) {
 			
 			if (results.length > 0) {
 				
-				roleID = results[0].id_role;             
+				roleID = results[0].id_role;  
+
 				request.session.loggedin = true;
 				request.session.username = username;
 
@@ -78,13 +79,13 @@ app.post('/', function(request, response) {
 
 
 app.get("/", (req, res) => {
-	req.session.loggedin === false
+	req.session.loggedin = false
 		req.session.username = null;
 
    
  res.render("index", {stav : 'Log in', name : req.session.username } );
 });
-
+//Main page after successfully loged in 
 app.get("/mainPage", (req, res) => {
   
   if (req.session.loggedin) {
@@ -96,7 +97,42 @@ app.get("/mainPage", (req, res) => {
 	}
   
  });
+ app.get("/blockedAcces", (req, res) => {
+	if(req.session.loggedin === true){
+		res.render("blockedAcces",{stav : 'Log out' , name : req.session.username  , role : roleID})
+	} else{
+      res.redirect("/");
+	};
+	
+});
+ app.get("/manageClasses", (req, res) => {
+  
+	if (req.session.loggedin )  {
+		if(roleID === 2 || roleID === 1){
+			session
+       res.redirect("blockedAcces");
 
+		};
+		connection.query('SELECT firstName, lastName, id_user FROM users WHERE id_role = 2', (error, results) => {
+			if (error) throw error;
+		
+			// store the results in an array
+			const users = results;
+		
+			// render the HTML template and pass the array to the template
+			res.render("manageClasses", {stav : 'Log out' , name : req.session.username  , role : roleID,users: users});
+		  });
+
+
+		
+
+
+	  } else { 
+		  
+	  res.redirect('/');
+	  }
+	
+   });
 
 
 app.listen(200, function(err)  {
