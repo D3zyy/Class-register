@@ -1,0 +1,36 @@
+<%-include("head")-%>
+
+<%-include("navigationGeneral")-%>
+
+
+<style>
+    .box {
+      border: 1px solid black;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      position: absolute; top: 100px; left: 42%;
+      padding: 20px;
+      border-radius: 10px;
+    }
+   
+  </style>
+
+
+<div class="box">
+  <form>
+    <label>Jméno učitele:</label>
+    <input type="text" value="<%= name %>" disabled>
+    <br>
+    <label>Předmět:</label>
+    <input type="text" value="<%= subject %>" disabled>
+    <br>
+    <label>Číslo hodiny:</label>
+    <input type="text" value="<%= classNumber %>" disabled>
+    <br>
+    <input type="submit" value="Odeslat">
+    </form>
+      
+</div>
+
+
+
+<%-include("footer")-%>

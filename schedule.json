@@ -1,0 +1,4 @@
+[  {    "name": "teacher",    "schedule": [      {        "day": "Saturday",        "startHour": 8,        "startMinute": 0,        "endHour": 20,        "endMinute": 45,        "subject": "Mathematics",        "classNumber": "1A"      },      {        "day": "Monday",        "startHour": 10,        "startMinute": 15,        "endHour": 12,        "endMinute": 0,        "subject": "Physics",        "classNumber": "2B"      }    ]
+  }
+]
+

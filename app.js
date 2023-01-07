@@ -18,7 +18,7 @@ app.use('/public', express.static("public"))
 app.use(express.urlencoded({extended:true}));
 app.use(session({
 	secret: 'secret',
-	cookie: { maxAge: 50000 },
+	cookie: { maxAge: 99990 },
 	resave: false,
 	saveUninitialized: false
 
@@ -85,6 +85,71 @@ app.get("/", (req, res) => {
    
  res.render("index", {stav : 'Log in', name : req.session.username } );
 });
+
+
+
+app.get('/entry', (req, res) => {
+	// načtení souboru JSON s učiteli a jejich rozvrhy
+	fs.readFile('schedule.json', (err, data) => {
+	  if (err) {
+		console.error(err);
+		res.send('Error');
+		return;
+	  }
+    console.log(req.session.username)
+;	  // zpracování souboru JSON a vyhledání učitele podle jména
+	  const teachers = JSON.parse(data);
+	  let currentTeacher = null;
+	  for (const teacher of teachers) {
+		if (teacher.name === req.session.username) {
+		  currentTeacher = teacher;
+		  break;
+		}
+	  }
+  
+	  // pokud učitel nebyl nalezen, odešleme chybové hlášení
+	  if (currentTeacher === null) {
+		res.send('Učitel nenalezen');
+		return;
+	  }
+  
+	  // získání aktuálního času
+	  const currentTime = new Date();
+	  const currentHour = currentTime.getHours();
+	  const currentMinute = currentTime.getMinutes();
+  
+	  // proměnné pro vyplnění formuláře
+	  let subject = 'Neučí';
+	  let classNumber = '';
+  
+	  // procházení rozvrhu učitele a porovnání s aktuálním časem
+	  for (const schedule of currentTeacher.schedule) {
+		if (schedule.startHour < currentHour && schedule.endHour > currentHour) {
+		  subject = schedule.subject;
+		  classNumber = schedule.classNumber;
+		  break;
+		} else if (schedule.startHour === currentHour && schedule.startMinute <= currentMinute) {
+		  subject = schedule.subject;
+		  classNumber = schedule.classNumber;
+		  break;
+		} else if (schedule.endHour === currentHour && schedule.endMinute >= currentMinute) {
+		  subject = schedule.subject;
+		  classNumber = schedule.classNumber;
+		  break;
+		}
+	  }
+  
+	  // vyplnění formuláře a odeslání odpovědi
+	  res.render('entry', {stav : 'Log out'   , role : roleID, name: currentTeacher.name,
+      subject: subject,
+      classNumber: classNumber});
+		
+	  
+	});
+  });
+
+
+	
 //Main page after successfully loged in 
 app.get("/mainPage", (req, res) => {
   
