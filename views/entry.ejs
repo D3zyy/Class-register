@@ -16,15 +16,21 @@
 
 
 <div class="box">
-  <form>
-    <label>Teacher name</label>
+  <form id="entry">
+    <label>Teacher’s name</label>
     <input type="text" value="<%= teacherName %>" disabled>
     <br>
     <label>Subject:</label>
     <input type="text" value="<%= subject %>" disabled>
     <br>
-    <label>Taught hours:</label>
+    <label>Class:</label>
+    <input type="text" value="<%= classNumber %>" disabled>
+    <br>
+    <label>Lesson number:</label>
     <input type="text" value="<%= taughtHours %>" disabled>
+    <br>
+    <label>notes:</label>
+    <input type="text">
     <br>
     <input type="submit" value="Odeslat">
     </form>

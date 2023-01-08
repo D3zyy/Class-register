@@ -95,35 +95,59 @@ app.get("/entry", (req, res) => {
 	// vyberte data o probíhajících předmětech z tabulky subject_times pro aktuálního učitele
 	const username = req.session.username;
 	const query = `
-	  SELECT s.jmeno AS subject_name, COUNT(*) AS taught_hours
+	  SELECT s.jmeno AS subject_name, classes.name as Class, s.id_subject, st.id_subject as subjectID, st.id_class as classID, st.id_user as userID
 	  FROM subject_times st
 	  INNER JOIN subjects s ON st.id_subject = s.id_subject
+	  inner join classes on st.id_class = classes.id_class
 	  WHERE st.id_user = (SELECT id_user FROM users WHERE username = ?) AND ? BETWEEN st.start_time AND st.end_time
-	  GROUP BY s.jmeno
+	
 	`;
 	const values = [username, currentTime];
+	
 	connection.query(query, values, (error, results) => {
 	  if (error) throw error;
   
 	  // pokud jsou výsledky dotazu prázdné, nastavte hodnoty formuláře na "Neučí"
 	  let teacherName = "Neučí";
 	  let subjectName = "Neučí";
-	  let taughtHours = "Neučí";
+	  let classname= "Neučí";
+	  let subjectID = null;
+	  let userID = null;
+	  let classID = null;
+	  let logCount;
 	  
   
 	  // pokud jsou výsledky dotazu nějaké, použijte první řádek výsledků pro vyplnění formuláře
 	  if (results.length > 0) {
 		teacherName = req.session.username;
-		subjectName = results[0].subject_name;
-		taughtHours = results[0].taught_hours;
+	
+		subjectName = results[0].subject_name;	
+		classname = results[0].Class
+		subjectID = results[0].subjectID;
+		userID = results[0].userID;
+		classID = results[0].classID;
+		
+		
+
 	  }
-  
+	  const sql = `SELECT COUNT(*) as count FROM entries WHERE id_user = ? AND id_subject = ? AND id_class = ?`;
+		const values = [userID, subjectID, classID];
+		
+		connection.query(sql, values, (error, results) => {
+		  if (error) throw error;
+		  logCount = results[0].count + 1;  
+		console.log(logCount);
+
+
+		res.render("entry", {teacherName: teacherName,
+			subject: subjectName,
+			stav : 'Log out' , name : req.session.username  , role : roleID, classNumber : classname,
+			taughtHours : logCount
+		  });
+		});
+	  
 	  // zobrazte stránku s vyplněným formulářem
-	  res.render("entry", {teacherName: teacherName,
-		subject: subjectName,
-		taughtHours: taughtHours ,stav : 'Log out' , name : req.session.username  , role : roleID,
-		classNumber : taughtHours
-	  });
+	  
 	});
   });
   
