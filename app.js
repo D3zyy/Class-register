@@ -88,65 +88,45 @@ app.get("/", (req, res) => {
 
 
 
-app.get('/entry', (req, res) => {
-	// načtení souboru JSON s učiteli a jejich rozvrhy
-	fs.readFile('schedule.json', (err, data) => {
-	  if (err) {
-		console.error(err);
-		res.send('Error');
-		return;
-	  }
-    console.log(req.session.username)
-;	  // zpracování souboru JSON a vyhledání učitele podle jména
-	  const teachers = JSON.parse(data);
-	  let currentTeacher = null;
-	  for (const teacher of teachers) {
-		if (teacher.name === req.session.username) {
-		  currentTeacher = teacher;
-		  break;
-		}
-	  }
+app.get("/entry", (req, res) => {
+	// získejte aktuální čas
+	const currentTime = new Date();
   
-	  // pokud učitel nebyl nalezen, odešleme chybové hlášení
-	  if (currentTeacher === null) {
-		res.send('Učitel nenalezen');
-		return;
-	  }
+	// vyberte data o probíhajících předmětech z tabulky subject_times pro aktuálního učitele
+	const username = req.session.username;
+	const query = `
+	  SELECT s.jmeno AS subject_name, COUNT(*) AS taught_hours
+	  FROM subject_times st
+	  INNER JOIN subjects s ON st.id_subject = s.id_subject
+	  WHERE st.id_user = (SELECT id_user FROM users WHERE username = ?) AND ? BETWEEN st.start_time AND st.end_time
+	  GROUP BY s.jmeno
+	`;
+	const values = [username, currentTime];
+	connection.query(query, values, (error, results) => {
+	  if (error) throw error;
   
-	  // získání aktuálního času
-	  const currentTime = new Date();
-	  const currentHour = currentTime.getHours();
-	  const currentMinute = currentTime.getMinutes();
-  
-	  // proměnné pro vyplnění formuláře
-	  let subject = 'Neučí';
-	  let classNumber = '';
-  
-	  // procházení rozvrhu učitele a porovnání s aktuálním časem
-	  for (const schedule of currentTeacher.schedule) {
-		if (schedule.startHour < currentHour && schedule.endHour > currentHour) {
-		  subject = schedule.subject;
-		  classNumber = schedule.classNumber;
-		  break;
-		} else if (schedule.startHour === currentHour && schedule.startMinute <= currentMinute) {
-		  subject = schedule.subject;
-		  classNumber = schedule.classNumber;
-		  break;
-		} else if (schedule.endHour === currentHour && schedule.endMinute >= currentMinute) {
-		  subject = schedule.subject;
-		  classNumber = schedule.classNumber;
-		  break;
-		}
-	  }
-  
-	  // vyplnění formuláře a odeslání odpovědi
-	  res.render('entry', {stav : 'Log out'   , role : roleID, name: currentTeacher.name,
-      subject: subject,
-      classNumber: classNumber});
-		
+	  // pokud jsou výsledky dotazu prázdné, nastavte hodnoty formuláře na "Neučí"
+	  let teacherName = "Neučí";
+	  let subjectName = "Neučí";
+	  let taughtHours = "Neučí";
 	  
+  
+	  // pokud jsou výsledky dotazu nějaké, použijte první řádek výsledků pro vyplnění formuláře
+	  if (results.length > 0) {
+		teacherName = req.session.username;
+		subjectName = results[0].subject_name;
+		taughtHours = results[0].taught_hours;
+	  }
+  
+	  // zobrazte stránku s vyplněným formulářem
+	  res.render("entry", {teacherName: teacherName,
+		subject: subjectName,
+		taughtHours: taughtHours ,stav : 'Log out' , name : req.session.username  , role : roleID,
+		classNumber : taughtHours
+	  });
 	});
   });
+  
 
 
 	

@@ -1,4 +1,4 @@
-[  {    "name": "teacher",    "schedule": [      {        "day": "Saturday",        "startHour": 0,        "startMinute": 0,        "endHour": 0,        "endMinute": 45,        "subject": "Mathematics",        "classNumber": "1A"      },      {        "day": "Monday",        "startHour": 10,        "startMinute": 15,        "endHour": 12,        "endMinute": 0,        "subject": "Physics",        "classNumber": "2B"      }    ]
+[  {    "name": "teacher",    "schedule": [      {        "day": "Sunday",        "startHour": 0,        "startMinute": 0,        "endHour": 24,        "endMinute": 45,        "subject": "Mathematics",        "classNumber": "1A"      },      {        "day": "Monday",        "startHour": 10,        "startMinute": 15,        "endHour": 12,        "endMinute": 0,        "subject": "Physics",        "classNumber": "2B"      }    ]
   }
 ]
 
