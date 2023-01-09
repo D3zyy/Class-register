@@ -34,6 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
   addNameButton.style.verticalAlign = 'top';
   addNameButton.style.marginLeft = '10px';
 
+  // Show or hide the addNameButton based on the number of options in the select element
+  if (selectElement.options.length > 0) {
+    addNameButton.style.display = 'inline-block';
+  } else {
+    addNameButton.style.display = 'none';
+  }
+
   addNameButton.addEventListener('click', (event) => {
     event.preventDefault();
     // The rest of the code goes here
@@ -41,11 +48,22 @@ document.addEventListener('DOMContentLoaded', () => {
   
     // Create a new element to display the selected value
     const newElement = document.createElement('div');
-    newElement.innerHTML = `${selectedOption.textContent} <button>-</button>`;
-    newElement.setAttribute('id_user', selectedOption.value);
+    newElement.textContent = `${selectedOption.textContent}`;
+    newElement.insertAdjacentHTML('beforeend', ' <button>-</button>');
+    newElement.setAttribute('user_id', selectedOption.value);
   
     // Insert the new element after the addNameButton
     addNameButton.parentNode.insertBefore(newElement, addNameButton.nextSibling);
+
+    // Remove the selected option from the select element
+    selectElement.options.remove(selectElement.selectedIndex);
+
+    // Show or hide the addNameButton based on the number of options in the select element
+    if (selectElement.options.length > 0) {
+      addNameButton.style.display = 'inline-block';
+    } else {
+      addNameButton.style.display = 'none';
+    }
 
     // Add a persistent event listener to the "-" button
     const removeButton = newElement.querySelector('button');
@@ -53,11 +71,22 @@ document.addEventListener('DOMContentLoaded', () => {
       event.preventDefault();
       // Remove the parent element of the button (the div containing the name and the button)
       removeButton.parentNode.remove();
+
+      // Add the option back to the select element
+      const value = newElement.getAttribute('data-value');
+      const text = newElement.textContent.substring(0, newElement.textContent.length - 1);
+      const option = new Option(text, value);
+      selectElement.options.add(option);
+
+      // Show or hide the addNameButton based on the number of options in the select element
+      if (selectElement.options.length > 0) {
+        addNameButton.style.display = 'inline-block';
+      } else {
+        addNameButton.style.display = 'none';
+      }
     });
   });
 });
-
-
 
 
 

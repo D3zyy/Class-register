@@ -18,7 +18,7 @@ app.use('/public', express.static("public"))
 app.use(express.urlencoded({extended:true}));
 app.use(session({
 	secret: 'secret',
-	cookie: { maxAge: 99990 },
+	cookie: { maxAge: 99999999},
 	resave: true,
 	saveUninitialized: true
 
