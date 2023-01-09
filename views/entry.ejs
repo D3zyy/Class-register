@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const selectElement = document.querySelector('select');
   const formElement = document.querySelector('form[name="myForm"]');
 
-
+  
 
   // Set the display and vertical-align styles of the select element
   selectElement.style.display = 'inline-block';
@@ -35,17 +35,18 @@ document.addEventListener('DOMContentLoaded', () => {
   addNameButton.style.marginLeft = '10px';
 
   addNameButton.addEventListener('click', (event) => {
-    
+    event.preventDefault();
     // The rest of the code goes here
     const selectedOption = selectElement.options[selectElement.selectedIndex];
   
     // Create a new element to display the selected value
     const newElement = document.createElement('div');
     newElement.innerHTML = `${selectedOption.textContent} <button>-</button>`;
+    newElement.setAttribute('id_user', selectedOption.value);
   
     // Insert the new element after the addNameButton
     addNameButton.parentNode.insertBefore(newElement, addNameButton.nextSibling);
-    event.preventDefault();
+
     // Add a persistent event listener to the "-" button
     const removeButton = newElement.querySelector('button');
     removeButton.addEventListener('click', (event) => {
@@ -55,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
 
 
 
