@@ -19,8 +19,8 @@ app.use(express.urlencoded({extended:true}));
 app.use(session({
 	secret: 'secret',
 	cookie: { maxAge: 99990 },
-	resave: false,
-	saveUninitialized: false
+	resave: true,
+	saveUninitialized: true
 
 }));
 
@@ -89,6 +89,18 @@ app.get("/", (req, res) => {
 
 
 app.get("/entry", (req, res) => {
+
+
+	if (!req.session.loggedin){
+res.redirect("/");
+	}
+
+	if(roleID === 1){
+		session
+   res.redirect("blockedAcces");
+
+	};
+
 	// získejte aktuální čas
 	const currentTime = new Date();
   
@@ -137,12 +149,24 @@ app.get("/entry", (req, res) => {
 		  logCount = results[0].count + 1;  
 		console.log(logCount);
 
-
-		res.render("entry", {teacherName: teacherName,
-			subject: subjectName,
-			stav : 'Log out' , name : req.session.username  , role : roleID, classNumber : classname,
-			taughtHours : logCount
+		const valuesClass = [classID];
+		console.log(valuesClass);
+		connection.query('SELECT firstName, lastName, id_user FROM users WHERE id_class = ?',valuesClass, (error, results) => {
+			if (error) throw error;
+		
+			// store the results in an array
+			const users = results;
+			console.log(users);
+			res.render("entry", {teacherName: teacherName,
+				subject: subjectName,
+				stav : 'Log out' , name : req.session.username  , role : roleID, classNumber : classname,
+				taughtHours : logCount , users : users
+			  });
+			
 		  });
+
+
+		
 		});
 	  
 	  // zobrazte stránku s vyplněným formulářem

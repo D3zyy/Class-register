@@ -10,13 +10,61 @@
       position: absolute; top: 100px; left: 42%;
       padding: 20px;
       border-radius: 10px;
+
+
     }
    
+  
   </style>
+  
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const addNameButton = document.querySelector('button[onclick="addName()"]');
+  const selectElement = document.querySelector('select');
+  const formElement = document.querySelector('form[name="myForm"]');
 
 
+
+  // Set the display and vertical-align styles of the select element
+  selectElement.style.display = 'inline-block';
+  selectElement.style.verticalAlign = 'top';
+
+  // Set the display and vertical-align styles of the addNameButton
+  addNameButton.style.display = 'inline-block';
+  addNameButton.style.verticalAlign = 'top';
+  addNameButton.style.marginLeft = '10px';
+
+  addNameButton.addEventListener('click', (event) => {
+    
+    // The rest of the code goes here
+    const selectedOption = selectElement.options[selectElement.selectedIndex];
+  
+    // Create a new element to display the selected value
+    const newElement = document.createElement('div');
+    newElement.innerHTML = `${selectedOption.textContent} <button>-</button>`;
+  
+    // Insert the new element after the addNameButton
+    addNameButton.parentNode.insertBefore(newElement, addNameButton.nextSibling);
+    event.preventDefault();
+    // Add a persistent event listener to the "-" button
+    const removeButton = newElement.querySelector('button');
+    removeButton.addEventListener('click', (event) => {
+      event.preventDefault();
+      // Remove the parent element of the button (the div containing the name and the button)
+      removeButton.parentNode.remove();
+    });
+  });
+});
+
+
+
+
+
+</script>
+  
+  
 <div class="box">
-  <form id="entry">
+  <form name="myForm" id="entry">
     <label>Teacher’s name</label>
     <input type="text" value="<%= teacherName %>" disabled>
     <br>
@@ -31,6 +79,18 @@
     <br>
     <label>notes:</label>
     <input type="text">
+
+    <br>
+    <label>absence:</label>
+   
+      <select>
+        <% users.forEach((user) => { %>
+          <option value="<%= user.id_user %>"><%= user.firstName %> <%= user.lastName %></option>
+        <% }); %>
+      </select>
+      <button onclick="addName()">+</button>
+   
+    
     <br>
     <input type="submit" value="Odeslat">
     </form>
