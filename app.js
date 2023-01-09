@@ -95,12 +95,11 @@ app.get("/entry", (req, res) => {
 	// vyberte data o probíhajících předmětech z tabulky subject_times pro aktuálního učitele
 	const username = req.session.username;
 	const query = `
-	  SELECT s.jmeno AS subject_name, classes.name as Class, s.id_subject, st.id_subject as subjectID, st.id_class as classID, st.id_user as userID
-	  FROM subject_times st
-	  INNER JOIN subjects s ON st.id_subject = s.id_subject
-	  inner join classes on st.id_class = classes.id_class
-	  WHERE st.id_user = (SELECT id_user FROM users WHERE username = ?) AND ? BETWEEN st.start_time AND st.end_time
-	
+	SELECT s.jmeno AS subject_name, classes.name as Class, s.id_subject, st.id_subject as subjectID, st.id_class as classID, st.id_user as userID 
+	FROM subject_times st
+	INNER JOIN subjects s ON st.id_subject = s.id_subject
+	inner join classes on st.id_class = classes.id_class
+	WHERE st.id_user = (SELECT id_user FROM users WHERE username = ?) AND ? BETWEEN st.start_time AND st.end_time AND st.day = DAYNAME(NOW())
 	`;
 	const values = [username, currentTime];
 	
