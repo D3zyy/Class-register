@@ -45,15 +45,22 @@ document.addEventListener('DOMContentLoaded', () => {
     event.preventDefault();
     // The rest of the code goes here
     const selectedOption = selectElement.options[selectElement.selectedIndex];
-  
+
     // Create a new element to display the selected value
     const newElement = document.createElement('div');
     newElement.textContent = `${selectedOption.textContent}`;
     newElement.insertAdjacentHTML('beforeend', ' <button>-</button>');
-    newElement.setAttribute('user_id', selectedOption.value);
-  
+    newElement.setAttribute('data-value', selectedOption.value);
+
     // Insert the new element after the addNameButton
     addNameButton.parentNode.insertBefore(newElement, addNameButton.nextSibling);
+
+    // Create a hidden input element for the selected option
+    const input = document.createElement("input");
+    input.setAttribute("type", "hidden");
+    input.setAttribute("name", "selectedOption");
+    input.setAttribute("value", selectedOption.value);
+    formElement.appendChild(input);
 
     // Remove the selected option from the select element
     selectElement.options.remove(selectElement.selectedIndex);
@@ -72,8 +79,12 @@ document.addEventListener('DOMContentLoaded', () => {
       // Remove the parent element of the button (the div containing the name and the button)
       removeButton.parentNode.remove();
 
+      // Remove the corresponding hidden input from the form
+      input.remove();
+
       // Add the option back to the select element
-      const value = newElement.getAttribute('data-value');
+    // Add the option back to the select element
+     const value = newElement.getAttribute('data-value');
       const text = newElement.textContent.substring(0, newElement.textContent.length - 1);
       const option = new Option(text, value);
       selectElement.options.add(option);
@@ -87,7 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
-
 
 
 
