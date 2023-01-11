@@ -100,43 +100,52 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+document.getElementById("entry").onsubmit = function(){
+    document.getElementById("message").innerHTML = "Form submitted successfully";
+    document.getElementById("message").style.display = "block";
+    return false;
+}
 
 </script>
   
-  
 <div class="box">
-  <form name="myForm" id="entry">
+  <form name="myForm" id="entry" >
     <label>Teacher’s name</label>
     <input type="text" value="<%= teacherName %>" disabled>
+    <input type="hidden" name="teacherName" value="<%= teacherName %>">
     <br>
     <label>Subject:</label>
     <input type="text" value="<%= subject %>" disabled>
+    <input type="hidden" name="subject" value="<%= subject %>">
     <br>
     <label>Class:</label>
     <input type="text" value="<%= classNumber %>" disabled>
+    <input type="hidden" name="classNumber" value="<%= classNumber %>">
     <br>
     <label>Lesson number:</label>
     <input type="text" value="<%= taughtHours %>" disabled>
+    <input type="hidden" name="taughtHours" value="<%= taughtHours %>">
+    <br>
+    <label>topic:</label>
+    <input type="text" name="topic" >
     <br>
     <label>notes:</label>
-    <input type="text">
-
+    <input type="text" name="notes" >
     <br>
     <label>absence:</label>
-   
-      <select>
+    <select>
         <% users.forEach((user) => { %>
           <option value="<%= user.id_user %>"><%= user.firstName %> <%= user.lastName %></option>
         <% }); %>
       </select>
       <button onclick="addName()">+</button>
-   
-    
     <br>
     <input type="submit" value="Odeslat">
-    </form>
-      
-</div>
+  </form> 
+  
+ 
+
+
 
 
 
