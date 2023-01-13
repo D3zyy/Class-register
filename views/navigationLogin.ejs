@@ -1,13 +1,23 @@
+<style>
+.a{
+  filter: blur(5px);
+}
+a:hover{
+  color: rgb(0, 0, 0);
+}
 
 
-    <ul  style="font-size: large;"  >
-        <li><a href="#home">Entry</a></li>
-        <li><a href="#news">Download</a></li>
-        <li><a href="#contact">About</a></li>
+</style>
+
+    <ul  style="font-size: large; display: block;"  >
+        <li><a  class="a" style="pointer-events: none" href="#home">The</a></li>
+        <li><a class="a" style="pointer-events: none" href="#news">most</a></li>
+        <li><a class="a" style="pointer-events: none" href="#contact">secret</a></li>
+        <li><a class="a" style="pointer-events: none" href="#contact">text</a></li>
         
         <ul style="float: right;" >
-          <li><a href="#">Switch Theme</a></li>
-          <li><a href="/"><%- stav -%> </a></li> 
+          <li><a href="#"> Switch theme</a></li>
+          <li><a  href="/"><%- stav -%> </a></li> 
         </ul>    
       </ul>
  

@@ -1,13 +1,9 @@
 <%-include("head")-%>
 
+<%-include("navigationGeneral")-%>
 
-<%if (role === 3) { %>
-    <%-include("navigationAdmin")-%>
-   <%}else if(role === 2){ %>
-    <%-include("navigationTeacher")-%>
-  <% } else if(role === 1){ %>
-    <%-include("navigationStudent")-%>
-    <% } %>
+
+  
 
      
 <%-include("footer")-%>

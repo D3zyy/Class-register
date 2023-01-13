@@ -1,0 +1,53 @@
+<%-include("head")-%>
+
+<%-include("navigationGeneral")-%>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
+
+<style>
+    .box {
+      border: 1px solid black;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      position: absolute; top: 100px; left: 42%;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    table {
+      margin: 0 auto;
+    }
+  </style>
+  
+  <div class="box">
+    <h2>Teachers</h2>
+    <table>
+      <thead>
+        <tr>
+          <th> </th>
+          <th>Name</th>
+          <th>ID</th>
+        </tr>
+      </thead>
+      <tbody >
+        <% for (var i = 0; i < users.length; i++) { %>
+          <tr>
+            <td>
+              <i class="fa fa-user"></i>
+            </td>
+            <td style="padding: 5px;">
+              <%= users[i].firstName %> <%= users[i].lastName %>
+            </td>
+            <td>
+              <%= users[i].id_user %>
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+  
+  
+  
+  
+
+     
+<%-include("footer")-%>
