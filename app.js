@@ -207,6 +207,8 @@ app.post("/success", (req, res) => {
 		const topic = req.body.topic;
 		const notes = req.body.notes;
 		const absence = req.body.absence;
+		const lessonNumber = req.body.taughtHours;
+		
 		subjectID = results[0].subjectID;
 		userID = results[0].userID;
 		classID = results[0].classID;
@@ -216,8 +218,8 @@ app.post("/success", (req, res) => {
 		// získejte aktuální čas
 
 
-const data = [date,userID, subjectID, classID, topic, notes];
-		const sql = `INSERT INTO entries (date,id_user, id_subject, id_class,  topic, notes) VALUES (?,?, ?, ?, ?, ?)`;
+const data = [date,userID, subjectID, classID, topic, notes,lessonNumber];
+		const sql = `INSERT INTO entries (date,id_user, id_subject, id_class,  topic, notes,lessonNumber) VALUES (?,?, ?, ?, ?, ?,?)`;
 		
 		connection.query(sql, data, (err, result) => {
 		  if (err) {
@@ -225,6 +227,7 @@ const data = [date,userID, subjectID, classID, topic, notes];
 			
 			return;
 		  }
+		 
 		  const entryId = result.insertId;
 	     console.log(entryId);
 		 
