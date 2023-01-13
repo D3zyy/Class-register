@@ -226,9 +226,20 @@ const data = [date,userID, subjectID, classID, topic, notes];
 			return;
 		  }
 		  const entryId = result.insertId;
+	     console.log(entryId);
+		 
+		 let selectedOptions = req.body.selectedOption;
+    if (typeof selectedOptions === 'string') {
+        selectedOptions = [selectedOptions];
+    }
 	
-		  const selectedOptions = req.body.selectedOption;
+		
 
+		 
+         console.log(selectedOptions);
+		 if(selectedOptions != null){
+
+		
 		  // Insert the selected options into the "absence" table
 		  for (let i = 0; i < selectedOptions.length; i++) {
 			  const sql = `INSERT INTO absence (id_user, id_entry) VALUES (?,?)`;
@@ -237,10 +248,11 @@ const data = [date,userID, subjectID, classID, topic, notes];
 				if (err) {
 				  console.log(err);
 		  
-				  return;
+				  
 				}
 			  });
 		  }
+		}
 		});
   
 // Get the selected options
