@@ -147,16 +147,16 @@ res.redirect("/");
 		connection.query(sql, values, (error, results) => {
 		  if (error) throw error;
 		  logCount = results[0].count + 1;  
-		console.log(logCount);
+
 
 		const valuesClass = [classID];
-		console.log(valuesClass);
+	 
 		connection.query('SELECT firstName, lastName, id_user FROM users WHERE id_class = ?',valuesClass, (error, results) => {
 			if (error) throw error;
 		
 			// store the results in an array
 			const users = results;
-			console.log(users);
+			
 			res.render("entry", {teacherName: teacherName,
 				subject: subjectName,
 				stav : 'Log out' , name : req.session.username  , role : roleID, classNumber : classname,
@@ -175,7 +175,98 @@ res.redirect("/");
   });
   
 
+//Main page after successfully loged in 
+app.post("/success", (req, res) => {
+  
+	if (req.session.loggedin) {
+	  res.render("success", {stav : 'Log out' , name : req.session.username  , role : roleID});	
 
+
+
+
+	  
+	  const currentTime = new Date();
+
+
+
+	  const username = req.session.username;
+	const query = `
+	SELECT s.jmeno AS subject_name, classes.name as Class, s.id_subject, st.id_subject as subjectID, st.id_class as classID, st.id_user as userID 
+	FROM subject_times st
+	INNER JOIN subjects s ON st.id_subject = s.id_subject
+	inner join classes on st.id_class = classes.id_class
+	WHERE st.id_user = (SELECT id_user FROM users WHERE username = ?) AND ? BETWEEN st.start_time AND st.end_time AND st.day = DAYNAME(NOW())
+	`;
+	const values = [username, currentTime];
+	  connection.query(query, values, (err, results) => {
+		
+		
+		const subject = req.body.subject;
+		const classNumber = req.body.classNumber;
+		const taughtHours = req.body.taughtHours;
+		const topic = req.body.topic;
+		const notes = req.body.notes;
+		const absence = req.body.absence;
+		subjectID = results[0].subjectID;
+		userID = results[0].userID;
+		classID = results[0].classID;
+		var d = new Date();
+  var date = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
+
+		// získejte aktuální čas
+
+
+const data = [date,userID, subjectID, classID, topic, notes];
+		const sql = `INSERT INTO entries (date,id_user, id_subject, id_class,  topic, notes) VALUES (?,?, ?, ?, ?, ?)`;
+		
+		connection.query(sql, data, (err, result) => {
+		  if (err) {
+			console.log(err);
+			
+			return;
+		  }
+		  const entryId = result.insertId;
+	
+		  const selectedOptions = req.body.selectedOption;
+
+		  // Insert the selected options into the "absence" table
+		  for (let i = 0; i < selectedOptions.length; i++) {
+			  const sql = `INSERT INTO absence (id_user, id_entry) VALUES (?,?)`;
+			  const data = [selectedOptions[i], entryId];
+			  connection.query(sql, data, (err, result) => {
+				if (err) {
+				  console.log(err);
+		  
+				  return;
+				}
+			  });
+		  }
+		});
+  
+// Get the selected options
+
+
+
+		
+	  });
+
+
+
+
+
+
+
+	
+	  // Insert the data into the "entries" table
+	  
+
+	  
+	  } else { 
+		  
+	  res.redirect('/');
+	  }
+	
+   });
 	
 //Main page after successfully loged in 
 app.get("/mainPage", (req, res) => {

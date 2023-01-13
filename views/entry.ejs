@@ -109,7 +109,7 @@ document.getElementById("entry").onsubmit = function(){
 </script>
   
 <div class="box">
-  <form name="myForm" id="entry" >
+  <form name="myForm" id="entry"  action="success"   method="POST"  >
     <label>Teacher’s name</label>
     <input type="text" value="<%= teacherName %>" disabled>
     <input type="hidden" name="teacherName" value="<%= teacherName %>">
