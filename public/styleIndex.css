@@ -2,6 +2,15 @@
 margin: 0px;
 padding: 0px;
 }
+
+
+body.light-mode {
+  background-color: #ffffff;
+  color: #000;
+}
+body.light-mode ul {
+  background-color: #5481c1;
+}
 body{
   background-color: rgb(93, 87, 87);
 }

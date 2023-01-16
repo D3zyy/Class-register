@@ -5,10 +5,12 @@
 a:hover{
   color: rgb(0, 0, 0);
 }
-
+body.light-mode form{
+  background-color: #7a8089;
+}
 
 </style>
-
+<script src="../public/dark-light-script.js" ></script>
     <ul  style="font-size: large; display: block;"  >
         <li><a  class="a" style="pointer-events: none" href="#home">The</a></li>
         <li><a class="a" style="pointer-events: none" href="#news">most</a></li>
@@ -16,7 +18,7 @@ a:hover{
         <li><a class="a" style="pointer-events: none" href="#contact">text</a></li>
         
         <ul style="float: right;" >
-          <li><a href="#"> Switch theme</a></li>
+          <li><a href="#" onclick="toggleTheme()">Switch theme</a>
           <li><a  href="/"><%- stav -%> </a></li> 
         </ul>    
       </ul>
