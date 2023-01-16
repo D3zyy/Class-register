@@ -1,6 +1,6 @@
-<%-include("head")-%>
+<%-include("../views/head")-%>
 
-<%-include("navigationGeneral")-%>
+<%-include("../views/navigationGeneral")-%>
 
 
 <style>
@@ -14,7 +14,10 @@
 
     }
    
-  
+  th{
+    margin-right: 5px;
+ display: inline-block
+  }
   </style>
   
 <script>
@@ -110,43 +113,70 @@ document.getElementById("entry").onsubmit = function(){
   
 <div class="box">
   <form name="myForm" id="entry"  action="success"   method="POST"  >
-    <label>Teacher’s name</label>
-    <input type="text" value="<%= teacherName %>" disabled>
-    <input type="hidden" name="teacherName" value="<%= teacherName %>">
-    <br>
-    <label>Subject:</label>
-    <input type="text" value="<%= subject %>" disabled>
-    <input type="hidden" name="subject" value="<%= subject %>">
-    <br>
-    <label>Class:</label>
-    <input type="text" value="<%= classNumber %>" disabled>
-    <input type="hidden" name="classNumber" value="<%= classNumber %>">
-    <br>
-    <label>Lesson number:</label>
-    <input type="text" value="<%= taughtHours %>" disabled>
-    <input type="hidden" name="taughtHours" value="<%= taughtHours %>">
-    <br>
-    <label>topic:</label>
-    <input type="text" name="topic" >
-    <br>
-    <label>notes:</label>
-    <input type="text" name="notes" >
-    <br>
-    <label>absence:</label>
-    <select>
-        <% users.forEach((user) => { %>
-          <option value="<%= user.id_user %>"><%= user.firstName %> <%= user.lastName %></option>
-        <% }); %>
-      </select>
-      <button onclick="addName()">+</button>
-    <br>
-    <input type="submit" value="Odeslat">
+    <table>
+      <tr>
+        <th>Teacher's name</th>
+        <td>
+          <input type="text" value="<%= teacherName %>" disabled>
+          <input type="hidden" name="teacherName" value="<%= teacherName %>">
+        </td>
+      </tr>
+      <tr>
+        <th>Subject</th>
+        <td>
+          <input type="text" value="<%= subject %>" disabled>
+          <input type="hidden" name="subject" value="<%= subject %>">
+        </td>
+      </tr>
+      <tr>
+        <th>Class</th>
+        <td>
+          <input type="text" value="<%= classNumber %>" disabled>
+          <input type="hidden" name="classNumber" value="<%= classNumber %>">
+        </td>
+      </tr>
+      <tr>
+        <th>Lesson number</th>
+        <td>
+          <input type="text" value="<%= taughtHours %>" disabled>
+          <input type="hidden" name="taughtHours" value="<%= taughtHours %>">
+        </td>
+      </tr>
+      <tr>
+        <th>Topic</th>
+        <td>
+          <input type="text" name="topic" >
+        </td>
+      </tr>
+      <tr>
+        <th>Notes</th>
+        <td>
+          <input type="text" name="notes" >
+        </td>
+      </tr>
+      <tr>
+        <th style="display: inline-block;" >Absence</th>
+        <td>
+          <select>
+            <% users.forEach((user) => { %>
+              <option value="<%= user.id_user %>"><%= user.firstName %> <%= user.lastName %></option>
+            <% }); %>
+          </select>
+          <button onclick="addName()">+</button>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <input type="submit" value="Odeslat">
+        </td>
+      </tr>
+    </table>
   </form> 
-  
+</div>
  
 
 
 
 
 
-<%-include("footer")-%>
+<%-include("../views/footer")-%>
