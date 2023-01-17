@@ -66,6 +66,10 @@ res.redirect("/");
 		subjectID = results[0].subjectID;
 		userID = results[0].userID;
 		classID = results[0].classID;
+	  } else {
+		res.redirect('enterManually');
+		
+		
 	  }
 	  const sql = `SELECT COUNT(*) as count FROM entries WHERE id_user = ? AND id_subject = ? AND id_class = ?`;
 		const values = [userID, subjectID, classID];
@@ -81,6 +85,14 @@ res.redirect("/");
 			if (error) throw error;
 
 			const users = results;
+
+
+
+
+
+
+
+			
 			
 			res.render("entry", {teacherName: teacherName, 
 				subject: subjectName,
@@ -91,7 +103,61 @@ res.redirect("/");
 		});	  
 	});
   });
+  router.get("/enterManually", (req, res) => {
+	if (req.session.loggedin) {
+		
+	connection.query('SELECT name,id_class from classes', (error, results) => {
+		if (error) throw error;
 
+		const users = results;
+
+
+
+
+
+		res.render('enterManually',{stav : 'Log out' , name : req.session.username  , role : roleID,users : users});
+
+		
+		
+			
+	  });	
+
+	  	
+	} else { 
+		  
+		res.redirect('/');
+		}
+	  
+	
+   });
+   router.post("/enterManuallyForm", (req, res) => {
+	if (req.session.loggedin) {
+		console.log(req.body.selectedOption);
+		const classs = req.body.selectedOption;
+		connection.query('SELECT firstName, lastName, id_user FROM users WHERE id_class = ?', classs, (error, results) => {
+			if (error) throw error;
+
+			const users = results;
+
+			connection.query('SELECT name FROM classes WHERE id_class = ?', classs, (error, results) => {
+				classNumberr = results[0].name;  
+				res.render('enterManuallyForm',{classNumber : classNumberr,stav : 'Log out' , name : req.session.username  , role : roleID,users: users, teacherName : req.session.username});
+
+			});	
+
+			
+			
+			
+		  });	
+
+	  	
+	} else { 
+		  
+		res.redirect('/');
+		}
+	  
+	
+   });
   //Page where we post the form
   router.post("/success", (req, res) => {
   
@@ -99,7 +165,7 @@ res.redirect("/");
 	  res.render("success", {stav : 'Log out' , name : req.session.username  , role : roleID});	
 
 
-
+     
 
 	  
 	  const currentTime = new Date();
@@ -107,14 +173,31 @@ res.redirect("/");
 
 
 	  const username = req.session.username;
+	  const queryUSER = `
+	SELECT  id_user
+	from users
+WHERE username = ? 
+`;
+const queryCLASS = `
+SELECT  id_user
+from users
+WHERE name = ?
+`;
+const querySUBJECT = `
+SELECT  id_subject
+from subjects
+WHERE jmeno = ?
+`;
 	const query = `
-	SELECT s.jmeno AS subject_name, classes.name as Class, s.id_subject, st.id_subject as subjectID, st.id_class as classID, st.id_user as userID 
-	FROM subject_times st
-	INNER JOIN subjects s ON st.id_subject = s.id_subject
-	inner join classes on st.id_class = classes.id_class
-	WHERE st.id_user = (SELECT id_user FROM users WHERE username = ?) AND ? BETWEEN st.start_time AND st.end_time AND st.day = DAYNAME(NOW())
+	SELECT  st.id_subject as subjectID, st.id_class as classID, st.id_user as userID
+FROM subject_times st
+INNER JOIN subjects s ON st.id_subject = s.id_subject
+inner join classes on st.id_class = classes.id_class
+WHERE st.id_user = (SELECT id_user FROM users WHERE username = ?) 
+AND st.id_class = (select id_class from classes where name = ?)
+AND st.id_subject = (select id_subject from subjects where jmeno = ?)
 	`;
-	const values = [username, currentTime];
+	const values = [username,req.body.classNumber, req.body.subject];
 	  connection.query(query, values, (err, results) => {
 		
 		
@@ -133,7 +216,7 @@ res.redirect("/");
   var date = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
 
 		// získejte aktuální čas
-
+		console.log(subject,classNumber,taughtHours);
 
 const data = [date,userID, subjectID, classID, topic, notes,lessonNumber];
 		const sql = `INSERT INTO entries (date,id_user, id_subject, id_class,  topic, notes,lessonNumber) VALUES (?,?, ?, ?, ?, ?,?)`;
