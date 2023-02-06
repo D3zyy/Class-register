@@ -1,3 +1,4 @@
+//Declaring essentials
 const express = require("express");
 const app = express();
 const mysql = require('mysql2');
@@ -9,21 +10,26 @@ const encoder = bodyParser.urlencoded();
 const session = require('express-session');
 const cookieParser = require("cookie-parser");
 const { query, Router } = require("express");
+const teacher = require("./routes/teacher");
+global.roleID = 2;
 
-
-
+//Use a set
 app.use(cookieParser());
 app.set('view engine', 'ejs');
 app.use('/public', express.static("public"))
 app.use(express.urlencoded({extended:true}));
 app.use(session({
 	secret: 'secret',
-	cookie: { maxAge: 99990 },
+	cookie: { maxAge: 99999999},
 	resave: true,
 	saveUninitialized: true
 
 }));
 
+//routes
+app.use("/teacher", teacher,);
+
+//Connect to database
 const connection  = mysql.createConnection({
 host : "localhost",
 user : "root",
@@ -38,9 +44,9 @@ connection.connect(function(err) {
   console.log("Connected to the database!");
 });
 
-let roleID;
 
-app.post('/', function(request, response) {
+
+app.post('/', function(request, response, next) {
 	
 	let username = request.body.username;
 	let password = request.body.password;
@@ -59,12 +65,14 @@ app.post('/', function(request, response) {
 
 				request.session.loggedin = true;
 				request.session.username = username;
+          
 
-				
+
 				
 			
 		
 				response.redirect('/mainPage');
+				
 			} else {
 				response.redirect('/');
 			}			
@@ -75,9 +83,11 @@ app.post('/', function(request, response) {
 		response.send('Please enter Username and Password!');
 		response.end();
 	}
+	
 });
 
 
+  
 app.get("/", (req, res) => {
 	req.session.loggedin = false
 		req.session.username = null;
@@ -88,92 +98,9 @@ app.get("/", (req, res) => {
 
 
 
-app.get("/entry", (req, res) => {
 
-
-	if (!req.session.loggedin){
-res.redirect("/");
-	}
-
-	if(roleID === 1){
-		session
-   res.redirect("blockedAcces");
-
-	};
-
-	// získejte aktuální čas
-	const currentTime = new Date();
   
-	// vyberte data o probíhajících předmětech z tabulky subject_times pro aktuálního učitele
-	const username = req.session.username;
-	const query = `
-	SELECT s.jmeno AS subject_name, classes.name as Class, s.id_subject, st.id_subject as subjectID, st.id_class as classID, st.id_user as userID 
-	FROM subject_times st
-	INNER JOIN subjects s ON st.id_subject = s.id_subject
-	inner join classes on st.id_class = classes.id_class
-	WHERE st.id_user = (SELECT id_user FROM users WHERE username = ?) AND ? BETWEEN st.start_time AND st.end_time AND st.day = DAYNAME(NOW())
-	`;
-	const values = [username, currentTime];
-	
-	connection.query(query, values, (error, results) => {
-	  if (error) throw error;
-  
-	  // pokud jsou výsledky dotazu prázdné, nastavte hodnoty formuláře na "Neučí"
-	  let teacherName = "Neučí";
-	  let subjectName = "Neučí";
-	  let classname= "Neučí";
-	  let subjectID = null;
-	  let userID = null;
-	  let classID = null;
-	  let logCount;
-	  
-  
-	  // pokud jsou výsledky dotazu nějaké, použijte první řádek výsledků pro vyplnění formuláře
-	  if (results.length > 0) {
-		teacherName = req.session.username;
-	
-		subjectName = results[0].subject_name;	
-		classname = results[0].Class
-		subjectID = results[0].subjectID;
-		userID = results[0].userID;
-		classID = results[0].classID;
-		
-		
 
-	  }
-	  const sql = `SELECT COUNT(*) as count FROM entries WHERE id_user = ? AND id_subject = ? AND id_class = ?`;
-		const values = [userID, subjectID, classID];
-		
-		connection.query(sql, values, (error, results) => {
-		  if (error) throw error;
-		  logCount = results[0].count + 1;  
-		console.log(logCount);
-
-		const valuesClass = [classID];
-		console.log(valuesClass);
-		connection.query('SELECT firstName, lastName, id_user FROM users WHERE id_class = ?',valuesClass, (error, results) => {
-			if (error) throw error;
-		
-			// store the results in an array
-			const users = results;
-			console.log(users);
-			res.render("entry", {teacherName: teacherName,
-				subject: subjectName,
-				stav : 'Log out' , name : req.session.username  , role : roleID, classNumber : classname,
-				taughtHours : logCount , users : users
-			  });
-			
-		  });
-
-
-		
-		});
-	  
-	  // zobrazte stránku s vyplněným formulářem
-	  
-	});
-  });
-  
 
 
 	
@@ -189,9 +116,9 @@ app.get("/mainPage", (req, res) => {
 	}
   
  });
- app.get("/blockedAcces", (req, res) => {
+ app.get("/blockedAccess", (req, res) => {
 	if(req.session.loggedin === true){
-		res.render("blockedAcces",{stav : 'Log out' , name : req.session.username  , role : roleID})
+		res.render("blockedAccess",{stav : 'Log out' , name : req.session.username  , role : roleID})
 	} else{
       res.redirect("/");
 	};
@@ -201,8 +128,8 @@ app.get("/mainPage", (req, res) => {
   
 	if (req.session.loggedin )  {
 		if(roleID === 2 || roleID === 1){
-			session
-       res.redirect("blockedAcces");
+			
+       res.redirect("blockedAccess");
 
 		};
 		connection.query('SELECT firstName, lastName, id_user FROM users WHERE id_role = 2', (error, results) => {

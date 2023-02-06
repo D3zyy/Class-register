@@ -1,7 +1,6 @@
 <%-include("head")-%>
 
-<%-include("navigationGeneral")-%>
-
+<%-include("../views/navigationGeneral")-%>
 
 <style>
     .box {
@@ -14,91 +13,80 @@
 
     }
    
-  
+  th{
+    margin-right: 5px;
+ display: inline-block
+  }
   </style>
   
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const addNameButton = document.querySelector('button[onclick="addName()"]');
-  const selectElement = document.querySelector('select');
-  const formElement = document.querySelector('form[name="myForm"]');
-
-  
-
-  // Set the display and vertical-align styles of the select element
-  selectElement.style.display = 'inline-block';
-  selectElement.style.verticalAlign = 'top';
-
-  // Set the display and vertical-align styles of the addNameButton
-  addNameButton.style.display = 'inline-block';
-  addNameButton.style.verticalAlign = 'top';
-  addNameButton.style.marginLeft = '10px';
-
-  addNameButton.addEventListener('click', (event) => {
-    event.preventDefault();
-    // The rest of the code goes here
-    const selectedOption = selectElement.options[selectElement.selectedIndex];
-  
-    // Create a new element to display the selected value
-    const newElement = document.createElement('div');
-    newElement.innerHTML = `${selectedOption.textContent} <button>-</button>`;
-    newElement.setAttribute('id_user', selectedOption.value);
-  
-    // Insert the new element after the addNameButton
-    addNameButton.parentNode.insertBefore(newElement, addNameButton.nextSibling);
-
-    // Add a persistent event listener to the "-" button
-    const removeButton = newElement.querySelector('button');
-    removeButton.addEventListener('click', (event) => {
-      event.preventDefault();
-      // Remove the parent element of the button (the div containing the name and the button)
-      removeButton.parentNode.remove();
-    });
-  });
-});
-
-
-
-
-
-
-</script>
-  
+<script src="../public/buttonAbsecneScript.js" ></script>
   
 <div class="box">
-  <form name="myForm" id="entry">
-    <label>Teacher’s name</label>
-    <input type="text" value="<%= teacherName %>" disabled>
-    <br>
-    <label>Subject:</label>
-    <input type="text" value="<%= subject %>" disabled>
-    <br>
-    <label>Class:</label>
-    <input type="text" value="<%= classNumber %>" disabled>
-    <br>
-    <label>Lesson number:</label>
-    <input type="text" value="<%= taughtHours %>" disabled>
-    <br>
-    <label>notes:</label>
-    <input type="text">
-
-    <br>
-    <label>absence:</label>
-   
-      <select>
-        <% users.forEach((user) => { %>
-          <option value="<%= user.id_user %>"><%= user.firstName %> <%= user.lastName %></option>
-        <% }); %>
-      </select>
-      <button onclick="addName()">+</button>
-   
-    
-    <br>
-    <input type="submit" value="Odeslat">
-    </form>
-      
+  <form name="myForm" id="entry"  action="success"   method="POST"  >
+    <table>
+      <tr>
+        <th>Teacher's name</th>
+        <td>
+          <input type="text" value="<%= teacherName %>" disabled>
+          <input type="hidden" name="teacherName" value="<%= teacherName %>">
+        </td>
+      </tr>
+      <tr>
+        <th>Subject</th>
+        <td>
+          <input type="text" value="<%= subject %>" disabled>
+          <input type="hidden" name="subject" value="<%= subject %>">
+        </td>
+      </tr>
+      <tr>
+        <th>Class</th>
+        <td>
+          <input type="text" value="<%= classNumber %>" disabled>
+          <input type="hidden" name="classNumber" value="<%= classNumber %>">
+        </td>
+      </tr>
+      <tr>
+        <th>Lesson number</th>
+        <td>
+          <input type="text" value="<%= taughtHours %>" disabled>
+          <input type="hidden" name="taughtHours" value="<%= taughtHours %>">
+        </td>
+      </tr>
+      <tr>
+        <th>Topic</th>
+        <td>
+          <input type="text" name="topic" >
+        </td>
+      </tr>
+      <tr>
+        <th>Notes</th>
+        <td>
+          <input type="text" name="notes" >
+        </td>
+      </tr>
+      <tr>
+        <th style="display: inline-block;" >Absence</th>
+        <td>
+          <select>
+            <% users.forEach((user) => { %>
+              <option value="<%= user.id_user %>"><%= user.firstName %> <%= user.lastName %></option>
+            <% }); %>
+          </select>
+          <button onclick="addName()">+</button>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <input type="submit" value="Odeslat">
+        </td>
+      </tr>
+    </table>
+  </form> 
 </div>
+ 
 
 
 
-<%-include("footer")-%>
+
+
+<%-include("../views/footer")-%>
