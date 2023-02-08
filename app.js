@@ -152,7 +152,5 @@ app.get("/mainPage", (req, res) => {
    });
 
 
-app.listen(200, function(err)  {
-console.log("listening on port 200");
-});
+   app.listen(process.env.PORT || 3000);
 
