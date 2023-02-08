@@ -200,8 +200,12 @@ res.redirect("/");
 
 				 connection.query('SELECT id_user FROM users WHERE username = ?', req.session.username, (error, results) => {
 					userID = results[0].name
-
-					res.render('enterManuallyForm',{subjectJmeno : subjectName,classNumber : classNumberr,stav : 'Log out' , name : req.session.username  , role : roleID,users: users, teacherName : req.session.username});
+					connection.query(`SELECT COUNT(*) as count FROM entries WHERE id_user = ? AND id_subject = ? AND id_class = ?`, [userID, subjectID, classID], (error, result) => {
+                          pocet = result[0].count + 1;
+						  if (error) throw error;
+						res.render('enterManuallyForm',{taughtHours : pocet,subjectJmeno : subjectName,classNumber : classNumberr,stav : 'Log out' , name : req.session.username  , role : roleID,users: users, teacherName : req.session.username});
+					});
+					
 
 				});	
 					
