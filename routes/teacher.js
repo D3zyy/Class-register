@@ -137,9 +137,20 @@ res.redirect("/");
 	connection.query('SELECT subjects.id_subject, subjects.jmeno from subject_times  inner join subjects on subject_times.id_subject = subjects.id_subject where id_class = ?', req.body.selectedOption,(error, results) => {
 		if (error) throw error;
 		const users = results;
+		const classID = req.body.selectedOption;
+		const subjectID = req.body.selectedSubject;
+		
 		connection.query('SELECT jmeno,id_subject from subjects where id_class = ?', req.body.selectedOption,(error, results) =>{
 
-			res.render('enterManuallySubject',{stav : 'Log out' , name : req.session.username  , role : roleID,users : users,clasIDD : req.body.selectedOption});
+			
+				
+				
+				
+				
+				res.render('enterManuallySubject',{stav : 'Log out' , name : req.session.username  , role : roleID,users : users,clasIDD : req.body.selectedOption});
+
+			
+			
 		});
 		
 		
@@ -170,22 +181,34 @@ res.redirect("/");
    router.post("/enterManuallyForm", (req, res) => {
 	if (req.session.loggedin) {
 		console.log(req.body.selectedOption);
-		const classs = req.body.selectedOption;
-		const subject = req.body.selectedSubject;
-		connection.query('SELECT firstName, lastName, id_user FROM users WHERE id_class = ?', classs, (error, results) => {
+		const classID = req.body.selectedOption;
+		const subjectID = req.body.selectedSubject;
+		const sql = `SELECT COUNT(*) as count FROM entries WHERE id_user = ? AND id_subject = ? AND id_class = ?`;
+		connection.query('SELECT firstName, lastName, id_user FROM users WHERE id_class = ?', classID, (error, results) => {
 			if (error) throw error;
 
 			const users = results;
 
-			connection.query('SELECT name FROM classes WHERE id_class = ?', classs, (error, results) => {
+			connection.query('SELECT name FROM classes WHERE id_class = ?', classID, (error, results) => {
 				classNumberr = results[0].name;  
 				
 				
 				
 				
-				connection.query('SELECT jmeno FROM subjects WHERE id_subject = ?', subject, (error, results) => {
+				connection.query('SELECT jmeno FROM subjects WHERE id_subject = ?', subjectID, (error, results) => {
                  subjectName = results[0].jmeno
+
+				 connection.query('SELECT id_user FROM users WHERE username = ?', req.session.username, (error, results) => {
+					userID = results[0].name
+
 					res.render('enterManuallyForm',{subjectJmeno : subjectName,classNumber : classNumberr,stav : 'Log out' , name : req.session.username  , role : roleID,users: users, teacherName : req.session.username});
+
+				});	
+					
+
+
+
+
 
 				});	
 			});	
