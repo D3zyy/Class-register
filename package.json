@@ -15,8 +15,6 @@
     "node": "^19.6.0",
     "nodemon": "^2.0.20",
     "template": "^0.17.5"
-  },
-  "scripts": {
-    "start": "node app.js"
   }
+ 
 }
