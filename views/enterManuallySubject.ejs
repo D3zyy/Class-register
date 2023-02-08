@@ -21,14 +21,15 @@
     <div class="box">
     <form action="/teacher/enterManuallyForm"   method="post">
         <label style="font-size: large;" >Select subject :</label>
-        <select id="mySelect"  name="selectedOption" >
+        <select id="mySelect"  name="selectedSubject" >
             <% users.forEach((user) => { %>
-              <option style="font-size: large;" value="<%= user.id_class %>"><%= user.name %></option>
+              <option style="font-size: large;" value="<%= user.id_subject %>"><%= user.jmeno %></option>
             <% }); %>
           </select>
           
           </script>
       <br>
+      <input type="hidden" value="<%= clasIDD %>" name="selectedOption">
       <input   style="margin-top: 20px;" type="submit">
     </form>
     
