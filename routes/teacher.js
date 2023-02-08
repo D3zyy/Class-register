@@ -137,12 +137,8 @@ res.redirect("/");
 	connection.query('SELECT subjects.id_subject, subjects.jmeno from subject_times  inner join subjects on subject_times.id_subject = subjects.id_subject where id_class = ?', req.body.selectedOption,(error, results) => {
 		if (error) throw error;
 		const users = results;
-		const sql = `SELECT COUNT(*) as count FROM entries WHERE id_user = ? AND id_subject = ? AND id_class = ?`;
 		connection.query('SELECT jmeno,id_subject from subjects where id_class = ?', req.body.selectedOption,(error, results) =>{
 
-			connection.query('SELECT jmeno,id_subject from subjects where id_class = ?', req.body.selectedOption,(error, results) =>{
-
-			});
 			res.render('enterManuallySubject',{stav : 'Log out' , name : req.session.username  , role : roleID,users : users,clasIDD : req.body.selectedOption});
 		});
 		
