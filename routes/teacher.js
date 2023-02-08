@@ -15,7 +15,7 @@ const connection  = mysql.createConnection({
     
     connection.connect(function(err) {
       if (err) throw err;
-      console.log("Connected to the database!");
+    
     });
 
 
@@ -180,7 +180,7 @@ res.redirect("/");
 
    router.post("/enterManuallyForm", (req, res) => {
 	if (req.session.loggedin) {
-		console.log(req.body.selectedOption);
+	
 		const classID = req.body.selectedOption;
 		const subjectID = req.body.selectedSubject;
 		const sql = `SELECT COUNT(*) as count FROM entries WHERE id_user = ? AND id_subject = ? AND id_class = ?`;
@@ -197,11 +197,13 @@ res.redirect("/");
 				
 				connection.query('SELECT jmeno FROM subjects WHERE id_subject = ?', subjectID, (error, results) => {
                  subjectName = results[0].jmeno
-
+              console.log(req.session.username)
 				 connection.query('SELECT id_user FROM users WHERE username = ?', req.session.username, (error, results) => {
-					userID = results[0].name
+					userID = results[0].id_user
+			
 					connection.query(`SELECT COUNT(*) as count FROM entries WHERE id_user = ? AND id_subject = ? AND id_class = ?`, [userID, subjectID, classID], (error, result) => {
                           pocet = result[0].count + 1;
+						  console.log(userID + " " + subjectID + " " + classID);
 						  if (error) throw error;
 						res.render('enterManuallyForm',{taughtHours : pocet,subjectJmeno : subjectName,classNumber : classNumberr,stav : 'Log out' , name : req.session.username  , role : roleID,users: users, teacherName : req.session.username});
 					});
@@ -301,7 +303,7 @@ const data = [date,userID, subjectID, classID, topic, notes,lessonNumber];
 		  }
 		 
 		  const entryId = result.insertId;
-	     console.log(entryId);
+	     
 		 
 		 let selectedOptions = req.body.selectedOption;
     if (typeof selectedOptions === 'string') {
@@ -311,7 +313,7 @@ const data = [date,userID, subjectID, classID, topic, notes,lessonNumber];
 		
 
 		 
-         console.log(selectedOptions);
+         
 		 if(selectedOptions != null){
 
 		
