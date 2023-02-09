@@ -5,11 +5,11 @@ const router = express.Router();
 
 const mysql = require('mysql2');
 const connection  = mysql.createConnection({
-	host : "sql7.freesqldatabase.com",
-	user : "sql7596793",
-	password : "1NbVuH4GIa",
+	host : "sql.freedb.tech",
+	user : "freedb_Dezyy",
+	password : "%bVqsV@c59f8Q5$",
 	port : "3306",
-	database :  "sql7596793",
+	
 	
 	});
     
