@@ -4,6 +4,7 @@ const router = express.Router();
 
 
 const mysql = require('mysql2');
+const { exit } = require("process");
 const connection  = mysql.createConnection({
 	host : "sql7.freesqldatabase.com",
 	user : "sql7596793",
@@ -49,7 +50,9 @@ res.redirect("/");
 	
 	connection.query(query, values, (error, results) => {
 	  if (error) throw error;
-  
+	  if(results.length < 1){
+		res.redirect('enterManually');
+	  }
 	  // pokud jsou výsledky dotazu prázdné, nastavte hodnoty formuláře na "Neučí"
 	  let teacherName = "Neučí";
 	  let subjectName = "Neučí";
@@ -66,11 +69,8 @@ res.redirect("/");
 		subjectID = results[0].subjectID;
 		userID = results[0].userID;
 		classID = results[0].classID;
-	  } else {
-		res.redirect('enterManually');
-		
-		
-	  }
+	  } 
+	   
 	  const sql = `SELECT COUNT(*) as count FROM entries WHERE id_user = ? AND id_subject = ? AND id_class = ?`;
 		const values = [userID, subjectID, classID];
 		
