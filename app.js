@@ -151,7 +151,7 @@ app.get("/mainPage", (req, res) => {
 	
    });
 
-   app.listen(process.env.PORT ||22106, function () {
+   app.listen(process.env.PORT ||200, function () {
     console.log('listening');
   });
 
