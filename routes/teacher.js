@@ -18,7 +18,14 @@ const connection  = mysql.createConnection({
       if (err) throw err;
     
     });
-
+	router.post("/:id_entry/delete", (req, res) => {
+		const id = req.params.id_entry;
+	  
+		connection.query("DELETE FROM entries WHERE id_entry = ?", [id], function (error, results, fields) {
+		  if (error) throw error;
+		  
+		});
+	  });
 //Entries
 router.get("/entries", (req, res) => {
 	
@@ -28,13 +35,19 @@ router.get("/entries", (req, res) => {
 				
 		   res.redirect('/blockedAccess');
 		
-			}
-			connection.query('SELECT datum, id_class,id_subject FROM entries ', (error, results) => {
+			} else {
+
+			
+			connection.query('SELECT id_user from users where username = ? ' ,req.session.username,(error, results) =>{
+         
+			userID = results[0].id_user;
+
+			connection.query('SELECT datum,entries.id_entry, classes.name,subjects.jmeno FROM entries inner join classes on entries.id_class = classes.id_class inner join subjects on entries.id_subject = subjects.id_subject where id_user = ? ', userID,(error, results) => {
 				if (error) throw error;
 				if(results.length > 0){
 					var date = new Date(results[0].datum);
 					var formattedDate = date.toLocaleDateString();
-				 console.log(formattedDate);
+				
 				}
 				
 				// store the results in an array
@@ -44,7 +57,8 @@ router.get("/entries", (req, res) => {
 				res.render("entries", {stav : 'Log out' , name : req.session.username  , role : roleID,users: users, date : formattedDate});
 			  });
 
-
+			});
+		}
 });
     //Entry page
 router.get("/entry", (req, res) => {
