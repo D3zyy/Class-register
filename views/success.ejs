@@ -1,8 +1,120 @@
 <%-include("head")-%>
 <%-include("navigationGeneral")-%>
 
+<script>
+  // functions to set and get theme from session storage
+window.onload = setThemeFromSessionStorage;
+
+function setThemeFromSessionStorage() {
+  var theme = sessionStorage.getItem("theme");
+  if (theme === "light") {
+    setLightMode();
+  } else {
+    setDarkMode();
+  }
+}
+
+function setSessionStorage(name, value) {
+  sessionStorage.setItem(name, value);
+}
+
+function getSessionStorage(name) {
+  return sessionStorage.getItem(name);
+}
+
+// functions to toggle theme
+function toggleTheme() {
+  var body = document.querySelector("body");
+  var ul = document.querySelector("ul");
+  if (body.classList.contains("light-mode")) {
+    setSessionStorage("theme", "dark");
+    setDarkMode();
+  } else {
+    setSessionStorage("theme", "light");
+    setLightMode();
+  }
+}
+
+// functions to set light and dark mode
+function setLightMode() {
+  var body = document.querySelector("body");
+  var ul = document.querySelector("ul");
+  body.classList.remove("dark-mode");
+  body.classList.add("light-mode");
+  ul.classList.remove("dark-ul");
+  ul.classList.add("light-ul");
+}
+
+
+function setDarkMode() {
+  var body = document.querySelector("body");
+  var ul = document.querySelector("ul");
+  body.classList.remove("light-mode");
+  body.classList.add("dark-mode");
+  ul.classList.remove("light-ul");
+  ul.classList.add("dark-ul");
+}
+
+
+// call the function on page load
+setThemeFromSessionStorage();
+
+</script>
+<style>
+
+*{
+margin: 0px;
+padding: 0px;
+}
+
+
+body.light-mode {
+  background-color: #ffffff;
+  color: #000;
+}
+body.light-mode ul {
+  background-color: #5481c1;
+}
+body{
+  background-color: rgb(93, 87, 87);
+}
+li {
+    display: inline;
+}
+
+#login >{
+    text-align: center;
+}
+/* Add a black background color to the top navigation */
+ul {
+  text-align: center;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  text-align: center;
+  float: left;
+}
+
+
+a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+
+  text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+
+</style>
 <div class="alert success">
-    <p>Form has been successfully submitted!</p>
+    <p><%= text %></p>
   </div>
   
   <style>

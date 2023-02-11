@@ -28,11 +28,11 @@ function deleteEntry(id) {
       border: 1px solid black;
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
       position: absolute; top: 100px; left: 42%;
-      padding: 20px;
+      padding: 25px;
       border-radius: 10px;
     }
-    table {
-      margin: 0 auto;
+    th{
+        padding-left: 12px;
     }
   </style>
 
@@ -40,26 +40,23 @@ function deleteEntry(id) {
     <h2>Entries</h2>
     <table>
       <thead>
-        <tr>
-          <th> </th>
+       
           <th>DATE</th>
           <th>CLASS</th>
           <th>SUBJECT</th>
-        </tr>
+          
       </thead>
       <tbody >
         <% for (var i = 0; i < users.length; i++) { %>
           <tr>
-            <td>
-              <i class="fa fa-user"></i>
-            </td>
+           
             <td style="padding: 5px;">
               <%= date %>
             </td>
             <td>
               <%= users[i].name %>
             </td>
-            <td>
+            <td style="margin: 20px;">
                 <%= users[i].jmeno %>
             </td>
             <td>

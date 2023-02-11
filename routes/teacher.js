@@ -19,6 +19,53 @@ const connection  = mysql.createConnection({
     
     });
 
+	router.post("/:id_entry/edit", (req, res) => {
+		const id = req.params.id_entry;
+        taughtHours = req.body.taughtHours;
+        notes = req.body.notes;
+        topic = req.body.topic;
+        users = req.body.name;
+
+		
+		connection.query("DELETE   FROM absence WHERE id_entry = ?", id, function (error, results, fields){
+			console.log(id);
+		
+				let selectedOptions = req.body.selectedOption;
+				if (typeof selectedOptions === 'string') {
+					selectedOptions = [selectedOptions];
+				}
+				
+					
+			
+					 
+					 
+					 if(selectedOptions != null){
+			
+					console.log(selectedOptions);
+					  // Insert the selected options into the "absence" table
+					  for (let i = 0; i < selectedOptions.length; i++) {
+						
+						  const sql = "INSERT INTO absence(id_entry,id_user) VALUES(?,?)";
+						  const data = [id, selectedOptions[i]];
+						  connection.query(sql, data, (err, result) => {
+							if (err) {
+							  console.log(err);
+					  
+							  
+							}
+						  });
+					  }
+					}
+
+
+		connection.query("UPDATE entries SET lessonNumber = ?,topic = ?, notes = ? where id_entry = ?", [taughtHours,topic,notes,id], function (error, results, fields) {
+			res.render("success", {stav : 'Log out' , name : req.session.username  , role : roleID, text : 'Data has been successfully updated!'});	
+	
+		
+	});
+});
+	});
+
 	router.get("/:id_entry/edit", (req, res) => {
 		const id = req.params.id_entry;
 		
@@ -297,7 +344,7 @@ res.redirect("/");
   router.post("/success", (req, res) => {
   
 	if (req.session.loggedin) {
-	  res.render("success", {stav : 'Log out' , name : req.session.username  , role : roleID});	
+	  res.render("success", {stav : 'Log out' , name : req.session.username  , role : roleID ,text : 'Data has been successfully submitted'});	
 
 
      

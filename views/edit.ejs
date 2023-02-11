@@ -131,11 +131,11 @@ a {
 <div class="box">
     
 
-    <form name="myForm" id="entry"  action="success"   method="POST"  >
+    <form name="myForm" id="entry"  action="edit"   method="POST"  >
         <table>
             <th>Lesson number</th>
             <td>
-              <input type="text" value="<%= taughtHours %>">
+              <input type="text" value="<%= taughtHours %>" name="taughtHours">
              
             </td>
           </tr>
@@ -148,16 +148,11 @@ a {
           <tr>
             <th>Notes</th>
             <td>
-              <input type="text" name="notes" value="<%= notes %>">
+              <input  type="text" name="notes" value="<%= notes %>">
             </td>
           </tr>
-          <tr>
-            <td colspan="2">
-              <input type="submit" value="Update">
-            </td>
-          </tr>
-        </table>
-        <table>
+          
+        
             <tr>
               <th>Student</th>
               <th>Absence</th>
@@ -175,10 +170,16 @@ a {
                       }
                     }
                   %>
-                  <input type="checkbox" name="user" value="<%= allUsers[i].id_user %>" <%= isAbsent ? "checked" : "" %> />
+                  <input type="checkbox" name="selectedOption" value="<%= allUsers[i].id_user %>" <%= isAbsent ? "checked" : "" %> />
                 </td>
               </tr>
+              
             <% } %>
+            <tr>
+                <td colspan="2">
+                  <input type="submit" value="Update">
+                </td>
+              </tr>
           </table>
           
       </form> 
