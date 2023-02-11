@@ -19,7 +19,33 @@ const connection  = mysql.createConnection({
     
     });
 
+//Entries
+router.get("/entries", (req, res) => {
+	
+	if (!req.session.loggedin){
+		res.redirect("/");
+			} else	if(roleID === 1){
+				
+		   res.redirect('/blockedAccess');
+		
+			}
+			connection.query('SELECT datum, id_class,id_subject FROM entries ', (error, results) => {
+				if (error) throw error;
+				if(results.length > 0){
+					var date = new Date(results[0].datum);
+					var formattedDate = date.toLocaleDateString();
+				 console.log(formattedDate);
+				}
+				
+				// store the results in an array
+				const users = results;
+			
+				// render the HTML template and pass the array to the template
+				res.render("entries", {stav : 'Log out' , name : req.session.username  , role : roleID,users: users, date : formattedDate});
+			  });
 
+
+});
     //Entry page
 router.get("/entry", (req, res) => {
 
@@ -289,13 +315,14 @@ AND st.id_subject = (select id_subject from subjects where jmeno = ?)
 		userID = results[0].userID;
 		classID = results[0].classID;
 		var d = new Date();
-  var date = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
+		var date = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
+
 
 		// získejte aktuální čas
 	
 
 const data = [date,userID, subjectID, classID, topic, notes,lessonNumber];
-		const sql = `INSERT INTO entries (date,id_user, id_subject, id_class,  topic, notes,lessonNumber) VALUES (?,?, ?, ?, ?, ?,?)`;
+		const sql = `INSERT INTO entries (datum,id_user, id_subject, id_class,  topic, notes,lessonNumber) VALUES (?,?, ?, ?, ?, ?,?)`;
 		
 		connection.query(sql, data, (err, result) => {
 		  if (err) {
