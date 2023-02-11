@@ -35,10 +35,12 @@ function deleteEntry(id) {
         padding-left: 12px;
     }
   </style>
+  
 
 <div class="box">
     <h2>Entries</h2>
-    <table>
+    <input type="text" id="searchInput" placeholder="&#x1F50D; Search for entries" style="padding: 10px; font-size: 16px; border-radius: 10px; border: 1px solid gray;">
+    <table id="entriesTable" >
       <thead>
        
           <th>DATE</th>
@@ -73,5 +75,49 @@ function deleteEntry(id) {
       </tbody>
     </table>
   </div>
+  <script>
+    document.getElementById("searchInput").addEventListener("keyup", searchFunction);
 
+    function searchFunction() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("searchInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("entriesTable");
+      tr = table.getElementsByTagName("tr");
+
+      // Zobrazení hlavičky
+      tr[0].style.display = "";
+
+      // Procházení všech řádků tabulky
+      for (i = 1; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td");
+        var match = false;
+        // Procházení všech sloupců v řádku
+        for (var j = 0; j < td.length; j++) {
+          txtValue = td[j].textContent || td[j].innerText;
+          // Pokud obsahuje hledaný řetězec, zobraz řádek
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            match = true;
+            break;
+          }
+        }
+        if (match) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  </script>
+  <style>
+    input[type=text] {
+      width: 200px;
+      padding: 12px 20px;
+      margin: 8px 0;
+      box-sizing: border-box;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    </style>
 <%-include("footer")-%>

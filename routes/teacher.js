@@ -27,7 +27,7 @@ const connection  = mysql.createConnection({
 
 		
 		connection.query("DELETE FROM absence WHERE id_entry = ?", id, function (error, results, fields){
-			console.log(id);
+		
 		
 				let selectedOptions = req.body.selectedOption;
 				if (typeof selectedOptions === 'string') {
