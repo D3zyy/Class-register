@@ -58,7 +58,7 @@ router.get("/entries", (req, res) => {
 			  });
 
 			});
-		}
+			}
 });
     //Entry page
 router.get("/entry", (req, res) => {
