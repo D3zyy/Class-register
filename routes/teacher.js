@@ -6,14 +6,13 @@ const router = express.Router();
 const mysql = require('mysql2');
 const { exit } = require("process");
 const connection  = mysql.createConnection({
-	host : "localhost",
-	user : "root",
-	password : "password",
+	host : "sql8.freemysqlhosting.net",
+	user : "sql8597540",
+	password : "JUmqiUcLHW",
 	port : "3306",
-	database :  "tridnice",
-	
-	});
-    
+	database :  "sql8597540",
+
+});
     connection.connect(function(err) {
       if (err) throw err;
     
@@ -27,7 +26,7 @@ const connection  = mysql.createConnection({
         users = req.body.name;
 
 		
-		connection.query("DELETE   FROM absence WHERE id_entry = ?", id, function (error, results, fields){
+		connection.query("DELETE FROM absence WHERE id_entry = ?", id, function (error, results, fields){
 			console.log(id);
 		
 				let selectedOptions = req.body.selectedOption;
@@ -41,7 +40,7 @@ const connection  = mysql.createConnection({
 					 
 					 if(selectedOptions != null){
 			
-					console.log(selectedOptions);
+					
 					  // Insert the selected options into the "absence" table
 					  for (let i = 0; i < selectedOptions.length; i++) {
 						
