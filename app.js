@@ -29,11 +29,11 @@ app.use("/teacher", teacher,);
 
 //Connect to database
 const connection  = mysql.createConnection({
-host : "sql7.freesqldatabase.com",
-user : "sql7596793",
-password : "1NbVuH4GIa",
-port : "3306",
-database :  "sql7596793",
+	host : "localhost",
+	user : "root",
+	password : "password",
+	port : "3306",
+	database :  "tridnice",
 
 });
 

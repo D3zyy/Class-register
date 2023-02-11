@@ -11,7 +11,7 @@ function deleteEntry(id) {
       type: 'POST',
       success: function (result) {
         console.log("Record with id " + id + " was deleted successfully");
-        location.reload();
+        location.reload(true);
       }
     });
   }
@@ -63,12 +63,12 @@ function deleteEntry(id) {
                 <%= users[i].jmeno %>
             </td>
             <td>
-                <form action="/teacher/<%= users[i].id_entry %>/modify" method="get">
-                    <input type="submit" value="MODIFY">
+                <form action="/teacher/<%= users[i].id_entry %>/edit" method="get">
+                    <input type="submit" value="Edit">
                 </form>
             </td>
             <td>
-                <input type="button" value="DELETE" onclick="deleteEntry('<%= users[i].id_entry %>')">
+                <input type="button" value="Delete" onclick="deleteEntry('<%= users[i].id_entry %>')">
 
             </td>
           </tr>

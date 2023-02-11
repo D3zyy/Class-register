@@ -6,11 +6,11 @@ const router = express.Router();
 const mysql = require('mysql2');
 const { exit } = require("process");
 const connection  = mysql.createConnection({
-	host : "sql7.freesqldatabase.com",
-	user : "sql7596793",
-	password : "1NbVuH4GIa",
+	host : "localhost",
+	user : "root",
+	password : "password",
 	port : "3306",
-	database :  "sql7596793",
+	database :  "tridnice",
 	
 	});
     
@@ -18,13 +18,36 @@ const connection  = mysql.createConnection({
       if (err) throw err;
     
     });
+
+	router.get("/:id_entry/edit", (req, res) => {
+		const id = req.params.id_entry;
+		
+		connection.query("SELECT users.id_user, users.firstName, users.lastName FROM users INNER JOIN absence ON users.id_user = absence.id_user WHERE absence.id_entry = ?", [id], function (error, results, fields) {
+			users = results;
+			connection.query("SELECT id_user,firstName,lastName from users where id_class = (select id_class from entries where id_entry = ?)", [id], function (error, results, fields) {
+            allUsers = results;
+			});
+
+
+
+  connection.query("SELECT lessonNumber,topic,notes FROM entries WHERE id_entry = ?", [id], function (error, results, fields) {
+	
+	res.render("edit", {stav : 'Log out' , name : req.session.username  , role : roleID,users: users, allUsers : allUsers,taughtHours : results[0].lessonNumber, topic : results[0].topic, notes : results[0].notes});
+  });
+		});
+
+	});
+
 	router.post("/:id_entry/delete", (req, res) => {
 		const id = req.params.id_entry;
 	  
-		connection.query("DELETE FROM entries WHERE id_entry = ?", [id], function (error, results, fields) {
-		  if (error) throw error;
-		  
+		connection.query("DELETE FROM absence WHERE id_entry = ?", [id], function (error, results, fields) {
+			connection.query("DELETE FROM entries WHERE id_entry = ?", [id], function (error, results, fields) {
+				if (error) throw error;
+				
+			  });
 		});
+		
 	  });
 //Entries
 router.get("/entries", (req, res) => {
@@ -46,14 +69,10 @@ router.get("/entries", (req, res) => {
 				if (error) throw error;
 				if(results.length > 0){
 					var date = new Date(results[0].datum);
-					var formattedDate = date.toLocaleDateString();
-				
+					var formattedDate = date.toLocaleDateString();	
 				}
-				
-				// store the results in an array
 				const users = results;
-			
-				// render the HTML template and pass the array to the template
+
 				res.render("entries", {stav : 'Log out' , name : req.session.username  , role : roleID,users: users, date : formattedDate});
 			  });
 
