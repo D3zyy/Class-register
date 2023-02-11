@@ -26,13 +26,11 @@ router.get("/entry", (req, res) => {
 
 	if (!req.session.loggedin){
 res.redirect("/");
-	}
-
-	if(roleID === 1){
+	} else	if(roleID === 1){
 		
    res.redirect('/blockedAccess');
 
-	};
+	}
 
 	// získejte aktuální čas
 	const currentTime = new Date();
@@ -46,13 +44,16 @@ res.redirect("/");
 	inner join classes on st.id_class = classes.id_class
 	WHERE st.id_user = (SELECT id_user FROM users WHERE username = ?) AND ? BETWEEN st.start_time AND st.end_time AND st.day = DAYNAME(NOW())
 	`;
-	const values = [username, currentTime];
+	const values = [username,currentTime];
 	
 	connection.query(query, values, (error, results) => {
 	  if (error) throw error;
-	  if(results.length < 1){
+  if(results.length < 1){
 		res.redirect('enterManually');
-	  }
+		res.end();
+	  } else {
+
+	 
 	  // pokud jsou výsledky dotazu prázdné, nastavte hodnoty formuláře na "Neučí"
 	  let teacherName = "Neučí";
 	  let subjectName = "Neučí";
@@ -100,7 +101,8 @@ res.redirect("/");
 				taughtHours : logCount , users : users
 			  });		
 		  });	
-		});	  
+		});	
+	}  
 	});
   });
   router.get("/enterManually", (req, res) => {
@@ -197,13 +199,13 @@ res.redirect("/");
 				
 				connection.query('SELECT jmeno FROM subjects WHERE id_subject = ?', subjectID, (error, results) => {
                  subjectName = results[0].jmeno
-              console.log(req.session.username)
+             
 				 connection.query('SELECT id_user FROM users WHERE username = ?', req.session.username, (error, results) => {
 					userID = results[0].id_user
 			
 					connection.query(`SELECT COUNT(*) as count FROM entries WHERE id_user = ? AND id_subject = ? AND id_class = ?`, [userID, subjectID, classID], (error, result) => {
                           pocet = result[0].count + 1;
-						  console.log(userID + " " + subjectID + " " + classID);
+						
 						  if (error) throw error;
 						res.render('enterManuallyForm',{taughtHours : pocet,subjectJmeno : subjectName,classNumber : classNumberr,stav : 'Log out' , name : req.session.username  , role : roleID,users: users, teacherName : req.session.username});
 					});
@@ -290,7 +292,7 @@ AND st.id_subject = (select id_subject from subjects where jmeno = ?)
   var date = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
 
 		// získejte aktuální čas
-		console.log(subject,classNumber,taughtHours);
+	
 
 const data = [date,userID, subjectID, classID, topic, notes,lessonNumber];
 		const sql = `INSERT INTO entries (date,id_user, id_subject, id_class,  topic, notes,lessonNumber) VALUES (?,?, ?, ?, ?, ?,?)`;

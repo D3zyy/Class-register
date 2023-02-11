@@ -74,12 +74,12 @@ app.post('/', function(request, response, next) {
 			} else {
 				response.redirect('/');
 			}			
-			response.end();
+		
 		});
 		
 	} else {
 		response.send('Please enter Username and Password!');
-		response.end();
+
 	}
 	
 });
