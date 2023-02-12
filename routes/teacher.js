@@ -19,6 +19,15 @@ const connection  = mysql.createConnection({
     });
 
 	router.post("/:id_entry/edit", (req, res) => {
+		if (!req.session.loggedin){
+			res.redirect("/");
+				} else	if(roleID === 1){
+					
+			   res.redirect('/blockedAccess');
+			
+				} else {
+
+		
 		const id = req.params.id_entry;
         taughtHours = req.body.taughtHours;
         notes = req.body.notes;
@@ -58,14 +67,24 @@ const connection  = mysql.createConnection({
 
 
 		connection.query("UPDATE entries SET lessonNumber = ?,topic = ?, notes = ? where id_entry = ?", [taughtHours,topic,notes,id], function (error, results, fields) {
-			res.render("success", {stav : 'Log out' , name : req.session.username  , role : roleID, text : 'Data has been successfully updated!'});	
+			res.render("success", {user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID, text : 'Data has been successfully updated!'});	
 	
 		
-	});
-});
+			});
+		});
+		}
 	});
 
 	router.get("/:id_entry/edit", (req, res) => {
+		if (!req.session.loggedin){
+			res.redirect("/");
+				} else	if(roleID === 1){
+					
+			   res.redirect('/blockedAccess');
+			
+				} else {
+
+				
 		const id = req.params.id_entry;
 		
 		connection.query("SELECT users.id_user, users.firstName, users.lastName FROM users INNER JOIN absence ON users.id_user = absence.id_user WHERE absence.id_entry = ?", [id], function (error, results, fields) {
@@ -78,13 +97,24 @@ const connection  = mysql.createConnection({
 
   connection.query("SELECT lessonNumber,topic,notes FROM entries WHERE id_entry = ?", [id], function (error, results, fields) {
 	
-	res.render("edit", {stav : 'Log out' , name : req.session.username  , role : roleID,users: users, allUsers : allUsers,taughtHours : results[0].lessonNumber, topic : results[0].topic, notes : results[0].notes});
+	res.render("edit", {user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID,users: users, allUsers : allUsers,taughtHours : results[0].lessonNumber, topic : results[0].topic, notes : results[0].notes});
   });
 		});
-
+	}
 	});
 
 	router.post("/:id_entry/delete", (req, res) => {
+
+		if (!req.session.loggedin){
+			res.redirect("/");
+				} else	if(roleID === 1){
+					
+			   res.redirect('/blockedAccess');
+			
+				} else {
+
+				
+
 		const id = req.params.id_entry;
 	  
 		connection.query("DELETE FROM absence WHERE id_entry = ?", [id], function (error, results, fields) {
@@ -93,9 +123,10 @@ const connection  = mysql.createConnection({
 				
 			  });
 		});
-		
+	}
 	  });
 //Entries
+let userID;
 router.get("/entries", (req, res) => {
 	
 	if (!req.session.loggedin){
@@ -111,7 +142,7 @@ router.get("/entries", (req, res) => {
          
 			userID = results[0].id_user;
 
-			connection.query('SELECT datum,entries.id_entry, classes.name,subjects.jmeno FROM entries inner join classes on entries.id_class = classes.id_class inner join subjects on entries.id_subject = subjects.id_subject where id_user = ? ', userID,(error, results) => {
+			connection.query('SELECT datum,entries.lessonNumber,entries.id_entry, classes.name,subjects.jmeno FROM entries inner join classes on entries.id_class = classes.id_class inner join subjects on entries.id_subject = subjects.id_subject where id_user = ? ', userID,(error, results) => {
 				if (error) throw error;
 				if(results.length > 0){
 					var date = new Date(results[0].datum);
@@ -119,7 +150,7 @@ router.get("/entries", (req, res) => {
 				}
 				const users = results;
 
-				res.render("entries", {stav : 'Log out' , name : req.session.username  , role : roleID,users: users, date : formattedDate});
+				res.render("entries", {user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID,users: users, date : formattedDate});
 			  });
 
 			});
@@ -135,7 +166,9 @@ res.redirect("/");
 		
    res.redirect('/blockedAccess');
 
-	}
+	} else {
+
+	
 
 	// získejte aktuální čas
 	const currentTime = new Date();
@@ -200,7 +233,7 @@ res.redirect("/");
 
 			
 			
-			res.render("entry", {teacherName: teacherName, 
+			res.render("entry", {user_id : userID,eacherName: teacherName, 
 				subject: subjectName,
 				stav : 'Log out' , name : req.session.username  , role : global.roleID, classNumber : classname,
 				taughtHours : logCount , users : users
@@ -208,10 +241,18 @@ res.redirect("/");
 		  });	
 		});	
 	}  
+
 	});
+}
   });
   router.get("/enterManually", (req, res) => {
-	if (req.session.loggedin) {
+	if (!req.session.loggedin){
+		res.redirect("/");
+			} else	if(roleID === 1){
+				
+		   res.redirect('/blockedAccess');
+		
+			} else {
 		
 	connection.query('SELECT name,id_class from classes', (error, results) => {
 		if (error) throw error;
@@ -222,7 +263,7 @@ res.redirect("/");
 
 
 
-		res.render('enterManually',{stav : 'Log out' , name : req.session.username  , role : roleID,users : users});
+		res.render('enterManually',{user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID,users : users});
 
 		
 		
@@ -230,16 +271,19 @@ res.redirect("/");
 	  });	
 
 	  	
-	} else { 
-		  
-		res.redirect('/');
-		}
-	  
+	
+	} 
 	
    });
 
    router.post("/enterManuallySubject", (req, res) => {
-	if (req.session.loggedin) {
+	if (!req.session.loggedin){
+		res.redirect("/");
+			} else	if(roleID === 1){
+				
+		   res.redirect('/blockedAccess');
+		
+			} else {
 		
 	connection.query('SELECT subjects.id_subject, subjects.jmeno from subject_times  inner join subjects on subject_times.id_subject = subjects.id_subject where id_class = ?', req.body.selectedOption,(error, results) => {
 		if (error) throw error;
@@ -254,7 +298,7 @@ res.redirect("/");
 				
 				
 				
-				res.render('enterManuallySubject',{stav : 'Log out' , name : req.session.username  , role : roleID,users : users,clasIDD : req.body.selectedOption});
+				res.render('enterManuallySubject',{user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID,users : users,clasIDD : req.body.selectedOption});
 
 			
 			
@@ -276,17 +320,20 @@ res.redirect("/");
 	  });	
 
 	  	
-	} else { 
-		  
-		res.redirect('/');
-		}
+	} 
 	  
 	
    });
 
 
    router.post("/enterManuallyForm", (req, res) => {
-	if (req.session.loggedin) {
+	if (!req.session.loggedin){
+		res.redirect("/");
+			} else	if(roleID === 1){
+				
+		   res.redirect('/blockedAccess');
+		
+			} else {
 	
 		const classID = req.body.selectedOption;
 		const subjectID = req.body.selectedSubject;
@@ -312,7 +359,7 @@ res.redirect("/");
                           pocet = result[0].count + 1;
 						
 						  if (error) throw error;
-						res.render('enterManuallyForm',{taughtHours : pocet,subjectJmeno : subjectName,classNumber : classNumberr,stav : 'Log out' , name : req.session.username  , role : roleID,users: users, teacherName : req.session.username});
+						res.render('enterManuallyForm',{user_id : userID,taughtHours : pocet,subjectJmeno : subjectName,classNumber : classNumberr,stav : 'Log out' , name : req.session.username  , role : roleID,users: users, teacherName : req.session.username});
 					});
 					
 
@@ -332,18 +379,13 @@ res.redirect("/");
 		  });	
 
 	  	
-	} else { 
-		  
-		res.redirect('/');
-		}
-	  
-	
+	} 
    });
   //Page where we post the form
   router.post("/success", (req, res) => {
   
 	if (req.session.loggedin) {
-	  res.render("success", {stav : 'Log out' , name : req.session.username  , role : roleID ,text : 'Data has been successfully submitted'});	
+	  res.render("success", {user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID ,text : 'Data has been successfully submitted'});	
 
 
      

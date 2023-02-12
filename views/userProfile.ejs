@@ -1,0 +1,61 @@
+<%-include("head")-%>
+<%-include("../views/navigationGeneral")-%>
+
+<style>
+    .box {
+      border: 1px solid black;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      position: absolute; top: 100px; left: 42%;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    table {
+      margin: 0 auto;
+    }
+  </style>
+
+
+<div class="box">
+    <h2><i class="fa fa-user"></i></h2>
+    <table>
+      <tbody >
+   
+          <tr>  
+            <th>Name and surname</th>
+            <td style="padding: 5px;">
+              <%- firstName -%> <%- lastName -%>
+            </td>
+          </tr>
+          <tr>
+            <th>Username</th>
+            <td>
+                <%- username -%> 
+              </td>
+          </tr>
+          <tr>
+            <tr>
+                <th>Role</th>
+                <td>
+                    <%- roleName -%> 
+                  </td>
+              </tr>
+              <tr>
+            <th>Class</th>
+            <td>
+                <%- className -%> 
+              </td>
+          </tr>
+          <tr>
+            <th>Heslo</th>
+            <td>
+                <a style="text-decoration: underline; color: lightslategray;" href="/user/changePassword/<%- user_id -%>">change password..</a>
+              </td>
+          </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+
+
+<%-include("footer")-%>

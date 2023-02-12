@@ -78,7 +78,7 @@ app.post('/', function(request, response, next) {
 		});
 		
 	} else {
-		response.send('Please enter Username and Password!');
+		
 
 	}
 	
@@ -87,7 +87,7 @@ app.post('/', function(request, response, next) {
 
   
 app.get("/", (req, res) => {
-	req.session.loggedin = false
+	    req.session.loggedin = false
 		req.session.username = null;
 
    
@@ -101,35 +101,81 @@ app.get("/", (req, res) => {
 
 
 
-	
+	let userID;
 //Main page after successfully loged in 
 app.get("/mainPage", (req, res) => {
-  
-  if (req.session.loggedin) {
-    res.render("mainPage", {stav : 'Log out' , name : req.session.username  , role : roleID});	
 	
+	   
+  if (req.session.loggedin) {
+	connection.query('SELECT id_user from users where username = ? ' ,req.session.username,(error, results) =>{
+         
+		userID = results[0].id_user;
+    res.render("mainPage", {user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID});	
+});
 	} else { 
 		
     res.redirect('/');
 	}
-  
+    
  });
  app.get("/blockedAccess", (req, res) => {
 	if(req.session.loggedin === true){
-		res.render("blockedAccess",{stav : 'Log out' , name : req.session.username  , role : roleID})
+		res.render("blockedAccess",{user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID})
 	} else{
       res.redirect("/");
 	};
 	
 });
+app.get("/user/:id_user", (req, res) => {
+		 
+
+
+	if(req.session.loggedin === true && req.params.id_user == userID || req.session.loggedin === true && roleID === 3 ){
+		
+		connection.query('SELECT users.username as username, users.firstName as firstName,users.lastName as lastName, classes.name as className,roles.name as role from users inner join roles on users.id_role = roles.id_role inner join classes on users.id_class = classes.id_class  where users.id_user = ? ' ,req.params.id_user,(error, results) =>{
+	  if(results.length > 0) {
+
+	
+			firstName = results[0].firstName;
+			lastName = results[0].lastName;
+			className = results[0].className;
+			username = results[0].username;
+			roleName = results[0].role;
+
+		res.render("userProfile",{role : roleName,username : username,user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID,firstName : firstName,lastName : lastName,className : className})
+	}
+	});
+	
+	} else if(req.params.id_user != userID){
+		res.redirect('/blockedAccess');
+		
+	}
+	 else{
+      res.redirect("/");
+	
+	};
+
+
+});
+
+app.get("/user/changePassword/:id_user", (req, res) => {
+
+
+
+	res.render("changePassword",{user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID});
+
+});
+
  app.get("/manageClasses", (req, res) => {
   
 	if (req.session.loggedin )  {
 		if(roleID === 2 || roleID === 1){
 			
-       res.redirect("blockedAccess");
+			res.render("blockedAccess",{user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID})
 
-		};
+		} else {
+
+		
 		connection.query('SELECT firstName, lastName, id_user FROM users WHERE id_role = 2', (error, results) => {
 			if (error) throw error;
 		
@@ -137,11 +183,11 @@ app.get("/mainPage", (req, res) => {
 			const users = results;
 		
 			// render the HTML template and pass the array to the template
-			res.render("manageClasses", {stav : 'Log out' , name : req.session.username  , role : roleID,users: users});
+			res.render("manageClasses", {user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID,users: users});
 		  });
 
 
-		
+		}
 
 
 	  } else { 
