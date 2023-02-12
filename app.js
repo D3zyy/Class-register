@@ -142,7 +142,14 @@ app.get("/user/:id_user", (req, res) => {
 			username = results[0].username;
 			roleName = results[0].role;
 
-		res.render("userProfile",{role : roleName,username : username,user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID,firstName : firstName,lastName : lastName,className : className})
+			connection.query(' SELECT id_role from users where id_user = ?' ,req.params.id_user,(error, results) =>{
+                
+				
+				res.render("userProfile",{roleColor : results[0].id_role,roleName : roleName,username : username,user_id : userID,specificUserID : req.params.id_user,stav : 'Log out' , name : req.session.username  , role : roleID,firstName : firstName,lastName : lastName,className : className})
+
+			});
+
+		
 	}
 	});
 	
@@ -171,7 +178,10 @@ app.post("/user/changePassword/:id_user", (req, res) => {
 	connection.query('UPDATE users set password = ? where id_user = ? ' ,[password, idd],(error, results) => {
 		console.log(password);
 		console.log(idd);
+		
+		
 		res.render("success", {user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID, text : 'Password was succcessfully updated!'});	
+	req.session.loggedin = false;
 	});
 });
 

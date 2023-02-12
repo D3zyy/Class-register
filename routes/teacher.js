@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-
+const csv = require("fast-csv");
+const fs = require("fs");
 
 
 const mysql = require('mysql2');
@@ -126,6 +127,51 @@ const connection  = mysql.createConnection({
 	}
 	  });
 //Entries
+router.get("/downland", (req, res) => {
+
+
+
+	res.render("downland", {user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID});	
+
+});
+router.post("/download", (req, res) => {
+	connection.query(
+	  'SELECT entries.datum,classes.name,subjects.jmeno,entries.topic,entries.notes,entries.lessonNumber from entries inner join classes on entries.id_class = classes.id_class inner join subjects on entries.id_subject = subjects.id_subject  where  entries.datum BETWEEN ? AND ? ',
+	  [req.body.od, req.body.do],
+	  (error, results) => {
+		if (error) {
+		  console.error(error);
+		  return;
+		}
+  
+		// Úprava datumu
+		for (let i = 0; i < results.length; i++) {
+		  var date = new Date(results[i].datum);
+		  var formattedDate = date.toLocaleDateString();
+		  results[i].datum = formattedDate;
+		}
+  
+		const fileStream = fs.createWriteStream("data.csv");
+  
+		csv
+		  .write(results, { headers: true })
+		  .pipe(fileStream)
+		  .on("finish", () => {
+
+  
+			// Nastavení hlaviček souboru pro stahování
+			res.setHeader("Content-Type", "text/csv");
+			res.setHeader(
+			  "Content-Disposition",
+			  `attachment; filename=ZÁZNAMY-${req.body.od}-${req.body.do}.csv`
+			);
+  
+			// Vrácení souboru jako odpovědi na požadavek
+			fs.createReadStream("data.csv").pipe(res);
+		  });
+	  }
+	);
+  });
 let userID;
 router.get("/entries", (req, res) => {
 	

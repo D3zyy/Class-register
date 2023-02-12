@@ -13,7 +13,25 @@
       margin: 0 auto;
     }
   </style>
-
+<% if (roleColor=== 2) { %>
+  <style>
+    #role {
+      color: rgb(220, 220, 0);
+    }
+  </style>
+<% } else if (roleColor === 3) { %>
+  <style>
+    #role {
+      color: red;
+    }
+  </style>
+<% } else if (roleColor === 1) { %>
+  <style>
+    #role {
+      color: green;
+    }
+  </style>
+<% } %>
 
 <div class="box">
     <h2><i class="fa fa-user"></i></h2>
@@ -23,7 +41,7 @@
           <tr>  
             <th>Name and surname</th>
             <td style="padding: 5px;">
-              <%- firstName -%> <%- lastName -%>
+           <span style="font-style: italic;" ><%- firstName -%> <%- lastName -%></span>   
             </td>
           </tr>
           <tr>
@@ -35,22 +53,25 @@
           <tr>
             <tr>
                 <th>Role</th>
-                <td>
-                    <%- roleName -%> 
+                  <td id="role">
+                    <span style="font-style: italic;">   <%- roleName -%>   </span>
+                   
                   </td>
               </tr>
               <tr>
             <th>Class</th>
             <td>
-                <%- className -%> 
+            <span style="font-style: italic;"> <%- className -%> </span>    
               </td>
           </tr>
+          <% if (user_id == specificUserID) { %>
           <tr>
             <th>Heslo</th>
             <td>
                 <a style="text-decoration: underline; color: lightslategray;" href="/user/changePassword/<%- user_id -%>">change password..</a>
               </td>
           </tr>
+          <% } %>
       </tbody>
     </table>
   </div>
