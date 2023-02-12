@@ -136,14 +136,21 @@ router.get("/downland", (req, res) => {
 });
 router.post("/download", (req, res) => {
 	connection.query(
-	  'SELECT entries.datum,classes.name,subjects.jmeno,entries.topic,entries.notes,entries.lessonNumber from entries inner join classes on entries.id_class = classes.id_class inner join subjects on entries.id_subject = subjects.id_subject  where  entries.datum BETWEEN ? AND ? ',
+	  `SELECT entries.datum, classes.name, subjects.jmeno, entries.topic, entries.notes, entries.lessonNumber, 
+			 users.firstName, users.lastName 
+	  FROM entries
+	  INNER JOIN classes ON entries.id_class = classes.id_class 
+	  INNER JOIN subjects ON entries.id_subject = subjects.id_subject 
+	  INNER JOIN absence ON absence.id_entry = entries.id_entry 
+	  INNER JOIN users ON absence.id_user = users.id_user 
+	  WHERE entries.datum BETWEEN ? AND ?`,
 	  [req.body.od, req.body.do],
 	  (error, results) => {
 		if (error) {
 		  console.error(error);
 		  return;
 		}
-  
+  console.log(results);
 		// Úprava datumu
 		for (let i = 0; i < results.length; i++) {
 		  var date = new Date(results[i].datum);
@@ -157,13 +164,13 @@ router.post("/download", (req, res) => {
 		  .write(results, { headers: true })
 		  .pipe(fileStream)
 		  .on("finish", () => {
-
+			console.log("Data byla úspěšně zapsána do souboru.");
   
 			// Nastavení hlaviček souboru pro stahování
 			res.setHeader("Content-Type", "text/csv");
 			res.setHeader(
 			  "Content-Disposition",
-			  `attachment; filename=ZÁZNAMY-${req.body.od}-${req.body.do}.csv`
+			  `attachment; filename=data-${req.body.od}-${req.body.do}.csv`
 			);
   
 			// Vrácení souboru jako odpovědi na požadavek

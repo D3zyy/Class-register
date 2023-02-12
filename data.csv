@@ -1,3 +1,3 @@
-datum,name,jmeno,topic,notes,lessonNumber
-2/12/2023,C3c,Matematika,,,1
-2/12/2023,C3b,Tělesná výchova,Rovnice,pepa hodný člověk,1
+datum,name,jmeno,topic,notes,lessonNumber,firstName,lastName
+2/12/2023,C3c,Matematika,Rovnice,Pepa pochvala,1,Michal,Doležel
+2/12/2023,C3c,Matematika,Rovnice,Pepa pochvala,1,Pepa,Novák
