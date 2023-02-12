@@ -10,7 +10,7 @@ function deleteEntry(id) {
       url: '/teacher/' + id + '/delete',
       type: 'POST',
       success: function (result) {
-        console.log("Record with id " + id + " was deleted successfully");
+        
         location.reload(true);
       }
     });

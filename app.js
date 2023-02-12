@@ -160,10 +160,19 @@ app.get("/user/:id_user", (req, res) => {
 
 app.get("/user/changePassword/:id_user", (req, res) => {
 
-
-
 	res.render("changePassword",{user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID});
 
+});
+
+app.post("/user/changePassword/:id_user", (req, res) => {
+	idd = req.params.id_user;
+	password = req.body.password;
+
+	connection.query('UPDATE users set password = ? where id_user = ? ' ,[password, idd],(error, results) => {
+		console.log(password);
+		console.log(idd);
+		res.render("success", {user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID, text : 'Password was succcessfully updated!'});	
+	});
 });
 
  app.get("/manageClasses", (req, res) => {
