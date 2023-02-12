@@ -136,8 +136,8 @@ router.get("/downland", (req, res) => {
 });
 router.post("/download", (req, res) => {
 	connection.query(
-	  `SELECT entries.datum, classes.name, subjects.jmeno, entries.topic, entries.notes, entries.lessonNumber, 
-			 users.firstName, users.lastName 
+	  `SELECT entries.datum , classes.name as Třída, subjects.jmeno as Předmět, entries.topic as Téma, entries.notes as Poznámky, entries.lessonNumber as ČísloHodinyVRoce, 
+			 users.firstName as Jméno, users.lastName as Příjmení 
 	  FROM entries
 	  INNER JOIN classes ON entries.id_class = classes.id_class 
 	  INNER JOIN subjects ON entries.id_subject = subjects.id_subject 
@@ -150,7 +150,7 @@ router.post("/download", (req, res) => {
 		  console.error(error);
 		  return;
 		}
-  console.log(results);
+
 		// Úprava datumu
 		for (let i = 0; i < results.length; i++) {
 		  var date = new Date(results[i].datum);
@@ -164,7 +164,7 @@ router.post("/download", (req, res) => {
 		  .write(results, { headers: true })
 		  .pipe(fileStream)
 		  .on("finish", () => {
-			console.log("Data byla úspěšně zapsána do souboru.");
+	
   
 			// Nastavení hlaviček souboru pro stahování
 			res.setHeader("Content-Type", "text/csv");
