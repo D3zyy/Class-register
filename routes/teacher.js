@@ -312,7 +312,7 @@ res.redirect("/");
 
 		const users = results;
 
-
+		hasClass = results[0].id_class;
 
 
 
