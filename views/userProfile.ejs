@@ -65,7 +65,22 @@
               <a style="text-decoration: underline; font-style: italic; color: lightslategray;" href="/class/<%- class_id -%>"><%- className -%></a> 
               </td>
           </tr>
-          <% } %>
+          <% } else if (class_id != null && roleColor === 1 || class_id != null  && roleColor === 3 ) { %>
+
+        
+            <tr>
+              <th>Třída</th>
+              <td>
+                <%if (role === 1) { %> 
+                <%- className -%>
+                <% }  else  {%>
+                  <a style="text-decoration: underline; font-style: italic; color: lightslategray;" href="/class/<%- class_id -%>"><%- className -%></a> 
+                  <% } %>
+                </td>
+            </tr>
+
+            <% } %>
+
           <% if (user_id == specificUserID) { %>
           <tr>
             <th>Heslo</th>

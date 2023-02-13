@@ -135,7 +135,7 @@ app.get("/user/:id_user", (req, res) => {
 
 	if(req.session.loggedin === true && req.params.id_user == userID || req.session.loggedin === true && roleID === 3 ){
 		
-		connection.query('SELECT users.username as username, users.firstName as firstName,users.lastName as lastName, classes.name as className,roles.name as role from users inner join roles on users.id_role = roles.id_role inner join classes on users.id_class = classes.id_class  where users.id_user = ? ' ,req.params.id_user,(error, results) =>{
+		connection.query('SELECT classes.id_class as classID, users.username as username, users.firstName as firstName,users.lastName as lastName, classes.name as className,roles.name as role from users inner join roles on users.id_role = roles.id_role inner join classes on users.id_class = classes.id_class  where users.id_user = ? ' ,req.params.id_user,(error, results) =>{
 	  if(results.length > 0) {
 
 	
@@ -144,11 +144,14 @@ app.get("/user/:id_user", (req, res) => {
 			className = results[0].className;
 			username = results[0].username;
 			roleName = results[0].role;
+            hasClass = results[0].classID;
+			
 
-			connection.query(' SELECT id_role from users where id_user = ?' ,req.params.id_user,(error, results) =>{
-                
+
+			connection.query('SELECT id_role from users where id_user = ?' ,req.params.id_user,(error, results) =>{
+                idRole = results[0].id_role;
 				
-				res.render("userProfile",{roleColor : results[0].id_role,roleName : roleName,username : username,user_id : userID,specificUserID : req.params.id_user,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,firstName : firstName,lastName : lastName,className : className,class_id : hasClass})
+				res.render("userProfile",{roleColor : idRole,roleName : roleName,username : username,user_id : userID,specificUserID : req.params.id_user,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,firstName : firstName,lastName : lastName,className : className,class_id : hasClass})
 
 			});
 
