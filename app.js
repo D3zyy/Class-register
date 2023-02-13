@@ -9,7 +9,7 @@ const session = require('express-session');
 const cookieParser = require("cookie-parser");
 const { query, Router } = require("express");
 const teacher = require("./routes/teacher");
-global.roleID = 2;
+global.roleID = 1;
 
 //Use a set
 app.use(cookieParser());
@@ -92,6 +92,19 @@ app.get("/", (req, res) => {
 
    
  res.render("index", {stav : 'Log in', name : req.session.username } );
+});
+
+app.get("/class/:id_class", (req, res) => {
+
+	connection.query('SELECT users.id_user,users.firstName,users.lastName,roles.name from users  inner join roles on users.id_role = roles.id_role  where users.id_class = (SELECT id_class from classes where id_class = ? )' ,req.params.id_class,(error, results) => {
+
+ const users = results;
+ res.render("classProfile",{users: users,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,class_id : hasClass})
+	});
+
+
+
+	
 });
 
 

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const csv = require("fast-csv");
 const fs = require("fs");
-
+let hasClass = null;
 
 const mysql = require('mysql2');
 const { exit } = require("process");
@@ -189,24 +189,30 @@ router.get("/entries", (req, res) => {
 		   res.redirect('/blockedAccess');
 		
 			} else {
+				connection.query('SELECT id_class from users where username = ? ' ,req.session.username,(error, results) =>{
+					hasClass = results[0].id_class;
+					console.log(results[0].id_class);
 
-			
-			connection.query('SELECT id_class,id_user from users where username = ? ' ,req.session.username,(error, results) =>{
+					connection.query('SELECT id_class,id_user from users where username = ? ' ,req.session.username,(error, results) =>{
          
-			userID = results[0].id_user;
-			hasClass = results[0].id_class;
-			connection.query('SELECT datum,entries.lessonNumber,entries.id_entry, classes.name,subjects.jmeno FROM entries inner join classes on entries.id_class = classes.id_class inner join subjects on entries.id_subject = subjects.id_subject where id_user = ? ', userID,(error, results) => {
-				if (error) throw error;
-				if(results.length > 0){
-					var date = new Date(results[0].datum);
-					var formattedDate = date.toLocaleDateString();	
-				}
-				const users = results;
+						userID = results[0].id_user;
+						hasClass = results[0].id_class;
+						connection.query('SELECT datum,entries.lessonNumber,entries.id_entry, classes.name,subjects.jmeno FROM entries inner join classes on entries.id_class = classes.id_class inner join subjects on entries.id_subject = subjects.id_subject where id_user = ? ', userID,(error, results) => {
+							if (error) throw error;
+							if(results.length > 0){
+								var date = new Date(results[0].datum);
+								var formattedDate = date.toLocaleDateString();	
+							}
+							const users = results;
+			
+							res.render("entries", {class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,users: users, date : formattedDate});
+						  });
+			
+						});
 
-				res.render("entries", {class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,users: users, date : formattedDate});
-			  });
-
-			});
+				});
+			
+			
 			}
 });
     //Entry page
@@ -312,7 +318,7 @@ res.redirect("/");
 
 		const users = results;
 
-		hasClass = results[0].id_class;
+
 
 
 
