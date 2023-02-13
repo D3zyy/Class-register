@@ -40,7 +40,7 @@
         <td>
             <% if (users[i].name === 'student') { %>
               
-                <form action="/user/<%= users[i].id_user %>/absence" method="get">
+                <form action="/absence/<%= users[i].id_user %>" method="get">
                     <input style="margin-left: 20px;" type="submit" value="absence">
                 </form>
             

@@ -191,7 +191,7 @@ router.get("/entries", (req, res) => {
 			} else {
 				connection.query('SELECT id_class from users where username = ? ' ,req.session.username,(error, results) =>{
 					hasClass = results[0].id_class;
-					console.log(results[0].id_class);
+				
 
 					connection.query('SELECT id_class,id_user from users where username = ? ' ,req.session.username,(error, results) =>{
          
@@ -199,10 +199,12 @@ router.get("/entries", (req, res) => {
 						hasClass = results[0].id_class;
 						connection.query('SELECT datum,entries.lessonNumber,entries.id_entry, classes.name,subjects.jmeno FROM entries inner join classes on entries.id_class = classes.id_class inner join subjects on entries.id_subject = subjects.id_subject where id_user = ? ', userID,(error, results) => {
 							if (error) throw error;
-							if(results.length > 0){
-								var date = new Date(results[0].datum);
+							for(var j= 0; j < results.length; j++) {
+								var date = new Date(results[j].datum);
 								var formattedDate = date.toLocaleDateString();	
-							}
+								results[j].datum = formattedDate;
+							};
+							
 							const users = results;
 			
 							res.render("entries", {class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,users: users, date : formattedDate});

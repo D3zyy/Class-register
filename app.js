@@ -117,14 +117,39 @@ app.get("/class/:id_class", (req, res) => {
 });
 
 
-app.post("/user/changePassword/:id_user", (req, res) => {
-
-
+app.get("/absence/:id_user", (req, res) => {
+	const idUser = req.params.id_user;
 	
+	connection.query('SELECT firstName,lastName from users where id_user = ? ' ,[idUser],(error, results) =>{
+     const firstNameUser = results[0].firstName;
+	 const lastNameUser = results[0].lastName;
+
+		connection.query(`SELECT entries.datum, absence.duvod,COUNT(absence.id_absence) AS absence_count 	FROM entries INNER JOIN absence ON absence.id_entry = entries.id_entry 		WHERE absence.id_user = ? GROUP BY entries.datum`, [idUser], (error, results) => {
+
+		console.log(results);
+		for(var j= 0; j < results.length; j++) {
+			var date = new Date(results[j].datum);
+			var formattedDate = date.toLocaleDateString();	
+			results[j].datum = formattedDate;
+		};
+		
+		const users = results;
+		res.render("absence", {
+			date : formattedDate,
+			users : users,
+			user_id: userID,
+			stav: 'Odhlásit se',
+			name: req.session.username,
+			firstNameUser : firstNameUser,
+			lastnameUser : lastNameUser,
+			role: roleID,
+			class_id: hasClass
+		});
+	});
+	});
 });
 
   
-
 
 
 	let userID;
@@ -231,8 +256,7 @@ app.post("/user/changePassword/:id_user", (req, res) => {
 	password = req.body.password;
 
 	connection.query('UPDATE users set password = ? where id_user = ? ' ,[password, idd],(error, results) => {
-		console.log(password);
-		console.log(idd);
+		
 		
 		
 		res.render("success", {user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID, text : 'Password was succcessfully updated!',class_id : hasClass});	

@@ -16,7 +16,41 @@
     }
   </style>
 
-ahooj
+<div class="box">
+    <h2>Absence - <%- firstNameUser-%> <%- lastnameUser-%></h2>
+    <input type="text" id="searchInput" placeholder="&#x1F50D; Vyhledat záznam" style="padding: 10px; font-size: 16px; border-radius: 10px; border: 1px solid gray;">
+    <table id="entriesTable" >
+      <thead>
+       
+          <th>Datum</th>
+          <th>Počer hodin</th> 
+          <th>Důvod</th>
+          <th>Omluveno</th>
+          
+      </thead>
+      <tbody >
+        <% for (var i = 0; i < users.length; i++) { %>
+          <tr>
+           
+            
+            <td style="padding: 5px;">
+                <%= users[i].datum %>
+              </td>
+              <td style="margin: 3px;">
+                <%= users[i].absence_count %>
+            </td>
+            <td style="margin: 3px;">
+                <%= users[i].duvod %>
+            </td>
+            <td style="margin: 3px;">
+                <%= users[i].omluveno %>
+            </td>
+    
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
 
 
 <%-include("footer")-%>

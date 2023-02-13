@@ -38,15 +38,15 @@ function deleteEntry(id) {
   
 
 <div class="box">
-    <h2>Entries</h2>
+    <h2>Záznamy</h2>
     <input type="text" id="searchInput" placeholder="&#x1F50D; Vyhledat záznam" style="padding: 10px; font-size: 16px; border-radius: 10px; border: 1px solid gray;">
     <table id="entriesTable" >
       <thead>
        
-          <th>DATE</th>
-          <th>CLASS</th>
-          <th>SUBJECT</th>
-          <th>Lesson Number</th>
+          <th>Datum</th>
+          <th>Třída</th>
+          <th>Předmět</th>
+          <th>Číslo hodiny</th>
           
       </thead>
       <tbody >
@@ -67,11 +67,11 @@ function deleteEntry(id) {
             </td>
             <td>
                 <form action="/teacher/<%= users[i].id_entry %>/edit" method="get">
-                    <input type="submit" value="Edit">
+                    <input type="submit" value="upravit">
                 </form>
             </td>
             <td>
-                <input type="button" value="Delete" onclick="deleteEntry('<%= users[i].id_entry %>')">
+                <input type="button" value="smazat" onclick="deleteEntry('<%= users[i].id_entry %>')">
 
             </td>
           </tr>
