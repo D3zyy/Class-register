@@ -39,13 +39,13 @@
       <tbody >
    
           <tr>  
-            <th>Name and surname</th>
+            <th>Jméno a příjmení</th>
             <td style="padding: 5px;">
            <span style="font-style: italic;" ><%- firstName -%> <%- lastName -%></span>   
             </td>
           </tr>
           <tr>
-            <th>Username</th>
+            <th>Uživatelské jméno</th>
             <td>
                 <%- username -%> 
               </td>
@@ -58,17 +58,19 @@
                    
                   </td>
               </tr>
+              <%if (class_id != null && roleColor === 2 || class_id != null  && roleColor === 3 ) { %>
               <tr>
-            <th>Class</th>
+            <th>Třídní učitel</th>
             <td>
-            <span style="font-style: italic;"> <%- className -%> </span>    
+              <a style="text-decoration: underline; font-style: italic; color: lightslategray;" href="/class/<%- class_id -%>"><%- className -%></a> 
               </td>
           </tr>
+          <% } %>
           <% if (user_id == specificUserID) { %>
           <tr>
             <th>Heslo</th>
             <td>
-                <a style="text-decoration: underline; color: lightslategray;" href="/user/changePassword/<%- user_id -%>">change password..</a>
+                <a style="text-decoration: underline; color: lightslategray;" href="/user/changePassword/<%- user_id -%>">změnit heslo..</a>
               </td>
           </tr>
           <% } %>

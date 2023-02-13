@@ -68,7 +68,7 @@ const connection  = mysql.createConnection({
 
 
 		connection.query("UPDATE entries SET lessonNumber = ?,topic = ?, notes = ? where id_entry = ?", [taughtHours,topic,notes,id], function (error, results, fields) {
-			res.render("success", {user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID, text : 'Data has been successfully updated!'});	
+			res.render("success", {class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID, text : 'Data has been successfully updated!'});	
 	
 		
 			});
@@ -98,7 +98,7 @@ const connection  = mysql.createConnection({
 
   connection.query("SELECT lessonNumber,topic,notes FROM entries WHERE id_entry = ?", [id], function (error, results, fields) {
 	
-	res.render("edit", {user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID,users: users, allUsers : allUsers,taughtHours : results[0].lessonNumber, topic : results[0].topic, notes : results[0].notes});
+	res.render("edit", {class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,users: users, allUsers : allUsers,taughtHours : results[0].lessonNumber, topic : results[0].topic, notes : results[0].notes});
   });
 		});
 	}
@@ -131,7 +131,7 @@ router.get("/downland", (req, res) => {
 
 
 
-	res.render("downland", {user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID});	
+	res.render("downland", {class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID});	
 
 });
 router.post("/download", (req, res) => {
@@ -191,10 +191,10 @@ router.get("/entries", (req, res) => {
 			} else {
 
 			
-			connection.query('SELECT id_user from users where username = ? ' ,req.session.username,(error, results) =>{
+			connection.query('SELECT id_class,id_user from users where username = ? ' ,req.session.username,(error, results) =>{
          
 			userID = results[0].id_user;
-
+			hasClass = results[0].id_class;
 			connection.query('SELECT datum,entries.lessonNumber,entries.id_entry, classes.name,subjects.jmeno FROM entries inner join classes on entries.id_class = classes.id_class inner join subjects on entries.id_subject = subjects.id_subject where id_user = ? ', userID,(error, results) => {
 				if (error) throw error;
 				if(results.length > 0){
@@ -203,7 +203,7 @@ router.get("/entries", (req, res) => {
 				}
 				const users = results;
 
-				res.render("entries", {user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID,users: users, date : formattedDate});
+				res.render("entries", {class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,users: users, date : formattedDate});
 			  });
 
 			});
@@ -286,9 +286,9 @@ res.redirect("/");
 
 			
 			
-			res.render("entry", {user_id : userID,eacherName: teacherName, 
+			res.render("entry", {class_id : hasClass,user_id : userID,eacherName: teacherName, 
 				subject: subjectName,
-				stav : 'Log out' , name : req.session.username  , role : global.roleID, classNumber : classname,
+				stav : 'Odhlásit se' , name : req.session.username  , role : global.roleID, classNumber : classname,
 				taughtHours : logCount , users : users
 			  });		
 		  });	
@@ -316,7 +316,7 @@ res.redirect("/");
 
 
 
-		res.render('enterManually',{user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID,users : users});
+		res.render('enterManually',{class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,users : users});
 
 		
 		
@@ -351,7 +351,7 @@ res.redirect("/");
 				
 				
 				
-				res.render('enterManuallySubject',{user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID,users : users,clasIDD : req.body.selectedOption});
+				res.render('enterManuallySubject',{class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,users : users,clasIDD : req.body.selectedOption});
 
 			
 			
@@ -412,7 +412,7 @@ res.redirect("/");
                           pocet = result[0].count + 1;
 						
 						  if (error) throw error;
-						res.render('enterManuallyForm',{user_id : userID,taughtHours : pocet,subjectJmeno : subjectName,classNumber : classNumberr,stav : 'Log out' , name : req.session.username  , role : roleID,users: users, teacherName : req.session.username});
+						res.render('enterManuallyForm',{class_id : hasClass,user_id : userID,taughtHours : pocet,subjectJmeno : subjectName,classNumber : classNumberr,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,users: users, teacherName : req.session.username});
 					});
 					
 
@@ -438,7 +438,7 @@ res.redirect("/");
   router.post("/success", (req, res) => {
   
 	if (req.session.loggedin) {
-	  res.render("success", {user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID ,text : 'Data has been successfully submitted'});	
+	  res.render("success", {class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID ,text : 'Data has been successfully submitted'});	
 
 
      

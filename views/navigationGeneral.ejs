@@ -75,10 +75,13 @@
                </style>
                
                 <ul>
-              <li><a href="/teacher/entry">Entry</a></li>
-              <li><a href="/teacher/entries">My entries</a></li>
-              <li><a href="/teacher/downland">Download</a></li>
-              <li><a href="/user/<%- user_id -%>">My profile</a></li>
+              <li><a href="/teacher/entry">Zápis</a></li>
+              <li><a href="/teacher/entries">Mé zápisy</a></li>
+              <%if (class_id != null) { %>
+              <li><a href="/class/<%- class_id -%>">Moje třída</a></li>
+              <% } %>
+              <li><a href="/teacher/downland">Stáhnout</a></li>
+              <li><a href="/user/<%- user_id -%>">Můj profil</a></li>
              
               
               <ul style="float: right; " >
@@ -93,7 +96,7 @@
       
       
                 </li>
-                <li><a href="#" onclick="toggleTheme()">Switch theme</a>
+                <li><a href="#" onclick="toggleTheme()">Změnit téma</a>
                 <li><a href="/"><%- stav -%> </a></li> 
                  
                </ul>

@@ -102,15 +102,18 @@ app.get("/", (req, res) => {
 
 
 	let userID;
+	let hasClass;
 //Main page after successfully loged in 
 app.get("/mainPage", (req, res) => {
 	
 	   
   if (req.session.loggedin) {
-	connection.query('SELECT id_user from users where username = ? ' ,req.session.username,(error, results) =>{
+	connection.query('SELECT id_user,id_class from users where username = ? ' ,req.session.username,(error, results) =>{
          
 		userID = results[0].id_user;
-    res.render("mainPage", {user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID});	
+		hasClass = results[0].id_class;
+		console.log(results[0].id_class);
+    res.render("mainPage", {user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,class_id : hasClass});	
 });
 	} else { 
 		
@@ -120,7 +123,7 @@ app.get("/mainPage", (req, res) => {
  });
  app.get("/blockedAccess", (req, res) => {
 	if(req.session.loggedin === true){
-		res.render("blockedAccess",{user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID})
+		res.render("blockedAccess",{user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,class_id : hasClass})
 	} else{
       res.redirect("/");
 	};
@@ -145,7 +148,7 @@ app.get("/user/:id_user", (req, res) => {
 			connection.query(' SELECT id_role from users where id_user = ?' ,req.params.id_user,(error, results) =>{
                 
 				
-				res.render("userProfile",{roleColor : results[0].id_role,roleName : roleName,username : username,user_id : userID,specificUserID : req.params.id_user,stav : 'Log out' , name : req.session.username  , role : roleID,firstName : firstName,lastName : lastName,className : className})
+				res.render("userProfile",{roleColor : results[0].id_role,roleName : roleName,username : username,user_id : userID,specificUserID : req.params.id_user,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,firstName : firstName,lastName : lastName,className : className,class_id : hasClass})
 
 			});
 
@@ -167,7 +170,7 @@ app.get("/user/:id_user", (req, res) => {
 
 app.get("/user/changePassword/:id_user", (req, res) => {
 
-	res.render("changePassword",{user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID});
+	res.render("changePassword",{user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,class_id : hasClass});
 
 });
 
@@ -180,7 +183,7 @@ app.post("/user/changePassword/:id_user", (req, res) => {
 		console.log(idd);
 		
 		
-		res.render("success", {user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID, text : 'Password was succcessfully updated!'});	
+		res.render("success", {user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID, text : 'Password was succcessfully updated!',class_id : hasClass});	
 	req.session.loggedin = false;
 	});
 });
@@ -190,7 +193,7 @@ app.post("/user/changePassword/:id_user", (req, res) => {
 	if (req.session.loggedin )  {
 		if(roleID === 2 || roleID === 1){
 			
-			res.render("blockedAccess",{user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID})
+			res.render("blockedAccess",{user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,class_id : hasClass})
 
 		} else {
 
@@ -202,7 +205,7 @@ app.post("/user/changePassword/:id_user", (req, res) => {
 			const users = results;
 		
 			// render the HTML template and pass the array to the template
-			res.render("manageClasses", {user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID,users: users});
+			res.render("manageClasses", {user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,users: users,class_id : hasClass});
 		  });
 
 
