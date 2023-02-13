@@ -133,7 +133,7 @@ app.get("/user/:id_user", (req, res) => {
 		 
 
 
-	if(req.session.loggedin === true && req.params.id_user == userID || req.session.loggedin === true && roleID === 3 ){
+	if(req.session.loggedin === true && req.params.id_user == userID || req.session.loggedin === true && roleID === 3 || req.session.loggedin === true && roleID === 2 ){
 		
 		connection.query('SELECT  users.username as username, users.firstName as firstName,users.lastName as lastName, roles.name as role from users inner join roles on users.id_role = roles.id_role   where users.id_user = ? ' ,req.params.id_user,(error, results) =>{
 	  if(results.length > 0) {
@@ -151,25 +151,23 @@ app.get("/user/:id_user", (req, res) => {
 			connection.query('SELECT id_role,id_class from users where id_user = ?' ,req.params.id_user,(error, results) =>{
                 idRole = results[0].id_role;
 				idCLass = results[0].id_class;
+				if(results[0].id_role > roleID  ) {
+					res.redirect('/blockedAccess');
+				} else {
+
 				
+
+
 				connection.query('SELECT id_class from users where id_user = ?' ,req.params.id_user,(error, results) =>{
 				
 					if(results[0].id_class != null) {
-						console.log(className);
-						console.log(results[0].id_class + " " + idRole);
+				
 						hasClass = results[0].id_class;
 						connection.query('SELECT name from  classes where id_class = ?' ,hasClass,(error, results) => {
                               className = results[0].name;
 							res.render("userProfile",{roleColor : idRole,roleName : roleName,username : username,user_id : userID,specificUserID : req.params.id_user,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,firstName : firstName,lastName : lastName,className : className,class_id : hasClass})
-
 						});
-
-
-					
-						
 					} else{
-						console.log("bez class");
-						console.log(className);
 						hasClass = null;
 						res.render("userProfile",{roleColor : idRole,roleName : roleName,username : username,user_id : userID,specificUserID : req.params.id_user,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,firstName : firstName,lastName : lastName,className : className,class_id : null})
 					};
@@ -177,7 +175,7 @@ app.get("/user/:id_user", (req, res) => {
 
 
 			
-
+			}
 			});
 
 		 
