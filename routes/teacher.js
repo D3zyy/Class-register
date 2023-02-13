@@ -137,7 +137,7 @@ router.get("/downland", (req, res) => {
 router.post("/download", (req, res) => {
 	connection.query(
 	  `SELECT entries.datum , classes.name as Třída, subjects.jmeno as Předmět, entries.topic as Téma, entries.notes as Poznámky, entries.lessonNumber as ČísloHodinyVRoce, 
-			 users.firstName as Jméno, users.lastName as Příjmení 
+			 users.firstName as Jméno, users.lastName as Příjmení , absence.duvod, absence.omluveno
 	  FROM entries
 	  INNER JOIN classes ON entries.id_class = classes.id_class 
 	  INNER JOIN subjects ON entries.id_subject = subjects.id_subject 
