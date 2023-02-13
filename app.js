@@ -117,7 +117,11 @@ app.get("/class/:id_class", (req, res) => {
 });
 
 
+app.post("/user/changePassword/:id_user", (req, res) => {
 
+
+	
+});
 
   
 
@@ -134,7 +138,7 @@ app.get("/mainPage", (req, res) => {
          
 		userID = results[0].id_user;
 		hasClass = results[0].id_class;
-		console.log(results[0].id_class);
+
     res.render("mainPage", {user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,class_id : hasClass});	
 });
 	} else { 

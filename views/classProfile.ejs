@@ -8,6 +8,9 @@
       padding: 20px;
       border-radius: 10px;
     }
+    a{
+        padding: 1px 10px;
+    }
     table {
       margin: 0 auto;
     }
@@ -16,7 +19,8 @@
 
 <div class="box">
 <h2><%- className -%></h2>
-    <table>
+<input type="text" id="searchInput" placeholder="&#x1F50D; Vyhledat uživatele" style="padding: 10px; margin: 10px 0; font-size: 16px; border-radius: 10px; border: 1px solid gray;">
+    <table id="entriesTable">
       <tbody >
         <% for (var i = 0; i < users.length; i++) { %>
           <tr>
@@ -32,19 +36,56 @@
                   <% } else if (users[i].name === 'student') { %>
                     <span style="color: rgb(21, 71, 255)"><%= users[i].name %></span> 
                   <% } %>
-                  
             </td>
-          </tr>
-          <tr>
-           
-                
-            </td>
-          </tr>
+        <td>
+            <% if (users[i].name === 'student') { %>
+              
+                <form action="/user/<%= users[i].id_user %>/absence" method="get">
+                    <input style="margin-left: 20px;" type="submit" value="absence">
+                </form>
+            
+              <% } %>
+            
+        </td>  
+        </tr>
         <% } %>
       </tbody>
     </table>
   </div>
+  <script>
+    document.getElementById("searchInput").addEventListener("keyup", searchFunction);
 
+    function searchFunction() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("searchInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("entriesTable");
+      tr = table.getElementsByTagName("tr");
+
+      // Zobrazení hlavičky
+      tr[0].style.display = "";
+
+      // Procházení všech řádků tabulky
+      for (i = 1; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td");
+        var match = false;
+        // Procházení všech sloupců v řádku
+        for (var j = 0; j < td.length; j++) {
+          txtValue = td[j].textContent || td[j].innerText;
+          // Pokud obsahuje hledaný řetězec, zobraz řádek
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            match = true;
+            break;
+          }
+        }
+        if (match) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  </script>
 
 
 <%-include("footer")-%>
