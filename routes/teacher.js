@@ -32,8 +32,9 @@ const connection  = mysql.createConnection({
 			  }
 				const sqlDate = convertDate(req.body.datum); 
 
-				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'ano' WHERE entries.datum = ?", [sqlDate], function (error, results, fields){
+				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'ano', absence.duvod = ? WHERE entries.datum = ?", [req.body.duvod,sqlDate], function (error, results, fields){
 					res.send();
+					
 			});
 			
 		}
@@ -73,7 +74,7 @@ const connection  = mysql.createConnection({
 			  }
 				const sqlDate = convertDate(req.body.datum); 
 
-				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'ne' WHERE entries.datum = ?", [sqlDate], function (error, results, fields){
+				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'ne', absence.duvod = ? WHERE entries.datum = ?", [req.body.duvod,sqlDate], function (error, results, fields){
 					res.send();
 			});
 		}
