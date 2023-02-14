@@ -215,11 +215,13 @@ router.get("/entries", (req, res) => {
 						hasClass = results[0].id_class;
 						connection.query('SELECT datum,entries.lessonNumber,entries.id_entry, classes.name,subjects.jmeno FROM entries inner join classes on entries.id_class = classes.id_class inner join subjects on entries.id_subject = subjects.id_subject where id_user = ? ', userID,(error, results) => {
 							if (error) throw error;
+							console.log(results);
 							for(var j= 0; j < results.length; j++) {
-								var date = new Date(results[j].datum);
+								var date = results[j].datum;
 								var formattedDate = date.toLocaleDateString();	
 								results[j].datum = formattedDate;
 							};
+							console.log(results);
 							
 							const users = results;
 			
