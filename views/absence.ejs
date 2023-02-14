@@ -91,13 +91,13 @@
           <% } else if(users[i].omluveno === 'ano') { %>
             <form action="">
                 <input style="display: inline-block; padding: 2px;" type="button" value="upravit">
-                <input style="display: inline-block; padding: 2px;" type="button" value="smazat absenci">
+                <input style="display: inline-block; padding: 2px;" type="button" value="smazat absenci" onclick="smazat('<%= users[i].datum %>')">
                 </form>
 
           <% } else if(users[i].omluveno === 'ne') { %> 
             <form action="">
                 <input style="display: inline-block; padding: 2px;" type="button" value="upravit">
-                <input style="display: inline-block; padding: 2px;" type="button" value="smazat absenci">
+                <input style="display: inline-block; padding: 2px;" type="button" value="smazat absenci" onclick="smazat('<%= users[i].datum %>')">
                     </form>
 
           <% } %>

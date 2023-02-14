@@ -38,6 +38,27 @@ const connection  = mysql.createConnection({
 			
 		}
 	  });
+
+	  router.post("/absence/smazat", (req, res) => {
+		if (!req.session.loggedin) {
+		  res.redirect("/");
+		} else if (roleID === 1) {
+		  res.redirect('/blockedAccess');
+		} else {
+
+			function convertDate(date) {
+				const [month, day, year] = date.split('/');
+				return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+			  }
+				const sqlDate = convertDate(req.body.datum); 
+
+				connection.query("DELETE FROM absence WHERE id_entry IN (SELECT id_entry FROM entries WHERE datum = ?)", [sqlDate], function (error, results, fields){
+					res.send();
+			});
+			
+		}
+	  });
+
 	  
 	  router.post("/absence/neomluvit", (req, res) => {
 		if (!req.session.loggedin) {

@@ -1,15 +1,15 @@
 function smazat(datum) {
-    
     $.ajax({
-      url: '/absence/' + datum + '/smazat',
+        
+      url: '/teacher/absence/smazat',
       type: 'POST',
-      complete: function () {
-         
+      data: { datum: datum },
+      success: function () {
         location.reload();
       },
       error: function (xhr, status, error) {
         console.log(xhr.responseText);
       }
     });
+  }
   
-}

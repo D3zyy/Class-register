@@ -1,5 +1,6 @@
 <%-include("head")-%>
 <%-include("../views/navigationGeneral")-%>
+<% if (users.length > 1) { %>
 <style>
     .box {
       border: 1px solid black;
@@ -15,7 +16,23 @@
       margin: 0 auto;
     }
   </style>
-
+ <% } else if(users.length < 2 ) {%>
+    <style>
+    .box {
+      border: 1px solid black;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      position: absolute; top: 100px; left: 82%;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    a{
+        padding: 1px 10px;
+    }
+    table {
+      margin: 0 auto;
+    }
+  </style>
+ <% } %>
 
 <div class="box">
 <h2><%- className -%></h2>
