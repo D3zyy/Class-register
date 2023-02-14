@@ -25,14 +25,38 @@ const connection  = mysql.createConnection({
 		} else if (roleID === 1) {
 		  res.redirect('/blockedAccess');
 		} else {
-		
-		  connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'ano' WHERE entries.datum = ?", [date], function (error, results, fields) {
-			res.send();
-		  });
+
+			function convertDate(date) {
+				const [month, day, year] = date.split('/');
+				return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+			  }
+				const sqlDate = convertDate(req.body.datum); 
+
+				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'ano' WHERE entries.datum = ?", [sqlDate], function (error, results, fields){
+					res.send();
+			});
+			
 		}
 	  });
 	  
+	  router.post("/absence/neomluvit", (req, res) => {
+		if (!req.session.loggedin) {
+		  res.redirect("/");
+		} else if (roleID === 1) {
+		  res.redirect('/blockedAccess');
+		} else {
+		
+			function convertDate(date) {
+				const [month, day, year] = date.split('/');
+				return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+			  }
+				const sqlDate = convertDate(req.body.datum); 
 
+				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'ne' WHERE entries.datum = ?", [sqlDate], function (error, results, fields){
+					res.send();
+			});
+		}
+	  });
 
 	router.post("/:id_entry/edit", (req, res) => {
 		if (!req.session.loggedin){
