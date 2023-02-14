@@ -128,13 +128,28 @@ const connection  = mysql.createConnection({
 	  });
 //Entries
 router.get("/downland", (req, res) => {
+	if (!req.session.loggedin){
+		res.redirect("/");
+			} else	if(roleID === 1){
+				
+		   res.redirect('/blockedAccess');
+		
+			} else {
+				res.render("downland", {class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID});	
+				}
 
 
-
-	res.render("downland", {class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID});	
+	
 
 });
 router.post("/download", (req, res) => {
+	if (!req.session.loggedin){
+		res.redirect("/");
+			} else	if(roleID === 1){
+				
+		   res.redirect('/blockedAccess');
+		
+			} else {
 	connection.query(
 	  `SELECT entries.datum , classes.name as Třída, subjects.jmeno as Předmět, entries.topic as Téma, entries.notes as Poznámky, entries.lessonNumber as ČísloHodinyVRoce, 
 			 users.firstName as Jméno, users.lastName as Příjmení , absence.duvod, absence.omluveno
@@ -178,6 +193,7 @@ router.post("/download", (req, res) => {
 		  });
 	  }
 	);
+} 
   });
 let userID;
 router.get("/entries", (req, res) => {

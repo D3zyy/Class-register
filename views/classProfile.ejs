@@ -19,20 +19,30 @@
 
 <div class="box">
 <h2><%- className -%></h2>
+<% for (var i = 0; i < users.length; i++) { %>
+<% if (users[i].name === 'učitel') { %>
+  <span style="text-decoration: solid; color: rgb(255, 166, 0);"><strong>Třídní učitel</strong>  </span>  <br> <span style="font-size: medium;"><%= users[i].firstName %> <%= users[i].lastName %></span>  
+    <br>
+    <% } %>
+    <% } %>
+    
 <input type="text" id="searchInput" placeholder="&#x1F50D; Vyhledat uživatele" style="padding: 10px; margin: 10px 0; font-size: 16px; border-radius: 10px; border: 1px solid gray;">
     <table id="entriesTable">
       <tbody >
         <% for (var i = 0; i < users.length; i++) { %>
           <tr>
-            <td>
-              <i class="fa fa-user"></i>
-            </td>
+            
             <td style="padding: 5px;">
-           <a style="display: inline-block; text-decoration:  underline; color: lightslategray; font-style: italic;" href="/user/<%= users[i].id_user %>"> <%= users[i].firstName %> <%= users[i].lastName %> </a> 
+                <% if (users[i].name === 'učitel') { %>
+                   
+                    <% } else if (users[i].name === 'student') { %>
+                        <a style="display: inline-block; text-decoration:  underline; color: lightslategray; font-style: italic;" href="/user/<%= users[i].id_user %>"> <%= users[i].firstName %> <%= users[i].lastName %> </a> 
+                    <% } %>
+          
             </td>
             <td>
                 <% if (users[i].name === 'učitel') { %>
-                    <span style="color: rgb(255, 166, 0);"><%= users[i].name %></span>  
+                   
                   <% } else if (users[i].name === 'student') { %>
                     <span style="color: rgb(21, 71, 255)"><%= users[i].name %></span> 
                   <% } %>

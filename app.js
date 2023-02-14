@@ -78,7 +78,7 @@ app.post('/', function(request, response, next) {
 		});
 		
 	} else {
-		
+		response.redirect('/');
 
 	}
 	
@@ -95,7 +95,13 @@ app.get("/", (req, res) => {
 });
 
 app.get("/class/:id_class", (req, res) => {
-
+	if (!req.session.loggedin){
+		res.redirect("/");
+			} else	if(roleID === 1){
+				
+		   res.redirect('/blockedAccess');
+		
+			} else {
 	connection.query('SELECT users.id_user,users.firstName,users.lastName,roles.name from users  inner join roles on users.id_role = roles.id_role  where users.id_class = (SELECT id_class from classes where id_class = ? )' ,req.params.id_class,(error, results) => {
 
 
@@ -113,40 +119,52 @@ app.get("/class/:id_class", (req, res) => {
 
 
 
-	
+}
 });
 
 
 app.get("/absence/:id_user", (req, res) => {
-	const idUser = req.params.id_user;
-	
-	connection.query('SELECT firstName,lastName from users where id_user = ? ' ,[idUser],(error, results) =>{
-     const firstNameUser = results[0].firstName;
-	 const lastNameUser = results[0].lastName;
-
-		connection.query(`SELECT entries.datum, absence.duvod,COUNT(absence.id_absence) AS absence_count 	FROM entries INNER JOIN absence ON absence.id_entry = entries.id_entry 		WHERE absence.id_user = ? GROUP BY entries.datum`, [idUser], (error, results) => {
-
-		console.log(results);
-		for(var j= 0; j < results.length; j++) {
-			var date = new Date(results[j].datum);
-			var formattedDate = date.toLocaleDateString();	
-			results[j].datum = formattedDate;
-		};
+	console.log(roleID);
+	if(req.session.loggedin === true && req.params.id_user == userID || req.session.loggedin === true && roleID === 3 || req.session.loggedin === true && roleID === 2 ){
 		
-		const users = results;
-		res.render("absence", {
-			date : formattedDate,
-			users : users,
-			user_id: userID,
-			stav: 'Odhlásit se',
-			name: req.session.username,
-			firstNameUser : firstNameUser,
-			lastnameUser : lastNameUser,
-			role: roleID,
-			class_id: hasClass
+		const idUser = req.params.id_user;
+	
+		connection.query('SELECT firstName,lastName from users where id_user = ? ' ,[idUser],(error, results) =>{
+		 const firstNameUser = results[0].firstName;
+		 const lastNameUser = results[0].lastName;
+	
+			connection.query(`SELECT entries.datum, absence.duvod,COUNT(absence.id_absence) AS absence_count 	FROM entries INNER JOIN absence ON absence.id_entry = entries.id_entry 		WHERE absence.id_user = ? GROUP BY entries.datum`, [idUser], (error, results) => {
+	
+		
+			for(var j= 0; j < results.length; j++) {
+				var date = new Date(results[j].datum);
+				var formattedDate = date.toLocaleDateString();	
+				results[j].datum = formattedDate;
+			};
+			
+			const users = results;
+			res.render("absence", {
+				date : formattedDate,
+				users : users,
+				user_id: userID,
+				stav: 'Odhlásit se',
+				name: req.session.username,
+				firstNameUser : firstNameUser,
+				lastnameUser : lastNameUser,
+				role: roleID,
+				class_id: hasClass
+			});
 		});
-	});
-	});
+		});
+		
+			} else	if(roleID === 1){
+				
+		   res.redirect('/blockedAccess');
+		
+			} else {
+
+				res.redirect("/");
+}
 });
 
   
@@ -246,12 +264,17 @@ app.get("/user/:id_user", (req, res) => {
 });
 
 app.get("/user/changePassword/:id_user", (req, res) => {
-
+	if (!req.session.loggedin){
+		res.redirect("/");
+			} else {
 	res.render("changePassword",{user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,class_id : hasClass});
-
+			}
 });
 
 app.post("/user/changePassword/:id_user", (req, res) => {
+	if (!req.session.loggedin){
+		res.redirect("/");
+			} else { 
 	idd = req.params.id_user;
 	password = req.body.password;
 
@@ -262,6 +285,7 @@ app.post("/user/changePassword/:id_user", (req, res) => {
 		res.render("success", {user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID, text : 'Password was succcessfully updated!',class_id : hasClass});	
 	req.session.loggedin = false;
 	});
+}
 });
 
  app.get("/manageClasses", (req, res) => {
