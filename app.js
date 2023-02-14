@@ -124,7 +124,7 @@ app.get("/class/:id_class", (req, res) => {
 
 
 app.get("/absence/:id_user", (req, res) => {
-	console.log(roleID);
+	
 	if(req.session.loggedin === true && req.params.id_user == userID || req.session.loggedin === true && roleID === 3 || req.session.loggedin === true && roleID === 2 ){
 		
 		const idUser = req.params.id_user;
@@ -133,7 +133,7 @@ app.get("/absence/:id_user", (req, res) => {
 		 const firstNameUser = results[0].firstName;
 		 const lastNameUser = results[0].lastName;
 	
-			connection.query(`SELECT entries.datum, absence.duvod,COUNT(absence.id_absence) AS absence_count 	FROM entries INNER JOIN absence ON absence.id_entry = entries.id_entry 		WHERE absence.id_user = ? GROUP BY entries.datum`, [idUser], (error, results) => {
+			connection.query(`SELECT entries.datum, absence.omluveno,absence.duvod,COUNT(absence.id_absence) AS absence_count 	FROM entries INNER JOIN absence ON absence.id_entry = entries.id_entry 		WHERE absence.id_user = ? GROUP BY entries.datum`, [idUser], (error, results) => {
 	
 		
 			for(var j= 0; j < results.length; j++) {

@@ -2,25 +2,8 @@
 
 <%-include("../views/navigationGeneral")-%>
 
-<script>
 
-function deleteEntry(id) {
-  if (confirm("Are you sure you want to delete this record?")) {
-    $.ajax({
-      url: '/teacher/' + id + '/delete',
-      type: 'POST',
-      success: function (result) {
-        
-        location.reload(true);
-      }
-    });
-  }
-}
-
-
-
-
-</script>
+<script src="../public/scriptDeleteEntry.js"></script>
 
 
 <style>
@@ -71,7 +54,7 @@ function deleteEntry(id) {
                 </form>
             </td>
             <td>
-                <input type="button" value="smazat" onclick="deleteEntry('<%= users[i].id_entry %>')">
+                <input type="button" value="smazat" name="delete" onclick="deleteEntry('<%= users[i].id_entry %>')">
 
             </td>
           </tr>

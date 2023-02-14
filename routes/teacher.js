@@ -19,6 +19,21 @@ const connection  = mysql.createConnection({
     
     });
 
+	router.post("/absence/omluvit", (req, res) => {
+		if (!req.session.loggedin) {
+		  res.redirect("/");
+		} else if (roleID === 1) {
+		  res.redirect('/blockedAccess');
+		} else {
+		
+		  connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'ano' WHERE entries.datum = ?", [date], function (error, results, fields) {
+			res.send();
+		  });
+		}
+	  });
+	  
+
+
 	router.post("/:id_entry/edit", (req, res) => {
 		if (!req.session.loggedin){
 			res.redirect("/");
@@ -121,6 +136,7 @@ const connection  = mysql.createConnection({
 		connection.query("DELETE FROM absence WHERE id_entry = ?", [id], function (error, results, fields) {
 			connection.query("DELETE FROM entries WHERE id_entry = ?", [id], function (error, results, fields) {
 				if (error) throw error;
+				res.send();
 				
 			  });
 		});
@@ -215,13 +231,13 @@ router.get("/entries", (req, res) => {
 						hasClass = results[0].id_class;
 						connection.query('SELECT datum,entries.lessonNumber,entries.id_entry, classes.name,subjects.jmeno FROM entries inner join classes on entries.id_class = classes.id_class inner join subjects on entries.id_subject = subjects.id_subject where id_user = ? ', userID,(error, results) => {
 							if (error) throw error;
-							console.log(results);
+							
 							for(var j= 0; j < results.length; j++) {
 								var date = results[j].datum;
 								var formattedDate = date.toLocaleDateString();	
 								results[j].datum = formattedDate;
 							};
-							console.log(results);
+					
 							
 							const users = results;
 			

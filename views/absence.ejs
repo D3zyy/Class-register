@@ -1,12 +1,18 @@
 <%-include("head")-%>
 <%-include("../views/navigationGeneral")-%>
+
+<script src="../public/scriptNeomluvit.js"></script>
+<script src="../public/scriptOmluvit.js"></script>
+<script src="../public/scriptSmazat.js"></script>
+
 <style>
     .box {
       border: 1px solid black;
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-      position: absolute; top: 100px; left: 42%;
+      position: absolute; top: 100px; left: 32%;
       padding: 20px;
       border-radius: 10px;
+      background-color: rgb(222, 222, 222);
     }
     a{
         padding: 1px 10px;
@@ -39,18 +45,107 @@
               <td style="margin: 3px;">
                 <%= users[i].absence_count %>
             </td>
-            <td style="margin: 3px;">
-                <%= users[i].duvod %>
+            <td>
+                <% if(users[i].omluveno === 'cekani') { %>
+                 
+                  <input type="text" value="<%= users[i].duvod %>">
+                <% } else if(users[i].omluveno === 'ano') { %>
+                 
+                  
+                      <input disabled type="text" value="<%= users[i].duvod %>">  
+                      <input type="hidden" value="<%= users[i].duvod %>">      
+                    
+                 
+                <% } else if(users[i].omluveno === 'ne') { %> 
+                  
+                    
+                      <input disabled type="text" value="<%= users[i].duvod %>">  
+                      <input type="hidden" value="<%= users[i].duvod %>">    
+                   
+                <% } %>
+                
+                
+            <td>
+                <% if(users[i].omluveno === 'cekani') { %>
+                    <i  
+                    style="color: black;" class="fas fa-question"></i>
+
+                  <% } else if(users[i].omluveno === 'ano') { %>
+                    <i style="color: green;" class="fas fa-check"></i>
+
+                  <% } else if(users[i].omluveno === 'ne') { %> 
+                    <i style="color: red;" class="fas fa-times"></i>
+
+                  <% } %>
+                  
             </td>
-            <td style="margin: 3px;">
-                <%= users[i].omluveno %>
-            </td>
-    
+     <td>
+       
+        <% if(users[i].omluveno === 'cekani') { %>
+            <form action="">
+        <input style="display: inline-block; padding: 2px; " type="button" value="omluvit" onclick="omluvit('<%= users[i].datum %>')">
+        <input style="display: inline-block; padding: 2px;" type="button" value="neomluvit" onclick="neomluvit('<%= users[i].datum %>')">
+        <input style="display: inline-block; padding: 2px;" type="button" value="smazat absenci" onclick="smazat('<%= users[i].datum %>')">
+            </form>
+
+          <% } else if(users[i].omluveno === 'ano') { %>
+            <form action="">
+                <input style="display: inline-block; padding: 2px;" type="button" value="upravit">
+                <input style="display: inline-block; padding: 2px;" type="button" value="smazat absenci">
+                </form>
+
+          <% } else if(users[i].omluveno === 'ne') { %> 
+            <form action="">
+                <input style="display: inline-block; padding: 2px;" type="button" value="upravit">
+                <input style="display: inline-block; padding: 2px;" type="button" value="smazat absenci">
+                    </form>
+
+          <% } %>
+
+
+
+
+     </td>
+            
+     
           </tr>
         <% } %>
       </tbody>
     </table>
   </div>
+  <script>
+    document.getElementById("searchInput").addEventListener("keyup", searchFunction);
 
+    function searchFunction() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("searchInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("entriesTable");
+      tr = table.getElementsByTagName("tr");
+
+      // Zobrazení hlavičky
+      tr[0].style.display = "";
+
+      // Procházení všech řádků tabulky
+      for (i = 1; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td");
+        var match = false;
+        // Procházení všech sloupců v řádku
+        for (var j = 0; j < td.length; j++) {
+          txtValue = td[j].textContent || td[j].innerText;
+          // Pokud obsahuje hledaný řetězec, zobraz řádek
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            match = true;
+            break;
+          }
+        }
+        if (match) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  </script>
 
 <%-include("footer")-%>
