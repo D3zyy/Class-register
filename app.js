@@ -18,9 +18,9 @@ app.use('/public', express.static("public"))
 app.use(express.urlencoded({extended:true}));
 app.use(session({
 	secret: 'secret',
-	cookie: { maxAge: 99999999},
-	resave: true,
-	saveUninitialized: true
+	cookie: { maxAge: 50000},
+	resave: false,
+	saveUninitialized: false
 
 }));
 
@@ -109,7 +109,7 @@ app.get("/class/:id_class", (req, res) => {
 
  connection.query ('SELECT name from classes where id_class = ?' , req.params.id_class, function(error, results){
    
-
+    
 	res.render("classProfile",{className : results[0].name,users: users,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,class_id : hasClass})
 
  });
