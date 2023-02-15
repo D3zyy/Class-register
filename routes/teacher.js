@@ -660,7 +660,7 @@ AND st.id_subject = (select id_subject from subjects where jmeno = ?)
 	
 	const values = [username,req.body.classNumber, req.body.subject];
 	  connection.query(query, values, (err, results) => {
-		if(results > 0 ) {
+		if(1 === 4) {
 			subjectID = results[0].subjectID;
 			userID = results[0].userID;
 			classID = results[0].classID;
@@ -723,12 +723,27 @@ AND st.id_subject = (select id_subject from subjects where jmeno = ?)
 	  
 
 		} else {
+			const queryUSER = `
+	SELECT  id_user
+	from users
+WHERE username = ? 
+`;
+const queryCLASS = `
+SELECT  id_class
+from classes
+WHERE name = ?
+`;
+const querySUBJECT = `
+SELECT  id_subject
+from subjects
+WHERE jmeno = ?
+`;
 			connection.query(queryUSER, username, (err, results) => {
-				userID = results[0].userID;
+				userID = results[0].id_user;
 				connection.query(querySUBJECT, req.body.subject, (err, results) => {
-					subjectID = results[0].subjectID;
+					subjectID = results[0].id_subject;
 					connection.query(queryCLASS, req.body.classNumber, (err, results) => {
-						classID = results[0].classID;
+						classID = results[0].id_class;
 
 
 						const subject = req.body.subject;
@@ -748,6 +763,7 @@ AND st.id_subject = (select id_subject from subjects where jmeno = ?)
 					
 				
 				const data = [date,userID, subjectID, classID, topic, notes,lessonNumber];
+				
 						const sql = `INSERT INTO entries (datum,id_user, id_subject, id_class,  topic, notes,lessonNumber) VALUES (?,?, ?, ?, ?, ?,?)`;
 						
 						connection.query(sql, data, (err, result) => {
