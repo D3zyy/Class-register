@@ -16,12 +16,24 @@
 <div  class="box" >
 
 
-<form method="POST" action="download">
-
+<form style="display: inline-block; margin: 15px;" method="POST" action="download">
+<h4 style="margin-bottom: 10px;">Moje záznamy</h4>
 Od : <input type="date" name="od"> <br>
 Do : <input type="date" name="do">
 <br>
-<input style="margin-top: 15px" type="submit" value="stáhnout">
+<input style="margin: 15px" type="submit" value="stáhnout">
 </form>
+<% if(className != null) { %>
+<form style="display: inline-block; margin: 15px" method="POST" action="downloadMyClass">
+  <h4 style="margin-bottom: 10px;">Záznamy <%- className -%> </h4>
+  Od : <input type="date" name="od"> <br>
+  Do : <input type="date" name="do">
+  <input  style="display: none;" type="text" value="<%- classID -%>">
+  <br>
+  <input style="margin: 15px" type="submit" value="stáhnout">
+  </form>
+  <% } %>
 </div>
+
+
 <%-include("footer")-%>

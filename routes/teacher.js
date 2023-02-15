@@ -278,7 +278,11 @@ const connection  = mysql.createConnection({
 		});
 	}
 	  });
-//Entries
+
+
+
+
+	  
 router.get("/downland", (req, res) => {
 	if (!req.session.loggedin){
 		res.redirect("/");
@@ -287,12 +291,43 @@ router.get("/downland", (req, res) => {
 		   res.redirect('/blockedAccess');
 		
 			} else {
-				connection.query('SELECT id_user,id_class from users where username = ? ' ,req.session.username,(error, results) =>{
-         
+				connection.query('SELECT users.id_user,users.id_class,classes.name,classes.id_class from users inner join classes on users.id_class = classes.id_class  where users.username = ? ', req.session.username, (error, results) => {
+					if (error) {
+					  // Handle the error
+					} else if (results && results.length > 0) {
+					  if (results[0].name) {
+						className = results[0].name;
+						classID = results[0].id_class;
+						userID = results[0].id_user;
+						hasClass = results[0].id_class;
+						res.render("downland", {classID : classID,className : className,class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID});	
+					  } else {
+						userID = results[0].id_user;
+						hasClass = results[0].id_class;
+						className = null;
+						res.render("downland", {className : className,class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID});	
+					  }
+					} else {
+					  // Handle the case when no results are returned
+					}
+				  });
+				  connection.query('SELECT id_user,id_class from users   where username = ? ', req.session.username, (error, results) => {
 					userID = results[0].id_user;
-					hasClass = results[0].id_class;
-					res.render("downland", {class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID});	
-				});
+							hasClass = results[0].id_class;
+					connection.query('SELECT name,id_class from classes  where id_user = ? ', userID, (error, results) => {
+						if (results) {
+							className = results[0].name;
+							classID = results[0].id_class;
+							res.render("downland", {classID : classID,className : className,class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID});	
+						  } else {
+							
+							className = null;
+							res.render("downland", {className : className,class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID});	
+						  }
+					});
+	
+				  });
+									
 				
 				}
 
@@ -353,6 +388,63 @@ router.post("/download", (req, res) => {
 	);
 } 
   });
+
+
+  router.post("/downloadMyClass", (req, res) => {
+	if (!req.session.loggedin){
+		res.redirect("/");
+			} else	if(roleID === 1){
+				
+		   res.redirect('/blockedAccess');
+		
+			} else {
+	connection.query(
+	  `SELECT entries.datum , classes.name as Třída, subjects.jmeno as Předmět, entries.topic as Téma, entries.notes as Poznámky, entries.lessonNumber as ČísloHodinyVRoce, 
+			 users.firstName as Jméno, users.lastName as Příjmení , absence.duvod, absence.omluveno
+	  FROM entries
+	  INNER JOIN classes ON entries.id_class = classes.id_class 
+	  INNER JOIN subjects ON entries.id_subject = subjects.id_subject 
+	  INNER JOIN absence ON absence.id_entry = entries.id_entry 
+	  INNER JOIN users ON absence.id_user = users.id_user 
+	  WHERE entries.datum BETWEEN ? AND ? AND entries.id_class = ?`,
+	  [req.body.od, req.body.do,classID],
+	  (error, results) => {
+		if (error) {
+		  console.error(error);
+		  return;
+		}
+
+		// Úprava datumu
+		for (let i = 0; i < results.length; i++) {
+		  var date = new Date(results[i].datum);
+		  var formattedDate = date.toLocaleDateString();
+		  results[i].datum = formattedDate;
+		}
+  
+		const fileStream = fs.createWriteStream("data.csv");
+  
+		csv
+		  .write(results, { headers: true })
+		  .pipe(fileStream)
+		  .on("finish", () => {
+	
+  
+			// Nastavení hlaviček souboru pro stahování
+			res.setHeader("Content-Type", "text/csv");
+			res.setHeader(
+			  "Content-Disposition",
+			  `attachment; filename=data-${req.body.od}-${req.body.do}.csv`
+			);
+  
+			// Vrácení souboru jako odpovědi na požadavek
+			fs.createReadStream("data.csv").pipe(res);
+		  });
+	  }
+	);
+} 
+  });
+
+
 let userID;
 router.get("/entries", (req, res) => {
 	
