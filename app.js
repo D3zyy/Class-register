@@ -127,6 +127,8 @@ app.get("/absence/:id_user", (req, res) => {
 	
 	if(req.session.loggedin === true && req.params.id_user == userID || req.session.loggedin === true && roleID === 3 || req.session.loggedin === true && roleID === 2 ){
 		
+		
+        
 		const idUser = req.params.id_user;
 	
 		connection.query('SELECT firstName,lastName from users where id_user = ? ' ,[idUser],(error, results) =>{
@@ -141,9 +143,13 @@ app.get("/absence/:id_user", (req, res) => {
 				var formattedDate = date.toLocaleDateString();	
 				results[j].datum = formattedDate;
 			};
-			
+			absenceID = req.params.id_user;
+		    idUserPrihlasen = userID;
 			const users = results;
 			res.render("absence", {
+				idUserPrihlasen : idUserPrihlasen,
+				absenceID : absenceID,
+				IDrole : roleID,
 				date : formattedDate,
 				users : users,
 				user_id: userID,

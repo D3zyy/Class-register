@@ -22,18 +22,18 @@ const connection  = mysql.createConnection({
 	router.post("/absence/omluvit", (req, res) => {
 		if(req.session.loggedin === true) {
 			connection.query("SELECT id_class from users where username = ?", req.session.username, function (error, results, fields){
-				console.log('Results : ' + results);
+				
 						hasClass = results[0].id_class;
 			
-		console.log("Class id teacher : "+hasClass + " Role : " + roleID);
+
 		if (!req.session.loggedin) {
 		  res.redirect("/");
 		} else if (roleID === 1) {
 		  res.redirect('/blockedAccess');
 		} else if (roleID === 2  && hasClass != null && req.session.loggedin === true || roleID === 3 && req.session.loggedin === true){
-			console.log(req.body.user_id);
+			
 			connection.query("SELECT id_class from users where id_user = ?", [req.body.user_id], function (error, results, fields){
-        console.log('Results : ' + results[0].id_class);
+       
 				idClassUser = results[0].id_class;
 		
 		if( idClassUser === hasClass && req.session.loggedin === true|| roleID === 3 && req.session.loggedin === true) {
@@ -60,18 +60,18 @@ const connection  = mysql.createConnection({
 	  router.post("/absence/smazat", (req, res) => {
 		if(req.session.loggedin === true) {
 			connection.query("SELECT id_class from users where username = ?", req.session.username, function (error, results, fields){
-				console.log('Results : ' + results);
+			
 						hasClass = results[0].id_class;
 			
-		console.log("Class id teacher : "+hasClass + " Role : " + roleID);
+
 		if (!req.session.loggedin) {
 		  res.redirect("/");
 		} else if (roleID === 1) {
 		  res.redirect('/blockedAccess');
 		} else if (roleID === 2  && hasClass != null && req.session.loggedin === true || roleID === 3 && req.session.loggedin === true){
-			console.log(req.body.user_id);
+			
 			connection.query("SELECT id_class from users where id_user = ?", [req.body.user_id], function (error, results, fields){
-        console.log('Results : ' + results[0].id_class);
+      
 				idClassUser = results[0].id_class;
 		
 		if( idClassUser === hasClass && req.session.loggedin === true|| roleID === 3 && req.session.loggedin === true) {
@@ -97,18 +97,18 @@ const connection  = mysql.createConnection({
 	  router.post("/absence/neurceno", (req, res) => {
 		if(req.session.loggedin === true) {
 			connection.query("SELECT id_class from users where username = ?", req.session.username, function (error, results, fields){
-				console.log('Results : ' + results);
+			
 						hasClass = results[0].id_class;
 			
-		console.log("Class id teacher : "+hasClass + " Role : " + roleID);
+
 		if (!req.session.loggedin) {
 		  res.redirect("/");
 		} else if (roleID === 1) {
 		  res.redirect('/blockedAccess');
 		} else if (roleID === 2  && hasClass != null && req.session.loggedin === true || roleID === 3 && req.session.loggedin === true){
-			console.log(req.body.user_id);
+			
 			connection.query("SELECT id_class from users where id_user = ?", [req.body.user_id], function (error, results, fields){
-        console.log('Results : ' + results[0].id_class);
+
 				idClassUser = results[0].id_class;
 		
 		if( idClassUser === hasClass && req.session.loggedin === true|| roleID === 3 && req.session.loggedin === true) {
@@ -131,6 +131,44 @@ const connection  = mysql.createConnection({
 	});
 };
 	  });
+
+
+	  router.post("/absence/pridatDuvod", (req, res) => {
+		if(req.session.loggedin === true) {
+		
+			connection.query("SELECT id_user from users where username = ?", req.session.username, function (error, results, fields){
+      idd_user = results[0].id_user;
+	  console.log(req.body.user_id + " " +results[0].id_user)
+		 if (req.body.user_id == idd_user || roleID === 3){
+			
+		
+			function convertDate(date) {
+				const [month, day, year] = date.split('/');
+				return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+			  }
+				const sqlDate = convertDate(req.body.datum); 
+console.log('tady');
+				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry set absence.duvod = ? WHERE entries.datum = ? AND absence.id_user = ?", [req.body.duvod,sqlDate,req.body.user_id], function (error, results, fields){
+					console.log('taadafdfady');
+					res.send();
+					
+			});
+
+
+		
+		
+		} else {
+			res.redirect('/');
+		}
+	});
+} else {
+	res.redirect('/');
+}
+
+
+	  });
+
+
 	  
 	  router.post("/absence/neomluvit", (req, res) => {
 		if(req.session.loggedin === true) {
@@ -144,7 +182,7 @@ const connection  = mysql.createConnection({
 		} else if (roleID === 1) {
 		  res.redirect('/blockedAccess');
 		} else if (roleID === 2  && hasClass != null && req.session.loggedin === true || roleID === 3 && req.session.loggedin === true){
-			console.log(req.body.user_id);
+		
 			connection.query("SELECT id_class from users where id_user = ?", [req.body.user_id], function (error, results, fields){
      
 				idClassUser = results[0].id_class;
@@ -278,6 +316,8 @@ const connection  = mysql.createConnection({
 		});
 	}
 	  });
+
+
 
 
 

@@ -48,25 +48,30 @@
                 <%= users[i].absence_count %>
             </td>
             <td>
-                <% if(users[i].omluveno === 'cekani') { %>
+                <% if(users[i].omluveno === 'cekani' && IDrole === 2 || users[i].omluveno === 'cekani' && IDrole === 3) { %>
                  
                   <input type="text" value="<%= users[i].duvod %>"  id="<%= i%>">
-                <% } else if(users[i].omluveno === 'ano') { %>
+                <% } else if(users[i].omluveno === 'ano' && IDrole === 2 || users[i].omluveno === 'ano' && IDrole === 3) { %>
                  
                   
                       <input disabled type="text" value="<%= users[i].duvod %>" id="<%= i %>">  
                       <input type="hidden" value="<%= users[i].duvod %>">      
                     
                  
-                <% } else if(users[i].omluveno === 'ne') { %> 
+                <% } else if(users[i].omluveno === 'ne' && IDrole === 2 || users[i].omluveno === 'ne' && IDrole === 3) { %> 
                   
                     
                       <input disabled type="text" value="<%= users[i].duvod %>" id="<%= i%>">  
                       <input type="hidden" value="<%= users[i].duvod %>">    
                    
-                <% } %>
+                 <% } else if(users[i].omluveno === 'cekani' && IDrole === 1 && users[0].duvod.length > 0) { %> 
+                  <input disabled type="text" value="<%= users[i].duvod %>" id="<%= i%>">  
                 
-                
+                  <% } else if(users[i].omluveno === 'cekani' && IDrole === 1 && users[0].duvod.length < 1) { %> 
+                    <input  type="text" value="<%= users[i].duvod %>" id="<%= i%>">
+                    <% } else if ( users[i].omluveno === 'ano' && IDrole === 1 && users[0].duvod.length > 1 ||  users[i].omluveno === 'ne' && IDrole === 1 && users[0].duvod.length > 1)  { %> 
+                      <input disabled type="text" value="<%= users[i].duvod %>" id="<%= i%>">
+                      <% } %>
             <td>
                 <% if(users[i].omluveno === 'cekani') { %>
                     <i style="color: black;" class="fas fa-question"></i>
@@ -82,32 +87,34 @@
             </td>
      <td>
        
-        <% if(users[i].omluveno === 'cekani') { %>
+        
+
+
+          <% if(users[i].omluveno === 'cekani' &&   IDrole === 2 || users[i].omluveno === 'cekani' &&   IDrole === 3  ){ %>
            
         <input style="display: inline-block; padding: 2px; " type="button" value="omluvit" onclick="omluvit('<%= users[i].datum %>','<%= i %>')">
         <input style="display: inline-block; padding: 2px;" type="button" value="neomluvit" onclick="neomluvit('<%= users[i].datum %>','<%= i %>')">
         <input style="display: inline-block; padding: 2px;" type="button" value="smazat absenci" onclick="smazat('<%= users[i].datum %>')">
            
 
-          <% } else if(users[i].omluveno === 'ano') { %>
+          <% } else if(users[i].omluveno === 'ano' &&   IDrole === 2 || users[i].omluveno === 'ano' &&   IDrole === 3 ) { %>
             
                 <input style="display: inline-block; padding: 2px;" type="button" value="neomluvit" onclick="neomluvit('<%= users[i].datum %>','<%= i %>')">
                 <input style="display: inline-block; padding: 2px;" type="button" value="neurcit" onclick="neurceno('<%= users[i].datum %>','<%= i %>')">
                 <input style="display: inline-block; padding: 2px;" type="button" value="smazat absenci" onclick="smazat('<%= users[i].datum %>')">
                
 
-          <% } else if(users[i].omluveno === 'ne') { %> 
+          <% } else if(users[i].omluveno === 'ne' &&   IDrole === 2 || users[i].omluveno === 'ne' &&   IDrole === 3 ) { %> 
           
                 <input style="display: inline-block; padding: 2px; " type="button" value="omluvit" onclick="omluvit('<%= users[i].datum %>','<%= i %>')">
                 <input style="display: inline-block; padding: 2px;" type="button" value="neurcit" onclick="neurceno('<%= users[i].datum %>','<%= i %>')">
                 <input style="display: inline-block; padding: 2px;" type="button" value="smazat absenci" onclick="smazat('<%= users[i].datum %>')">
                   
 
+          <% } else if(users[i].omluveno === 'cekani' &&   IDrole === 1  && users[0].duvod.length < 1){%>
+            <input style="display: inline-block; padding: 2px; " type="button" value="odeslat důvod" onclick="odeslatDuvod('<%= users[i].datum %>','<%= i %>')">
+            
           <% } %>
-
-
-
-
      </td>
             
      
