@@ -32,7 +32,7 @@ const connection  = mysql.createConnection({
 			  }
 				const sqlDate = convertDate(req.body.datum); 
 
-				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'ano', absence.duvod = ? WHERE entries.datum = ?", [req.body.duvod,sqlDate], function (error, results, fields){
+				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'ano', absence.duvod = ? WHERE entries.datum = ? AND absence.id_user = ?", [req.body.duvod,sqlDate,req.body.user_id], function (error, results, fields){
 					res.send();
 					
 			});
@@ -53,7 +53,7 @@ const connection  = mysql.createConnection({
 			  }
 				const sqlDate = convertDate(req.body.datum); 
 
-				connection.query("DELETE FROM absence WHERE id_entry IN (SELECT id_entry FROM entries WHERE datum = ?)", [sqlDate], function (error, results, fields){
+				connection.query("DELETE FROM absence WHERE id_entry IN (SELECT id_entry FROM entries WHERE datum = ?) AND absence.id_user = ?", [sqlDate,req.body.user_id], function (error, results, fields){
 					res.send();
 			});
 			
@@ -64,7 +64,7 @@ const connection  = mysql.createConnection({
 		  res.redirect("/");
 		} else if (roleID === 1) {
 		  res.redirect('/blockedAccess');
-		} else {
+		} else if(roleID === 2 ){
 		
 			function convertDate(date) {
 				const [month, day, year] = date.split('/');
@@ -72,7 +72,7 @@ const connection  = mysql.createConnection({
 			  }
 				const sqlDate = convertDate(req.body.datum); 
 
-				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'cekani', absence.duvod = ? WHERE entries.datum = ?", [req.body.duvod,sqlDate], function (error, results, fields){
+				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'cekani', absence.duvod = ? WHERE entries.datum = ? AND absence.id_user = ? ", [req.body.duvod,sqlDate,req.body.user_id], function (error, results, fields){
 					res.send();
 			});
 		}
@@ -91,7 +91,7 @@ const connection  = mysql.createConnection({
 			  }
 				const sqlDate = convertDate(req.body.datum); 
 
-				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'ne', absence.duvod = ? WHERE entries.datum = ?", [req.body.duvod,sqlDate], function (error, results, fields){
+				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'ne', absence.duvod = ? WHERE entries.datum = ? AND absence.id_user = ?", [req.body.duvod,sqlDate,req.body.user_id], function (error, results, fields){
 					res.send();
 			});
 		}

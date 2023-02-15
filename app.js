@@ -152,7 +152,8 @@ app.get("/absence/:id_user", (req, res) => {
 				firstNameUser : firstNameUser,
 				lastnameUser : lastNameUser,
 				role: roleID,
-				class_id: hasClass
+				class_id: hasClass,
+				user_id : idUser
 			});
 		});
 		});
