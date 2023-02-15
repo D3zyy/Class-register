@@ -147,9 +147,9 @@ const connection  = mysql.createConnection({
 				return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 			  }
 				const sqlDate = convertDate(req.body.datum); 
-console.log('tady');
+
 				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry set absence.duvod = ? WHERE entries.datum = ? AND absence.id_user = ?", [req.body.duvod,sqlDate,req.body.user_id], function (error, results, fields){
-					console.log('taadafdfady');
+					
 					res.send();
 					
 			});
