@@ -308,25 +308,25 @@ router.get("/downland", (req, res) => {
 						res.render("downland", {className : className,class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID});	
 					  }
 					} else {
-					  // Handle the case when no results are returned
+						connection.query('SELECT id_user,id_class from users   where username = ? ', req.session.username, (error, results) => {
+							userID = results[0].id_user;
+									hasClass = results[0].id_class;
+							connection.query('SELECT name,id_class from classes  where id_user = ? ', userID, (error, results) => {
+								if (results) {
+									className = results[0].name;
+									classID = results[0].id_class;
+									res.render("downland", {classID : classID,className : className,class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID});	
+								  } else {
+									
+									className = null;
+									res.render("downland", {className : className,class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID});	
+								  }
+							});
+			
+						  });
 					}
 				  });
-				  connection.query('SELECT id_user,id_class from users   where username = ? ', req.session.username, (error, results) => {
-					userID = results[0].id_user;
-							hasClass = results[0].id_class;
-					connection.query('SELECT name,id_class from classes  where id_user = ? ', userID, (error, results) => {
-						if (results) {
-							className = results[0].name;
-							classID = results[0].id_class;
-							res.render("downland", {classID : classID,className : className,class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID});	
-						  } else {
-							
-							className = null;
-							res.render("downland", {className : className,class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID});	
-						  }
-					});
-	
-				  });
+				  
 									
 				
 				}
@@ -343,6 +343,9 @@ router.post("/download", (req, res) => {
 		   res.redirect('/blockedAccess');
 		
 			} else {
+				connection.query('SELECT id_user from users where username = ? ', req.session.username,(error, results) =>{
+          idUSER = results[0].id_user;
+				
 	connection.query(
 	  `SELECT entries.datum , classes.name as Třída, subjects.jmeno as Předmět, entries.topic as Téma, entries.notes as Poznámky, entries.lessonNumber as ČísloHodinyVRoce, 
 			 users.firstName as Jméno, users.lastName as Příjmení , absence.duvod, absence.omluveno
@@ -351,8 +354,8 @@ router.post("/download", (req, res) => {
 	  INNER JOIN subjects ON entries.id_subject = subjects.id_subject 
 	  INNER JOIN absence ON absence.id_entry = entries.id_entry 
 	  INNER JOIN users ON absence.id_user = users.id_user 
-	  WHERE entries.datum BETWEEN ? AND ?`,
-	  [req.body.od, req.body.do],
+	  WHERE entries.datum BETWEEN ? AND ? AND entries.id_user = ?`,
+	  [req.body.od, req.body.do,idUSER],
 	  (error, results) => {
 		if (error) {
 		  console.error(error);
@@ -386,6 +389,7 @@ router.post("/download", (req, res) => {
 		  });
 	  }
 	);
+});
 } 
   });
 
