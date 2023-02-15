@@ -50,18 +50,18 @@
             <td>
                 <% if(users[i].omluveno === 'cekani') { %>
                  
-                  <input type="text" value="<%= users[i].duvod %>" required id="duvod-input">
+                  <input type="text" value="<%= users[i].duvod %>"  id="<%= i%>">
                 <% } else if(users[i].omluveno === 'ano') { %>
                  
                   
-                      <input disabled type="text" value="<%= users[i].duvod %>" id="duvod-input">  
+                      <input disabled type="text" value="<%= users[i].duvod %>" id="<%= i %>">  
                       <input type="hidden" value="<%= users[i].duvod %>">      
                     
                  
                 <% } else if(users[i].omluveno === 'ne') { %> 
                   
                     
-                      <input disabled type="text" value="<%= users[i].duvod %>" id="duvod-input">  
+                      <input disabled type="text" value="<%= users[i].duvod %>" id="<%= i%>">  
                       <input type="hidden" value="<%= users[i].duvod %>">    
                    
                 <% } %>
@@ -84,22 +84,22 @@
        
         <% if(users[i].omluveno === 'cekani') { %>
            
-        <input style="display: inline-block; padding: 2px; " type="button" value="omluvit" onclick="omluvit('<%= users[i].datum %>')">
-        <input style="display: inline-block; padding: 2px;" type="button" value="neomluvit" onclick="neomluvit('<%= users[i].datum %>')">
+        <input style="display: inline-block; padding: 2px; " type="button" value="omluvit" onclick="omluvit('<%= users[i].datum %>','<%= i %>')">
+        <input style="display: inline-block; padding: 2px;" type="button" value="neomluvit" onclick="neomluvit('<%= users[i].datum %>','<%= i %>')">
         <input style="display: inline-block; padding: 2px;" type="button" value="smazat absenci" onclick="smazat('<%= users[i].datum %>')">
            
 
           <% } else if(users[i].omluveno === 'ano') { %>
             
-                <input style="display: inline-block; padding: 2px;" type="button" value="neomluvit" onclick="neomluvit('<%= users[i].datum %>')">
-                <input style="display: inline-block; padding: 2px;" type="button" value="neurcit" onclick="neurceno('<%= users[i].datum %>')">
+                <input style="display: inline-block; padding: 2px;" type="button" value="neomluvit" onclick="neomluvit('<%= users[i].datum %>','<%= i %>')">
+                <input style="display: inline-block; padding: 2px;" type="button" value="neurcit" onclick="neurceno('<%= users[i].datum %>','<%= i %>')">
                 <input style="display: inline-block; padding: 2px;" type="button" value="smazat absenci" onclick="smazat('<%= users[i].datum %>')">
                
 
           <% } else if(users[i].omluveno === 'ne') { %> 
           
-                <input style="display: inline-block; padding: 2px; " type="button" value="omluvit" onclick="omluvit('<%= users[i].datum %>')">
-                <input style="display: inline-block; padding: 2px;" type="button" value="neurcit" onclick="neurceno('<%= users[i].datum %>')">
+                <input style="display: inline-block; padding: 2px; " type="button" value="omluvit" onclick="omluvit('<%= users[i].datum %>','<%= i %>')">
+                <input style="display: inline-block; padding: 2px;" type="button" value="neurcit" onclick="neurceno('<%= users[i].datum %>','<%= i %>')">
                 <input style="display: inline-block; padding: 2px;" type="button" value="smazat absenci" onclick="smazat('<%= users[i].datum %>')">
                   
 

@@ -1,10 +1,11 @@
 function smazat(datum) {
-    var user_id = $('#user-id').val(); 
+    
+    var user = $('#user-id').val();  
     $.ajax({
         
       url: '/teacher/absence/smazat',
       type: 'POST',
-      data: { datum: datum, user_id : user_id },
+      data: { datum: datum, user_id : user },
       success: function () {
         location.reload();
       },

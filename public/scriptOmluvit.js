@@ -1,8 +1,8 @@
 
-function omluvit(datum) {
-    var duvod = $('#duvod-input').val().trim();
+function omluvit(datum,id) {
+    var duvod = $('#' + id).val().trim();
     var user = $('#user-id').val(); 
-    console.log($('#user-id').val());
+
     if (duvod !== '') {
         $.ajax({
             url: '/teacher/absence/omluvit',

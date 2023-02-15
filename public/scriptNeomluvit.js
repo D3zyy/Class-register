@@ -1,12 +1,13 @@
 
-function neomluvit(datum) {
-    var duvod = $('#duvod-input').val().trim(); 
-    var user_id = $('#user-id').val(); 
+function neomluvit(datum,id) {
+    var duvod = $('#' + id).val().trim();
+    var user = $('#user-id').val();  
+
     if (duvod !== '') {
         $.ajax({
             url: '/teacher/absence/neomluvit',
             type: 'POST',
-            data: { datum: datum, duvod: duvod , user_id : user_id},
+            data: { datum: datum, duvod: duvod , user_id : user},
             success: function () {
                 location.reload();
             },
