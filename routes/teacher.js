@@ -19,7 +19,156 @@ const connection  = mysql.createConnection({
     
     });
 
-	
+	router.post("/absence/omluvit", (req, res) => {
+		if(req.session.loggedin === true) {
+			connection.query("SELECT id_class from users where username = ?", req.session.username, function (error, results, fields){
+				console.log('Results : ' + results);
+						hasClass = results[0].id_class;
+			
+		console.log("Class id teacher : "+hasClass + " Role : " + roleID);
+		if (!req.session.loggedin) {
+		  res.redirect("/");
+		} else if (roleID === 1) {
+		  res.redirect('/blockedAccess');
+		} else if (roleID === 2  && hasClass != null && req.session.loggedin === true || roleID === 3 && req.session.loggedin === true){
+			console.log(req.body.user_id);
+			connection.query("SELECT id_class from users where id_user = ?", [req.body.user_id], function (error, results, fields){
+        console.log('Results : ' + results[0].id_class);
+				idClassUser = results[0].id_class;
+		
+		if( idClassUser === hasClass && req.session.loggedin === true|| roleID === 3 && req.session.loggedin === true) {
+
+			function convertDate(date) {
+				const [month, day, year] = date.split('/');
+				return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+			  }
+				const sqlDate = convertDate(req.body.datum); 
+
+				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'ano', absence.duvod = ? WHERE entries.datum = ? AND absence.id_user = ?", [req.body.duvod,sqlDate,req.body.user_id], function (error, results, fields){
+					res.send();
+					
+			});
+
+
+		};
+			});
+		}
+	});
+};
+	  });
+
+	  router.post("/absence/smazat", (req, res) => {
+		if(req.session.loggedin === true) {
+			connection.query("SELECT id_class from users where username = ?", req.session.username, function (error, results, fields){
+				console.log('Results : ' + results);
+						hasClass = results[0].id_class;
+			
+		console.log("Class id teacher : "+hasClass + " Role : " + roleID);
+		if (!req.session.loggedin) {
+		  res.redirect("/");
+		} else if (roleID === 1) {
+		  res.redirect('/blockedAccess');
+		} else if (roleID === 2  && hasClass != null && req.session.loggedin === true || roleID === 3 && req.session.loggedin === true){
+			console.log(req.body.user_id);
+			connection.query("SELECT id_class from users where id_user = ?", [req.body.user_id], function (error, results, fields){
+        console.log('Results : ' + results[0].id_class);
+				idClassUser = results[0].id_class;
+		
+		if( idClassUser === hasClass && req.session.loggedin === true|| roleID === 3 && req.session.loggedin === true) {
+
+			function convertDate(date) {
+				const [month, day, year] = date.split('/');
+				return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+			  }
+				const sqlDate = convertDate(req.body.datum); 
+
+				connection.query("DELETE FROM absence WHERE id_entry IN (SELECT id_entry FROM entries WHERE datum = ?) AND absence.id_user = ?", [sqlDate,req.body.user_id], function (error, results, fields){
+					res.send();
+			});
+
+
+		};
+			});
+		}
+	});
+};
+		
+}); 
+	  router.post("/absence/neurceno", (req, res) => {
+		if(req.session.loggedin === true) {
+			connection.query("SELECT id_class from users where username = ?", req.session.username, function (error, results, fields){
+				console.log('Results : ' + results);
+						hasClass = results[0].id_class;
+			
+		console.log("Class id teacher : "+hasClass + " Role : " + roleID);
+		if (!req.session.loggedin) {
+		  res.redirect("/");
+		} else if (roleID === 1) {
+		  res.redirect('/blockedAccess');
+		} else if (roleID === 2  && hasClass != null && req.session.loggedin === true || roleID === 3 && req.session.loggedin === true){
+			console.log(req.body.user_id);
+			connection.query("SELECT id_class from users where id_user = ?", [req.body.user_id], function (error, results, fields){
+        console.log('Results : ' + results[0].id_class);
+				idClassUser = results[0].id_class;
+		
+		if( idClassUser === hasClass && req.session.loggedin === true|| roleID === 3 && req.session.loggedin === true) {
+
+			function convertDate(date) {
+				const [month, day, year] = date.split('/');
+				return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+			  }
+				const sqlDate = convertDate(req.body.datum); 
+
+				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'cekani', absence.duvod = ? WHERE entries.datum = ? AND absence.id_user = ?", [req.body.duvod,sqlDate,req.body.user_id], function (error, results, fields){
+					res.send();
+					
+			});
+
+
+		};
+			});
+		}
+	});
+};
+	  });
+	  
+	  router.post("/absence/neomluvit", (req, res) => {
+		if(req.session.loggedin === true) {
+			connection.query("SELECT id_class from users where username = ?", req.session.username, function (error, results, fields){
+				
+						hasClass = results[0].id_class;
+			
+		
+		if (!req.session.loggedin) {
+		  res.redirect("/");
+		} else if (roleID === 1) {
+		  res.redirect('/blockedAccess');
+		} else if (roleID === 2  && hasClass != null && req.session.loggedin === true || roleID === 3 && req.session.loggedin === true){
+			console.log(req.body.user_id);
+			connection.query("SELECT id_class from users where id_user = ?", [req.body.user_id], function (error, results, fields){
+     
+				idClassUser = results[0].id_class;
+		
+		if( idClassUser === hasClass && req.session.loggedin === true|| roleID === 3 && req.session.loggedin === true) {
+
+			function convertDate(date) {
+				const [month, day, year] = date.split('/');
+				return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+			  }
+				const sqlDate = convertDate(req.body.datum); 
+
+				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'ne', absence.duvod = ? WHERE entries.datum = ? AND absence.id_user = ?", [req.body.duvod,sqlDate,req.body.user_id], function (error, results, fields){
+					res.send();
+					
+			});
+
+
+		};
+			});
+		}
+	});
+} ;
+	  });
 
 	router.post("/:id_entry/edit", (req, res) => {
 		if (!req.session.loggedin){
@@ -245,219 +394,277 @@ router.get("/entries", (req, res) => {
 			}
 });
     //Entry page
-	router.get("/entry", (req, res) => {
-		if (!req.session.loggedin){
-	res.redirect("/");
-		} else	if(roleID === 1){
-			
-	   res.redirect('/blockedAccess');
-		} else {
+router.get("/entry", (req, res) => {
+
+
+	if (!req.session.loggedin){
+res.redirect("/");
+	} else	if(roleID === 1){
 		
-		// získejte aktuální čas
-		const currentTime = new Date();
-	  
-		// vyberte data o probíhajících předmětech z tabulky subject_times pro aktuálního učitele
-		const username = req.session.username;
-		const query = `
-		SELECT s.jmeno AS subject_name, classes.name as Class, s.id_subject, st.id_subject as subjectID, st.id_class as classID, st.id_user as userID 
-		FROM subject_times st
-		INNER JOIN subjects s ON st.id_subject = s.id_subject
-		inner join classes on st.id_class = classes.id_class
-		WHERE st.id_user = (SELECT id_user FROM users WHERE username = ?) AND ? BETWEEN st.start_time AND st.end_time AND st.day = DAYNAME(NOW())
-		`;
-		const values = [username,currentTime];
-		
-		connection.query(query, values, (error, results) => {
-		  if (error) throw error;
-	  if(results.length < 1){
-			res.redirect('enterManually');
-			res.end();
-		  } else {
-		 
-		  // pokud jsou výsledky dotazu prázdné, nastavte hodnoty formuláře na "Neučí"
-		  let teacherName = "Neučí";
-		  let subjectName = "Neučí";
-		  let classname= "Neučí";
-		  let subjectID = null;
-		  let userID = null;
-		  let classID = null;
-		  let logCount;
-		  // pokud jsou výsledky dotazu nějaké, použijte první řádek výsledků pro vyplnění formuláře
-		  if (results.length > 0) {
-			teacherName = req.session.username;
-			subjectName = results[0].subject_name;	
-			classname = results[0].Class
-			subjectID = results[0].subjectID;
-			userID = results[0].userID;
-			classID = results[0].classID;
-		  } 
-		   
-		  const sql = `SELECT COUNT(*) as count FROM entries WHERE id_user = ? AND id_subject = ? AND id_class = ?`;
-			const values = [userID, subjectID, classID];
-			
-			connection.query(sql, values, (error, results) => {
-			  if (error) throw error;
-			  logCount = results[0].count + 1;  
-			const valuesClass = [classID];
-		 
-			connection.query('SELECT firstName, lastName, id_user FROM users WHERE id_class = ?',valuesClass, (error, results) => {
-				if (error) throw error;
-				const users = results;
-				
-				
-				res.render("entry", {class_id : hasClass,user_id : userID,eacherName: teacherName, 
-					subject: subjectName,
-					stav : 'Odhlásit se' , name : req.session.username  , role : global.roleID, classNumber : classname,
-					taughtHours : logCount , users : users
-				  });		
-			  });	
-			});	
-		}  
-		});
-	}
-	  });
-	  router.get("/enterManually", (req, res) => {
-		if (!req.session.loggedin){
-			res.redirect("/");
-				} else	if(roleID === 1){
-					
-			   res.redirect('/blockedAccess');
-			
-				} else {
-			
-		connection.query('SELECT name,id_class from classes', (error, results) => {
-			if (error) throw error;
-			const users = results;
-			res.render('enterManually',{class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,users : users});
-			
-			
-				
-		  });	
-			  
-		
-		} 
-		
-	   });
-	   router.post("/enterManuallySubject", (req, res) => {
-		if (!req.session.loggedin){
-			res.redirect("/");
-				} else	if(roleID === 1){
-					
-			   res.redirect('/blockedAccess');
-			
-				} else {
-			
-		connection.query('SELECT subjects.id_subject, subjects.jmeno from subject_times  inner join subjects on subject_times.id_subject = subjects.id_subject where id_class = ?', req.body.selectedOption,(error, results) => {
-			if (error) throw error;
-			const users = results;
-			const classID = req.body.selectedOption;
-			const subjectID = req.body.selectedSubject;
-			
-			connection.query('SELECT jmeno,id_subject from subjects where id_class = ?', req.body.selectedOption,(error, results) =>{
-				
-					
-					
-					
-					
-					res.render('enterManuallySubject',{class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,users : users,clasIDD : req.body.selectedOption});
-				
-				
-			});
-			
-			
-			
-			
-			
-			
-				
-		  });	
-			  
-		} 
-		  
-		
-	   });
-	   router.post("/enterManuallyForm", (req, res) => {
-		if (!req.session.loggedin){
-			res.redirect("/");
-				} else	if(roleID === 1){
-					
-			   res.redirect('/blockedAccess');
-			
-				} else {
-		
-			const classID = req.body.selectedOption;
-			const subjectID = req.body.selectedSubject;
-			const sql = `SELECT COUNT(*) as count FROM entries WHERE id_user = ? AND id_subject = ? AND id_class = ?`;
-			connection.query('SELECT firstName, lastName, id_user FROM users WHERE id_class = ?', classID, (error, results) => {
-				if (error) throw error;
-				const users = results;
-				connection.query('SELECT name FROM classes WHERE id_class = ?', classID, (error, results) => {
-					classNumberr = results[0].name;  
-					
-					
-					
-					
-					connection.query('SELECT jmeno FROM subjects WHERE id_subject = ?', subjectID, (error, results) => {
-					 subjectName = results[0].jmeno
-				 
-					 connection.query('SELECT id_user FROM users WHERE username = ?', req.session.username, (error, results) => {
-						userID = results[0].id_user
-				
-						connection.query(`SELECT COUNT(*) as count FROM entries WHERE id_user = ? AND id_subject = ? AND id_class = ?`, [userID, subjectID, classID], (error, result) => {
-							  pocet = result[0].count + 1;
-							
-							  if (error) throw error;
-							res.render('enterManuallyForm',{class_id : hasClass,user_id : userID,taughtHours : pocet,subjectJmeno : subjectName,classNumber : classNumberr,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,users: users, teacherName : req.session.username});
-						});
-						
-					});	
-						
-					});	
-				});	
-				
-				
-				
-			  });	
-			  
-		} 
-	   });
-	  //Page where we post the form
-	  router.post("/success", (req, res) => {
-	  
-		if (req.session.loggedin) {
-		  res.render("success", {class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID ,text : 'Data has been successfully submitted'});	
-		 
-		  
-		  const currentTime = new Date();
-		  const username = req.session.username;
-		  const queryUSER = `
-		SELECT  id_user
-		from users
-	WHERE username = ? 
-	`;
-	const queryCLASS = `
-	SELECT  id_user
-	from users
-	WHERE name = ?
-	`;
-	const querySUBJECT = `
-	SELECT  id_subject
-	from subjects
-	WHERE jmeno = ?
-	`;
-		const query = `
-		SELECT  st.id_subject as subjectID, st.id_class as classID, st.id_user as userID
+   res.redirect('/blockedAccess');
+
+	} else {
+
+	
+
+	// získejte aktuální čas
+	const currentTime = new Date();
+  
+	// vyberte data o probíhajících předmětech z tabulky subject_times pro aktuálního učitele
+	const username = req.session.username;
+	const query = `
+	SELECT s.jmeno AS subject_name, classes.name as Class, s.id_subject, st.id_subject as subjectID, st.id_class as classID, st.id_user as userID 
 	FROM subject_times st
 	INNER JOIN subjects s ON st.id_subject = s.id_subject
 	inner join classes on st.id_class = classes.id_class
-	WHERE st.id_user = (SELECT id_user FROM users WHERE username = ?) 
-	AND st.id_class = (select id_class from classes where name = ?)
-	AND st.id_subject = (select id_subject from subjects where jmeno = ?)
-		`;
-		const values = [username,req.body.classNumber, req.body.subject];
-		  connection.query(query, values, (err, results) => {
+	WHERE st.id_user = (SELECT id_user FROM users WHERE username = ?) AND ? BETWEEN st.start_time AND st.end_time AND st.day = DAYNAME(NOW())
+	`;
+	const values = [username,currentTime];
+	
+	connection.query(query, values, (error, results) => {
+	  if (error) throw error;
+  if(results.length < 1){
+		res.redirect('enterManually');
+		res.end();
+	  } else {
+
+	 
+	  // pokud jsou výsledky dotazu prázdné, nastavte hodnoty formuláře na "Neučí"
+	  let teacherName = "Neučí";
+	  let subjectName = "Neučí";
+	  let classname= "Neučí";
+	  let subjectID = null;
+	  let userID = null;
+	  let classID = null;
+	  let logCount;
+	  // pokud jsou výsledky dotazu nějaké, použijte první řádek výsledků pro vyplnění formuláře
+	  if (results.length > 0) {
+		teacherName = req.session.username;
+		subjectName = results[0].subject_name;	
+		classname = results[0].Class
+		subjectID = results[0].subjectID;
+		userID = results[0].userID;
+		classID = results[0].classID;
+	  } 
+	   
+	  const sql = `SELECT COUNT(*) as count FROM entries WHERE id_user = ? AND id_subject = ? AND id_class = ?`;
+		const values = [userID, subjectID, classID];
+		
+		connection.query(sql, values, (error, results) => {
+		  if (error) throw error;
+		  logCount = results[0].count + 1;  
+
+
+		const valuesClass = [classID];
+	 
+		connection.query('SELECT firstName, lastName, id_user FROM users WHERE id_class = ?',valuesClass, (error, results) => {
+			if (error) throw error;
+
+			const users = results;
+
+
+
+
+
+
+
 			
 			
+			res.render("entry", {class_id : hasClass,user_id : userID,eacherName: teacherName, 
+				subject: subjectName,
+				stav : 'Odhlásit se' , name : req.session.username  , role : global.roleID, classNumber : classname,
+				taughtHours : logCount , users : users
+			  });		
+		  });	
+		});	
+	}  
+
+	});
+}
+  });
+  router.get("/enterManually", (req, res) => {
+	if (!req.session.loggedin){
+		res.redirect("/");
+			} else	if(roleID === 1){
+				
+		   res.redirect('/blockedAccess');
+		
+			} else {
+		
+	connection.query('SELECT name,id_class from classes', (error, results) => {
+		if (error) throw error;
+
+		const users = results;
+
+
+
+
+
+		res.render('enterManually',{class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,users : users});
+
+		
+		
+			
+	  });	
+
+	  	
+	
+	} 
+	
+   });
+
+   router.post("/enterManuallySubject", (req, res) => {
+	if (!req.session.loggedin){
+		res.redirect("/");
+			} else	if(roleID === 1){
+				
+		   res.redirect('/blockedAccess');
+		
+			} else {
+		
+	connection.query('SELECT subjects.id_subject, subjects.jmeno from subject_times  inner join subjects on subject_times.id_subject = subjects.id_subject where id_class = ?', req.body.selectedOption,(error, results) => {
+		if (error) throw error;
+		const users = results;
+		const classID = req.body.selectedOption;
+		const subjectID = req.body.selectedSubject;
+		
+		connection.query('SELECT jmeno,id_subject from subjects where id_class = ?', req.body.selectedOption,(error, results) =>{
+
+			
+				
+				
+				
+				
+				res.render('enterManuallySubject',{class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,users : users,clasIDD : req.body.selectedOption});
+
+			
+			
+		});
+		
+		
+
+		
+
+
+
+
+
+		
+
+		
+		
+			
+	  });	
+
+	  	
+	} 
+	  
+	
+   });
+
+
+   router.post("/enterManuallyForm", (req, res) => {
+	if (!req.session.loggedin){
+		res.redirect("/");
+			} else	if(roleID === 1){
+				
+		   res.redirect('/blockedAccess');
+		
+			} else {
+	
+		const classID = req.body.selectedOption;
+		const subjectID = req.body.selectedSubject;
+		const sql = `SELECT COUNT(*) as count FROM entries WHERE id_user = ? AND id_subject = ? AND id_class = ?`;
+		connection.query('SELECT firstName, lastName, id_user FROM users WHERE id_class = ?', classID, (error, results) => {
+			if (error) throw error;
+
+			const users = results;
+
+			connection.query('SELECT name FROM classes WHERE id_class = ?', classID, (error, results) => {
+				classNumberr = results[0].name;  
+				
+				
+				
+				
+				connection.query('SELECT jmeno FROM subjects WHERE id_subject = ?', subjectID, (error, results) => {
+                 subjectName = results[0].jmeno
+             
+				 connection.query('SELECT id_user FROM users WHERE username = ?', req.session.username, (error, results) => {
+					userID = results[0].id_user
+			
+					connection.query(`SELECT COUNT(*) as count FROM entries WHERE id_user = ? AND id_subject = ? AND id_class = ?`, [userID, subjectID, classID], (error, result) => {
+                          pocet = result[0].count + 1;
+						
+						  if (error) throw error;
+						res.render('enterManuallyForm',{class_id : hasClass,user_id : userID,taughtHours : pocet,subjectJmeno : subjectName,classNumber : classNumberr,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,users: users, teacherName : req.session.username});
+					});
+					
+
+				});	
+					
+
+
+
+
+
+				});	
+			});	
+
+			
+			
+			
+		  });	
+
+	  	
+	} 
+   });
+  //Page where we post the form
+  router.post("/success", (req, res) => {
+  
+	if (req.session.loggedin) {
+	  res.render("success", {class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID ,text : 'Data has been successfully submitted'});	
+
+
+     
+
+	  
+	  const currentTime = new Date();
+
+
+
+	  const username = req.session.username;
+	  const queryUSER = `
+	SELECT  id_user
+	from users
+WHERE username = ? 
+`;
+const queryCLASS = `
+SELECT  id_class
+from classes
+WHERE name = ?
+`;
+const querySUBJECT = `
+SELECT  id_subject
+from subjects
+WHERE jmeno = ?
+`;
+	const query = `
+	SELECT  st.id_subject as subjectID, st.id_class as classID, st.id_user as userID
+FROM subject_times st
+INNER JOIN subjects s ON st.id_subject = s.id_subject
+inner join classes on st.id_class = classes.id_class
+WHERE st.id_user = (SELECT id_user FROM users WHERE username = ?) 
+AND st.id_class = (select id_class from classes where name = ?)
+AND st.id_subject = (select id_subject from subjects where jmeno = ?)
+	`;
+	
+	const values = [username,req.body.classNumber, req.body.subject];
+	  connection.query(query, values, (err, results) => {
+		if(results > 0 ) {
+			subjectID = results[0].subjectID;
+			userID = results[0].userID;
+			classID = results[0].classID;
+
 			const subject = req.body.subject;
 			const classNumber = req.body.classNumber;
 			const taughtHours = req.body.taughtHours;
@@ -466,13 +673,14 @@ router.get("/entries", (req, res) => {
 			const absence = req.body.absence;
 			const lessonNumber = req.body.taughtHours;
 			
-			subjectID = results[0].subjectID;
-			userID = results[0].userID;
-			classID = results[0].classID;
+			
 			var d = new Date();
 			var date = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
+	
+	
 			// získejte aktuální čas
 		
+	
 	const data = [date,userID, subjectID, classID, topic, notes,lessonNumber];
 			const sql = `INSERT INTO entries (datum,id_user, id_subject, id_class,  topic, notes,lessonNumber) VALUES (?,?, ?, ?, ?, ?,?)`;
 			
@@ -492,9 +700,11 @@ router.get("/entries", (req, res) => {
 		}
 		
 			
+	
 			 
 			 
 			 if(selectedOptions != null){
+	
 			
 			  // Insert the selected options into the "absence" table
 			  for (let i = 0; i < selectedOptions.length; i++) {
@@ -511,18 +721,107 @@ router.get("/entries", (req, res) => {
 			}
 			});
 	  
-	// Get the selected options
+
+		} else {
+			connection.query(queryUSER, username, (err, results) => {
+				userID = results[0].userID;
+				connection.query(querySUBJECT, req.body.subject, (err, results) => {
+					subjectID = results[0].subjectID;
+					connection.query(queryCLASS, req.body.classNumber, (err, results) => {
+						classID = results[0].classID;
+
+
+						const subject = req.body.subject;
+						const classNumber = req.body.classNumber;
+						const taughtHours = req.body.taughtHours;
+						const topic = req.body.topic;
+						const notes = req.body.notes;
+						const absence = req.body.absence;
+						const lessonNumber = req.body.taughtHours;
+						
+						
+						var d = new Date();
+						var date = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
+				
+				
+						// získejte aktuální čas
+					
+				
+				const data = [date,userID, subjectID, classID, topic, notes,lessonNumber];
+						const sql = `INSERT INTO entries (datum,id_user, id_subject, id_class,  topic, notes,lessonNumber) VALUES (?,?, ?, ?, ?, ?,?)`;
+						
+						connection.query(sql, data, (err, result) => {
+						  if (err) {
+							console.log(err);
+							
+							return;
+						  }
+						 
+						  const entryId = result.insertId;
+						 
+						 
+						 let selectedOptions = req.body.selectedOption;
+					if (typeof selectedOptions === 'string') {
+						selectedOptions = [selectedOptions];
+					}
+					
+						
+				
+						 
+						 
+						 if(selectedOptions != null){
+				
+						
+						  // Insert the selected options into the "absence" table
+						  for (let i = 0; i < selectedOptions.length; i++) {
+							  const sql = `INSERT INTO absence (id_user, id_entry) VALUES (?,?)`;
+							  const data = [selectedOptions[i], entryId];
+							  connection.query(sql, data, (err, result) => {
+								if (err) {
+								  console.log(err);
+						  
+								  
+								}
+							  });
+						  }
+						}
+						});
+				  
+
+					});
+				});
+			});
 			
-		  });
+			
+		};
+
+	
 		
-		  // Insert the data into the "entries" table
-		  
-		  
-		  } else { 
-			  
-		  res.redirect('/');
-		  }
 		
-	   });
+// Get the selected options
+
+
+
+		
+	  });
+
+
+
+
+
+
+
+	
+	  // Insert the data into the "entries" table
+	  
+
+	  
+	  } else { 
+		  
+	  res.redirect('/');
+	  }
+	
+   });
+
 
 module.exports = router;
