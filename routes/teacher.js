@@ -241,7 +241,7 @@ const connection  = mysql.createConnection({
 		
 		connection.query("SELECT users.id_user, users.firstName, users.lastName FROM users INNER JOIN absence ON users.id_user = absence.id_user WHERE absence.id_entry = ?", [id], function (error, results, fields) {
 			users = results;
-			connection.query("SELECT id_user,firstName,lastName from users where id_class = (select id_class from entries where id_entry = ?)", [id], function (error, results, fields) {
+			connection.query("SELECT id_user,firstName,lastName from users where id_class = (select id_class from entries where id_entry = ?) AND id_role = 1", [id], function (error, results, fields) {
             allUsers = results;
 			});
 
@@ -575,7 +575,7 @@ res.redirect("/");
 		const classID = req.body.selectedOption;
 		const subjectID = req.body.selectedSubject;
 		const sql = `SELECT COUNT(*) as count FROM entries WHERE id_user = ? AND id_subject = ? AND id_class = ?`;
-		connection.query('SELECT firstName, lastName, id_user FROM users WHERE id_class = ?', classID, (error, results) => {
+		connection.query('SELECT firstName, lastName, id_user FROM users WHERE id_class = ? AND id_role = 1', classID, (error, results) => {
 			if (error) throw error;
 
 			const users = results;
