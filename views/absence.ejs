@@ -4,6 +4,7 @@
 <script src="../public/scriptNeomluvit.js"></script>
 <script src="../public/scriptOmluvit.js"></script>
 <script src="../public/scriptSmazat.js"></script>
+<script src="../public/scriptNeurceno.js"></script>
 
 <style>
     .box {
@@ -52,14 +53,14 @@
                 <% } else if(users[i].omluveno === 'ano') { %>
                  
                   
-                      <input disabled type="text" value="<%= users[i].duvod %>">  
+                      <input disabled type="text" value="<%= users[i].duvod %>" id="duvod-input">  
                       <input type="hidden" value="<%= users[i].duvod %>">      
                     
                  
                 <% } else if(users[i].omluveno === 'ne') { %> 
                   
                     
-                      <input disabled type="text" value="<%= users[i].duvod %>">  
+                      <input disabled type="text" value="<%= users[i].duvod %>" id="duvod-input">  
                       <input type="hidden" value="<%= users[i].duvod %>">    
                    
                 <% } %>
@@ -67,8 +68,7 @@
                 
             <td>
                 <% if(users[i].omluveno === 'cekani') { %>
-                    <i  
-                    style="color: black;" class="fas fa-question"></i>
+                    <i style="color: black;" class="fas fa-question"></i>
 
                   <% } else if(users[i].omluveno === 'ano') { %>
                     <i style="color: green;" class="fas fa-check"></i>
@@ -82,23 +82,25 @@
      <td>
        
         <% if(users[i].omluveno === 'cekani') { %>
-            <form action="">
+           
         <input style="display: inline-block; padding: 2px; " type="button" value="omluvit" onclick="omluvit('<%= users[i].datum %>')">
         <input style="display: inline-block; padding: 2px;" type="button" value="neomluvit" onclick="neomluvit('<%= users[i].datum %>')">
         <input style="display: inline-block; padding: 2px;" type="button" value="smazat absenci" onclick="smazat('<%= users[i].datum %>')">
-            </form>
+           
 
           <% } else if(users[i].omluveno === 'ano') { %>
-            <form action="">
-                <input style="display: inline-block; padding: 2px;" type="button" value="upravit">
+            
+                <input style="display: inline-block; padding: 2px;" type="button" value="neomluvit" onclick="neomluvit('<%= users[i].datum %>')">
+                <input style="display: inline-block; padding: 2px;" type="button" value="neurcit" onclick="neurceno('<%= users[i].datum %>')">
                 <input style="display: inline-block; padding: 2px;" type="button" value="smazat absenci" onclick="smazat('<%= users[i].datum %>')">
-                </form>
+               
 
           <% } else if(users[i].omluveno === 'ne') { %> 
-            <form action="">
-                <input style="display: inline-block; padding: 2px;" type="button" value="upravit">
+          
+                <input style="display: inline-block; padding: 2px; " type="button" value="omluvit" onclick="omluvit('<%= users[i].datum %>')">
+                <input style="display: inline-block; padding: 2px;" type="button" value="neurcit" onclick="neurceno('<%= users[i].datum %>')">
                 <input style="display: inline-block; padding: 2px;" type="button" value="smazat absenci" onclick="smazat('<%= users[i].datum %>')">
-                    </form>
+                  
 
           <% } %>
 
