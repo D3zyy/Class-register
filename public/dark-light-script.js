@@ -37,9 +37,9 @@ function setLightMode() {
   var body = document.querySelector("body");
   var ul = document.querySelector("ul");
   var form = document.querySelector(".box");
-  var submitButton = document.querySelector('input[type="submit"]');
 
-  submitButton.classList.add('light-mode');
+
+
   
   body.classList.add('light-mode');
   
@@ -52,9 +52,7 @@ function setDarkMode() {
   var body = document.querySelector("body");
   var ul = document.querySelector("ul");
   var form = document.querySelector(".box");
-  var submitButton = document.querySelector('input[type="submit"]');
-
-  submitButton.classList.remove('light-mode');
+  
   form.classList.remove("light-mode");
  
   body.classList.remove("light-mode");
