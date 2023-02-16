@@ -541,21 +541,28 @@ res.redirect("/");
 
 	} else {
 
-	
+		
 
 	// získejte aktuální čas
-	const currentTime = new Date();
-  
+	const currentDate = new Date();
+
+	const currentSQLDate = currentDate.toISOString().slice(0, 10); // převod na SQL formát data (YYYY-MM-DD)
+	const currentSQLTime = currentDate.toTimeString().slice(0, 8); // převod na SQL formát času (HH:MM:SS)
+	
+
+
+
+  console.log(currentSQLDate + "  " +currentSQLTime);
 	// vyberte data o probíhajících předmětech z tabulky subject_times pro aktuálního učitele
 	const username = req.session.username;
 	const query = `
-	SELECT s.jmeno AS subject_name, classes.name as Class, s.id_subject, st.id_subject as subjectID, st.id_class as classID, st.id_user as userID 
+	SELECT s.jmeno AS subject_name, classes.name as Class, s.id_subject, st.startTIme,st.endTIme,st.startDate,st.endDate,st.id_subject as subjectID, st.id_class as classID, st.id_user as userID 
 	FROM subject_times st
 	INNER JOIN subjects s ON st.id_subject = s.id_subject
 	inner join classes on st.id_class = classes.id_class
-	WHERE st.id_user = (SELECT id_user FROM users WHERE username = ?) AND ? BETWEEN st.start_time AND st.end_time AND st.day = DAYNAME(NOW())
+	WHERE st.id_user = (SELECT id_user FROM users WHERE username = ?) AND ? BETWEEN st.startDate AND st.endDate  AND ? BETWEEN st.startTime AND st.endTime  AND st.day = DAYNAME(NOW() )
 	`;
-	const values = [username,currentTime];
+	const values = [username,currentSQLDate,currentSQLTime];
 	
 	connection.query(query, values, (error, results) => {
 	  if (error) throw error;
@@ -563,7 +570,7 @@ res.redirect("/");
 		res.redirect('enterManually');
 		res.end();
 	  } else {
-
+    console.log(results);
 	 
 	  // pokud jsou výsledky dotazu prázdné, nastavte hodnoty formuláře na "Neučí"
 	  let teacherName = "Neučí";
