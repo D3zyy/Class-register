@@ -552,7 +552,7 @@ res.redirect("/");
 
 
 
-  console.log(currentSQLDate + "  " +currentSQLTime);
+
 	// vyberte data o probíhajících předmětech z tabulky subject_times pro aktuálního učitele
 	const username = req.session.username;
 	const query = `
@@ -560,7 +560,7 @@ res.redirect("/");
 	FROM subject_times st
 	INNER JOIN subjects s ON st.id_subject = s.id_subject
 	inner join classes on st.id_class = classes.id_class
-	WHERE st.id_user = (SELECT id_user FROM users WHERE username = ?) AND ? BETWEEN st.startDate AND st.endDate  AND ? BETWEEN st.startTime AND st.endTime  AND st.day = DAYNAME(NOW() )
+	WHERE st.id_user = (SELECT id_user FROM users WHERE username = ?) AND ? BETWEEN st.startDate AND st.endDate  AND ? BETWEEN st.startTime AND st.endTime  AND st.day = DAYNAME(NOW())
 	`;
 	const values = [username,currentSQLDate,currentSQLTime];
 	

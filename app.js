@@ -91,7 +91,7 @@ app.get("/", (req, res) => {
 		req.session.username = null;
 
    
- res.render("index", {stav : 'Log in', name : req.session.username } );
+ res.render("index", {stav : 'Přihlásit se', name : req.session.username } );
 });
 
 app.get("/class/:id_class", (req, res) => {
