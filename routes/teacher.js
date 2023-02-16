@@ -575,16 +575,19 @@ res.redirect("/");
 	  let logCount;
 	  // pokud jsou výsledky dotazu nějaké, použijte první řádek výsledků pro vyplnění formuláře
 	  if (results.length > 0) {
+		
 		teacherName = req.session.username;
 		subjectName = results[0].subject_name;	
 		classname = results[0].Class
 		subjectID = results[0].subjectID;
 		userID = results[0].userID;
 		classID = results[0].classID;
-	  } 
+	  } else {
+		console.log('not found');
+	  }
 	   
-	  const sql = `SELECT COUNT(*) as count FROM entries WHERE id_user = ? AND id_subject = ? AND id_class = ?`;
-		const values = [userID, subjectID, classID];
+	  const sql = `SELECT COUNT(*) as count FROM entries WHERE  id_subject = ? AND id_class = ?`;
+		const values = [subjectID, classID];
 		
 		connection.query(sql, values, (error, results) => {
 		  if (error) throw error;
@@ -606,7 +609,7 @@ res.redirect("/");
 
 			
 			
-			res.render("entry", {class_id : hasClass,user_id : userID,eacherName: teacherName, 
+			res.render("entry", {class_id : hasClass,user_id : userID,teacherName: teacherName, 
 				subject: subjectName,
 				stav : 'Odhlásit se' , name : req.session.username  , role : global.roleID, classNumber : classname,
 				taughtHours : logCount , users : users
@@ -728,7 +731,7 @@ res.redirect("/");
 				 connection.query('SELECT id_user FROM users WHERE username = ?', req.session.username, (error, results) => {
 					userID = results[0].id_user
 			
-					connection.query(`SELECT COUNT(*) as count FROM entries WHERE id_user = ? AND id_subject = ? AND id_class = ?`, [userID, subjectID, classID], (error, result) => {
+					connection.query(`SELECT COUNT(*) as count FROM entries WHERE id_subject = ? AND id_class = ?`, [subjectID, classID], (error, result) => {
                           pocet = result[0].count + 1;
 						
 						  if (error) throw error;
