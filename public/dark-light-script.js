@@ -22,6 +22,7 @@ function getSessionStorage(name) {
 function toggleTheme() {
   var body = document.querySelector("body");
   var ul = document.querySelector("ul");
+  var form = document.querySelector(".box");
   if (body.classList.contains("light-mode")) {
     setSessionStorage("theme", "dark");
     setDarkMode();
@@ -35,9 +36,14 @@ function toggleTheme() {
 function setLightMode() {
   var body = document.querySelector("body");
   var ul = document.querySelector("ul");
-  body.classList.remove("dark-mode");
-  body.classList.add("light-mode");
-  ul.classList.remove("dark-ul");
+  var form = document.querySelector(".box");
+  var submitButton = document.querySelector('input[type="submit"]');
+
+  submitButton.classList.add('light-mode');
+  
+  body.classList.add('light-mode');
+  
+
   ul.classList.add("light-ul");
 }
 
@@ -45,10 +51,16 @@ function setLightMode() {
 function setDarkMode() {
   var body = document.querySelector("body");
   var ul = document.querySelector("ul");
+  var form = document.querySelector(".box");
+  var submitButton = document.querySelector('input[type="submit"]');
+
+  submitButton.classList.remove('light-mode');
+  form.classList.remove("light-mode");
+ 
   body.classList.remove("light-mode");
-  body.classList.add("dark-mode");
+ 
   ul.classList.remove("light-ul");
-  ul.classList.add("dark-ul");
+ 
 }
 
 

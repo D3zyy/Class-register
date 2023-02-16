@@ -2,8 +2,7 @@
 <%-include("../views/navigationGeneral")-%>
 
 <script>
-
-    // functions to set and get theme from session storage
+// functions to set and get theme from session storage
 window.onload = setThemeFromSessionStorage;
 
 function setThemeFromSessionStorage() {
@@ -27,6 +26,7 @@ function getSessionStorage(name) {
 function toggleTheme() {
   var body = document.querySelector("body");
   var ul = document.querySelector("ul");
+  var form = document.querySelector(".box");
   if (body.classList.contains("light-mode")) {
     setSessionStorage("theme", "dark");
     setDarkMode();
@@ -40,9 +40,13 @@ function toggleTheme() {
 function setLightMode() {
   var body = document.querySelector("body");
   var ul = document.querySelector("ul");
-  body.classList.remove("dark-mode");
-  body.classList.add("light-mode");
-  ul.classList.remove("dark-ul");
+  var form = document.querySelector(".box");
+  
+  form.classList.add('light-mode');
+  
+  body.classList.add('light-mode');
+  
+
   ul.classList.add("light-ul");
 }
 
@@ -50,10 +54,13 @@ function setLightMode() {
 function setDarkMode() {
   var body = document.querySelector("body");
   var ul = document.querySelector("ul");
+  var form = document.querySelector(".box");
+  form.classList.remove("light-mode");
+ 
   body.classList.remove("light-mode");
-  body.classList.add("dark-mode");
+ 
   ul.classList.remove("light-ul");
-  ul.classList.add("dark-ul");
+ 
 }
 
 
@@ -72,14 +79,15 @@ padding: 0px;
   background-color: #e1e1e7;
 }
 body.light-mode {
-  background-color: rgb(222, 222, 222);
+  background-color: #bdbdbd;
   color: #000;
 }
 body.light-mode ul {
-  background-color: #1E2A78;
+  background-color:  #333;
+
 }
 body{
-  background-color: rgb(93, 87, 87);
+  background-color: #bdbdbd;
 }
 li {
     display: inline;
@@ -95,7 +103,7 @@ ul {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #333;
+  background-color: #1E2A78;
 }
 
 li {
@@ -113,7 +121,6 @@ a {
   text-decoration: none;
 }
 
-/* Change the link color to #111 (black) on hover */
  </style>
 <style>
     .box {

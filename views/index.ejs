@@ -1,6 +1,6 @@
 <%-include("head")-%>
-
-
+<script src="../public/dark-light-script.js"></script>
+ 
 <%-include("navigationLogin")-%>
 <style>
 body{
@@ -29,8 +29,15 @@ body{
       box-sizing: border-box;
       
     }
-    input[type="submit"] {
-      background-color: #333;
+  
+    .light-modee{
+      background-color:#333;
+      color: white;
+      border: none;
+       ;
+    }
+    .dark-modee{
+      background-color: #1E2A78;
       color: white;
       border: none;
     }
@@ -44,13 +51,120 @@ body{
     <input type="text" id="username" name="username"><br>
     <label for="password"><strong>Heslo:</strong></label><br>
     <input type="password" id="password" name="password"><br><br>
-    <input type="submit" value="Login">
+    <input type="submit"  value="Login">
   </form> 
   
 
 
+  <script>
+
+// functions to set and get theme from session storage
+window.onload = setThemeFromSessionStorage;
+
+function setThemeFromSessionStorage() {
+  var theme = sessionStorage.getItem("theme");
+  if (theme === "light") {
+    setLightMode();
+  } else {
+    setDarkMode();
+  }
+}
+
+function setSessionStorage(name, value) {
+  sessionStorage.setItem(name, value);
+}
+
+function getSessionStorage(name) {
+  return sessionStorage.getItem(name);
+}
+
+// functions to toggle theme
+function toggleTheme() {
+  var body = document.querySelector("body");
+  var ul = document.querySelector("ul");
+  var form = document.querySelector(".box");
+  if (body.classList.contains("light-mode")) {
+    setSessionStorage("theme", "dark");
+    setDarkMode();
+  } else {
+    setSessionStorage("theme", "light");
+    setLightMode();
+  }
+}
+
+// functions to set light and dark mode
+function setLightMode() {
+  var body = document.querySelector("body");
+  var ul = document.querySelector("ul");
+  var form = document.querySelector(".box");
+  var submitButton = document.querySelector('input[type="submit"]');
+  submitButton.classList.remove('dark-modee');
+  submitButton.classList.add('light-modee');
+  
+  body.classList.add('light-mode');
   
 
+  ul.classList.add("light-ul");
+}
+
+
+function setDarkMode() {
+  var body = document.querySelector("body");
+  var ul = document.querySelector("ul");
+  var form = document.querySelector(".box");
+  var submitButton = document.querySelector('input[type="submit"]');
+
+  submitButton.classList.remove('light-modee');
+  submitButton.classList.add('dark-modee');
+  form.classList.remove("light-mode");
+ 
+  body.classList.remove("light-mode");
+ 
+  ul.classList.remove("light-ul");
+ 
+}
+
+
+// call the function on page load
+setThemeFromSessionStorage();
+
+
+  </script>
+
+<style>
+  #div {
+      margin-top: 200px;
+      border-top: dotted 2px #555;
+display: flex;
+justify-content: center;
+align-items: center;
+flex-direction: column;
+text-align: center;
+}
+
+
+  .footerLogo{
+      width: 40px;
+      height: 40px;
+     margin-top: 10px;
+      text-align: center;
+ 
+  }
+  #a{
+     
+      padding: 10px;
+      text-align: center;
+    
+ 
+  }
+</style>
+
+<div id="div" >
+
+<a id="a" href="http://www.spsejecna.cz">Střední průmyslová škola elektrotechnická, Praha 2, Ječná 30, Ječná 30, 120 00, Praha 2</a>    
+<span>Provozuje SPŠE Ječná © Všechna práva vyhrazena.</span>
+<img class="footerLogo" src="../public/LogoSkola2.png" alt="Oficialní stránky">
+</div>
 
 
 

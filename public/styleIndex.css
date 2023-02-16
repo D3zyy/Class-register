@@ -7,14 +7,15 @@ padding: 0px;
   background-color: #e1e1e7;
 }
 body.light-mode {
-  background-color: rgb(222, 222, 222);
+  background-color: #bdbdbd;
   color: #000;
 }
 body.light-mode ul {
-  background-color: #1E2A78;
+  background-color:  #333;
+
 }
 body{
-  background-color: rgb(93, 87, 87);
+  background-color: #bdbdbd;
 }
 li {
     display: inline;
@@ -30,7 +31,7 @@ ul {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #333;
+  background-color: #1E2A78;
 }
 
 li {
