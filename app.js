@@ -102,8 +102,12 @@ app.post("/download-student", (req, res) => {
 	if (!req.session.loggedin){
 		res.redirect("/");
 			}  else {
-				connection.query('SELECT id_user from users where username = ? ', req.session.username,(error, results) =>{
-          idUSER = results[0].id_user;
+				
+				if(idUSER != user_id){
+					res.redirect('/');
+				} else{
+					connection.query('SELECT id_user from users where username = ? ', req.session.username,(error, results) =>{
+						idUSER = results[0].id_user;
 				
 	connection.query(
 	  `SELECT entries.datum , classes.name as Třída, subjects.jmeno as Předmět, entries.topic as Téma, entries.notes as Poznámky, entries.lessonNumber as ČísloHodinyVRoce, 
@@ -149,6 +153,7 @@ app.post("/download-student", (req, res) => {
 	  }
 	);
 });
+}
 } 
   });
 
