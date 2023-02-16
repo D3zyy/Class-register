@@ -378,11 +378,7 @@ router.get("/downland", (req, res) => {
 router.post("/download", (req, res) => {
 	if (!req.session.loggedin){
 		res.redirect("/");
-			} else	if(roleID === 1){
-				
-		   res.redirect('/blockedAccess');
-		
-			} else {
+	 } else {
 				connection.query('SELECT id_user from users where username = ? ', req.session.username,(error, results) =>{
           idUSER = results[0].id_user;
 				
@@ -394,7 +390,7 @@ router.post("/download", (req, res) => {
 	  INNER JOIN subjects ON entries.id_subject = subjects.id_subject 
 	  INNER JOIN absence ON absence.id_entry = entries.id_entry 
 	  INNER JOIN users ON absence.id_user = users.id_user 
-	  WHERE entries.datum BETWEEN ? AND ? AND entries.id_user = ?`,
+	  WHERE entries.datum BETWEEN ? AND ? AND absence.id_user = ?`,
 	  [req.body.od, req.body.do,idUSER],
 	  (error, results) => {
 		if (error) {

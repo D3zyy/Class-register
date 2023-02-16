@@ -84,6 +84,73 @@ app.post('/', function(request, response, next) {
 	
 });
 
+app.get("/download-student", (req, res) => {
+
+	if(req.session.loggedin === true){
+		res.render("downloadStudent", {user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID});	
+	} else{
+      res.redirect("/");
+	};
+
+	
+	
+
+});
+
+
+app.post("/download-student", (req, res) => {
+	if (!req.session.loggedin){
+		res.redirect("/");
+			}  else {
+				connection.query('SELECT id_user from users where username = ? ', req.session.username,(error, results) =>{
+          idUSER = results[0].id_user;
+				
+	connection.query(
+	  `SELECT entries.datum , classes.name as Třída, subjects.jmeno as Předmět, entries.topic as Téma, entries.notes as Poznámky, entries.lessonNumber as ČísloHodinyVRoce, 
+			 users.firstName as Jméno, users.lastName as Příjmení , absence.duvod, absence.omluveno
+	  FROM entries
+	  INNER JOIN classes ON entries.id_class = classes.id_class 
+	  INNER JOIN subjects ON entries.id_subject = subjects.id_subject 
+	  INNER JOIN absence ON absence.id_entry = entries.id_entry 
+	  INNER JOIN users ON absence.id_user = users.id_user 
+	  WHERE entries.datum BETWEEN ? AND ? AND entries.id_user = ?`,
+	  [req.body.od, req.body.do,idUSER],
+	  (error, results) => {
+		if (error) {
+		  console.error(error);
+		  return;
+		}
+
+		// Úprava datumu
+		for (let i = 0; i < results.length; i++) {
+		  var date = new Date(results[i].datum);
+		  var formattedDate = date.toLocaleDateString();
+		  results[i].datum = formattedDate;
+		}
+  
+		const fileStream = fs.createWriteStream("data.csv");
+  
+		csv
+		  .write(results, { headers: true })
+		  .pipe(fileStream)
+		  .on("finish", () => {
+	
+  
+			// Nastavení hlaviček souboru pro stahování
+			res.setHeader("Content-Type", "text/csv");
+			res.setHeader(
+			  "Content-Disposition",
+			  `attachment; filename=data-${req.body.od}-${req.body.do}.csv`
+			);
+  
+			// Vrácení souboru jako odpovědi na požadavek
+			fs.createReadStream("data.csv").pipe(res);
+		  });
+	  }
+	);
+});
+} 
+  });
 
   
 app.get("/", (req, res) => {
