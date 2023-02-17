@@ -142,20 +142,28 @@ a {
 
     <form name="myForm" id="entry"  action="edit"   method="POST"  >
         <table>
-            <th>Lesson number</th>
+          <tr>
+            <th>Datum</th>
+            <td>
+              <input type="date" value="<%= datum %>" name="datum" style="width: 145px; height: 17px;">
+             
+            </td>
+          </tr>
+          <tr>
+            <th>Číslo hodiny</th>
             <td>
               <input type="text" value="<%= taughtHours %>" name="taughtHours">
              
             </td>
           </tr>
           <tr>
-            <th>Topic</th>
+            <th>Probrané učivo</th>
             <td>
               <input type="text" name="topic" value="<%= topic %>">
             </td>
           </tr>
           <tr>
-            <th>Notes</th>
+            <th>Poznámky</th>
             <td>
               <input  type="text" name="notes" value="<%= notes %>">
             </td>

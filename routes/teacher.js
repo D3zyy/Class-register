@@ -223,7 +223,8 @@ const connection  = mysql.createConnection({
         notes = req.body.notes;
         topic = req.body.topic;
         users = req.body.name;
-
+		datum = req.body.datum;
+    console.log(datum);
 		
 		connection.query("DELETE FROM absence WHERE id_entry = ?", id, function (error, results, fields){
 		
@@ -256,7 +257,7 @@ const connection  = mysql.createConnection({
 					}
 
 
-		connection.query("UPDATE entries SET lessonNumber = ?,topic = ?, notes = ? where id_entry = ?", [taughtHours,topic,notes,id], function (error, results, fields) {
+		connection.query("UPDATE entries SET datum = ? ,lessonNumber = ?,topic = ?, notes = ? where id_entry = ?", [datum,taughtHours,topic,notes,id], function (error, results, fields) {
 			res.render("success", {class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID, text : 'Data has been successfully updated!'});	
 	
 		
@@ -285,9 +286,14 @@ const connection  = mysql.createConnection({
 
 
 
-  connection.query("SELECT lessonNumber,topic,notes FROM entries WHERE id_entry = ?", [id], function (error, results, fields) {
-	
-	res.render("edit", {class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,users: users, allUsers : allUsers,taughtHours : results[0].lessonNumber, topic : results[0].topic, notes : results[0].notes});
+  connection.query("SELECT datum,lessonNumber,topic,notes FROM entries WHERE id_entry = ?", [id], function (error, results, fields) {
+	 
+	var date = new Date(results[0].datum);
+var year = date.getFullYear();
+var month = ('0' + (date.getMonth() + 1)).slice(-2);
+var day = ('0' + date.getDate()).slice(-2);
+var isoDateString = year + '-' + month + '-' + day;
+	res.render("edit", {datum : isoDateString,class_id : hasClass,user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,users: users, allUsers : allUsers,taughtHours : results[0].lessonNumber, topic : results[0].topic, notes : results[0].notes});
   });
 		});
 	}
@@ -507,8 +513,11 @@ router.get("/entries", (req, res) => {
 							if (error) throw error;
 							
 							for(var j= 0; j < results.length; j++) {
-								var date = results[j].datum;
-								var formattedDate = date.toLocaleDateString();	
+								var date = new Date(results[j].datum);
+								var options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+								var formattedDate = date.toLocaleDateString('cs-CZ', options).replace(/\./g, '/');
+								formattedDate = formattedDate.split(' ').map(s => s.trim()).join('');
+				
 								results[j].datum = formattedDate;
 							};
 					

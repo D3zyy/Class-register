@@ -87,7 +87,7 @@ app.post('/', function(request, response, next) {
 app.get("/download-student", (req, res) => {
 
 	if(req.session.loggedin === true){
-		res.render("downloadStudent", {user_id : userID,stav : 'Log out' , name : req.session.username  , role : roleID});	
+		res.render("downloadStudent", {user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID});	
 	} else{
       res.redirect("/");
 	};
