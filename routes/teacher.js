@@ -38,13 +38,11 @@ const connection  = mysql.createConnection({
 		
 		if( idClassUser === hasClass && req.session.loggedin === true|| roleID === 3 && req.session.loggedin === true) {
 
-			function convertDate(date) {
-				const [month, day, year] = date.split('/');
-				return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-			  }
-				const sqlDate = convertDate(req.body.datum); 
+			let myDate = req.body.datum; // Specifické datum ve formátu DD/MM/YYYY
+			let [day, month, year] = myDate.split('/');
+			let sqlFormattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 
-				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'ano', absence.duvod = ? WHERE entries.datum = ? AND absence.id_user = ?", [req.body.duvod,sqlDate,req.body.user_id], function (error, results, fields){
+				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'ano', absence.duvod = ? WHERE entries.datum = ? AND absence.id_user = ?", [req.body.duvod,sqlFormattedDate,req.body.user_id], function (error, results, fields){
 					res.send();
 					
 			});
@@ -76,13 +74,11 @@ const connection  = mysql.createConnection({
 		
 		if( idClassUser === hasClass && req.session.loggedin === true|| roleID === 3 && req.session.loggedin === true) {
 
-			function convertDate(date) {
-				const [month, day, year] = date.split('/');
-				return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-			  }
-				const sqlDate = convertDate(req.body.datum); 
+			let myDate = req.body.datum; // Specifické datum ve formátu DD/MM/YYYY
+			let [day, month, year] = myDate.split('/');
+			let sqlFormattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 
-				connection.query("DELETE FROM absence WHERE id_entry IN (SELECT id_entry FROM entries WHERE datum = ?) AND absence.id_user = ?", [sqlDate,req.body.user_id], function (error, results, fields){
+				connection.query("DELETE FROM absence WHERE id_entry IN (SELECT id_entry FROM entries WHERE datum = ?) AND absence.id_user = ?", [sqlFormattedDate,req.body.user_id], function (error, results, fields){
 					res.send();
 			});
 
@@ -113,18 +109,16 @@ const connection  = mysql.createConnection({
 		
 		if( idClassUser === hasClass && req.session.loggedin === true|| roleID === 3 && req.session.loggedin === true) {
 
-			function convertDate(date) {
-				const [month, day, year] = date.split('/');
-				return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-			  }
-				const sqlDate = convertDate(req.body.datum); 
+let myDate = req.body.datum; // Specifické datum ve formátu DD/MM/YYYY
+let [day, month, year] = myDate.split('/');
+let sqlFormattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 
-				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'cekani', absence.duvod = ? WHERE entries.datum = ? AND absence.id_user = ?", [req.body.duvod,sqlDate,req.body.user_id], function (error, results, fields){
+
+				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'cekani', absence.duvod = ? WHERE entries.datum = ? AND absence.id_user = ?", [req.body.duvod,sqlFormattedDate,req.body.user_id], function (error, results, fields){
 					res.send();
 					
 			});
-
-
+		
 		};
 			});
 		}
@@ -142,13 +136,11 @@ const connection  = mysql.createConnection({
 		 if (req.body.user_id == idd_user || roleID === 3){
 			
 		
-			function convertDate(date) {
-				const [month, day, year] = date.split('/');
-				return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-			  }
-				const sqlDate = convertDate(req.body.datum); 
-
-				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry set absence.duvod = ? WHERE entries.datum = ? AND absence.id_user = ?", [req.body.duvod,sqlDate,req.body.user_id], function (error, results, fields){
+			let myDate = req.body.datum; // Specifické datum ve formátu DD/MM/YYYY
+let [day, month, year] = myDate.split('/');
+let sqlFormattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+                
+				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry set absence.duvod = ? WHERE entries.datum = ? AND absence.id_user = ?", [req.body.duvod,sqlFormattedDate,req.body.user_id], function (error, results, fields){
 					
 					res.send();
 					
@@ -175,27 +167,24 @@ const connection  = mysql.createConnection({
 			connection.query("SELECT id_class from users where username = ?", req.session.username, function (error, results, fields){
 				
 						hasClass = results[0].id_class;
-			
+		
 		
 		if (!req.session.loggedin) {
 		  res.redirect("/");
 		} else if (roleID === 1) {
 		  res.redirect('/blockedAccess');
 		} else if (roleID === 2  && hasClass != null && req.session.loggedin === true || roleID === 3 && req.session.loggedin === true){
-		
+			
 			connection.query("SELECT id_class from users where id_user = ?", [req.body.user_id], function (error, results, fields){
      
 				idClassUser = results[0].id_class;
 		
 		if( idClassUser === hasClass && req.session.loggedin === true|| roleID === 3 && req.session.loggedin === true) {
 
-			function convertDate(date) {
-				const [month, day, year] = date.split('/');
-				return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-			  }
-				const sqlDate = convertDate(req.body.datum); 
-
-				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'ne', absence.duvod = ? WHERE entries.datum = ? AND absence.id_user = ?", [req.body.duvod,sqlDate,req.body.user_id], function (error, results, fields){
+			let myDate = req.body.datum; // Specifické datum ve formátu DD/MM/YYYY
+			let [day, month, year] = myDate.split('/');
+			let sqlFormattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+				connection.query("UPDATE absence INNER JOIN entries ON absence.id_entry = entries.id_entry SET absence.omluveno = 'ne', absence.duvod = ? WHERE entries.datum = ? AND absence.id_user = ?", [req.body.duvod,sqlFormattedDate,req.body.user_id], function (error, results, fields){
 					res.send();
 					
 			});
@@ -224,7 +213,7 @@ const connection  = mysql.createConnection({
         topic = req.body.topic;
         users = req.body.name;
 		datum = req.body.datum;
-    console.log(datum);
+
 		
 		connection.query("DELETE FROM absence WHERE id_entry = ?", id, function (error, results, fields){
 		

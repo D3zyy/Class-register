@@ -210,11 +210,14 @@ app.get("/absence/:id_user", (req, res) => {
 			connection.query(`SELECT entries.datum, absence.omluveno,absence.duvod,COUNT(absence.id_absence) AS absence_count 	FROM entries INNER JOIN absence ON absence.id_entry = entries.id_entry 		WHERE absence.id_user = ? GROUP BY entries.datum`, [idUser], (error, results) => {
 	
 		
-			for(var j= 0; j < results.length; j++) {
-				var date = new Date(results[j].datum);
-				var formattedDate = date.toLocaleDateString();	
-				results[j].datum = formattedDate;
-			};
+				for(var j= 0; j < results.length; j++) {
+					var date = new Date(results[j].datum);
+					var options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+					var formattedDate = date.toLocaleDateString('cs-CZ', options).replace(/\./g, '/');
+					formattedDate = formattedDate.split(' ').map(s => s.trim()).join('');
+	
+					results[j].datum = formattedDate;
+				};
 			absenceID = req.params.id_user;
 		    idUserPrihlasen = userID;
 			const users = results;
