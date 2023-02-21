@@ -43,6 +43,48 @@ connection.connect(function(err) {
 });
 
 
+//Admin
+app.post("/smazatUzivatele", (req, res) => {
+	console.log(req.body.id_user);
+	if(req.session.loggedin === true && roleID === 3){
+		connection.query('SELECT roles.name  FROM users inner join roles on users.id_role = roles.id_role  WHERE id_user = ? ' , [req.body.id_user], function(error, results) {
+           if(results[0].name === 'admin'){
+          res.redirect('/');
+		   } else {
+
+			connection.query('DELETE FROM absence WHERE id_user = ? ' , [req.body.id_user], function(error, results) {
+      console.log('smazana trida');
+	  connection.query('DELETE FROM entries WHERE id_user = ? ' , [req.body.id_user], function(error, results) {
+		console.log('smazane zaznamy');
+		connection.query('DELETE FROM subject_times WHERE id_user = ? ' , [req.body.id_user], function(error, results) {
+			console.log('smazane schedule');
+			connection.query('DELETE FROM users WHERE id_user = ? ' , [req.body.id_user], function(error, results) {
+				console.log('smazany uzivatel');
+				res.send();
+					  });
+				  });
+			  });
+			});
+		}
+
+
+
+		});
+
+
+
+
+	} else{
+      res.redirect("/");
+	};
+
+
+
+
+});
+
+
+
 
 app.post('/', function(request, response, next) {
 	
@@ -380,7 +422,7 @@ app.post("/user/changePassword/:id_user", (req, res) => {
 		} else {
 
 		
-		connection.query('SELECT firstName, lastName, id_user FROM users WHERE id_role = 2', (error, results) => {
+		connection.query('SELECT users.firstName, users.lastName,roles.name,users.id_user FROM users inner join roles on users.id_role = roles.id_role ', (error, results) => {
 			if (error) throw error;
 		
 			// store the results in an array

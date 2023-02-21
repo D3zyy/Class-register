@@ -2,7 +2,7 @@
 
 <%-include("navigationGeneral")-%>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-
+<script src="../public/smazatUzivateleScript.js"></script>
 
 <style>
     .box {
@@ -18,27 +18,46 @@
   </style>
   
   <div class="box">
-    <h2>Teachers</h2>
-    <table>
+    <input type="text" id="searchInput" placeholder="&#x1F50D; Vyhledat uživatele" style="margin: 15px; padding: 10px; font-size: 16px; border-radius: 10px; border: 1px solid gray;">
+    <h2 style="margin: 4px;">Uživatelé</h2>
+    <table id="entriesTable">
       <thead>
         <tr>
           <th> </th>
-          <th>Name</th>
-          <th>ID</th>
+          <th>Jméno příjmení</th>
+          <th>role</th>
         </tr>
       </thead>
       <tbody >
         <% for (var i = 0; i < users.length; i++) { %>
           <tr>
             <td>
-              <i class="fa fa-user"></i>
+              <i style="margin: 10px;" class="fa fa-user"></i>
             </td>
-            <td style="padding: 5px;">
+            <td style="padding: 10px; ">
               <%= users[i].firstName %> <%= users[i].lastName %>
             </td>
-            <td>
-              <%= users[i].id_user %>
+          
+              <% if(users[i].name === 'učitel') { %>
+                <td style="color: orange;">
+                <%= users[i].name %>
+              </td>
             </td>
+            <td > 
+              <input type="button" onclick="smazatUzivatele('<%= users[i].id_user %>')" style="color: red; padding: 5px; margin: 7px;" value="Smazat uživatele">
+            </td>
+                  <% }  else if (users[i].name === 'student') {%>
+                    <td style="color: blue;"> 
+                      <%= users[i].name %>
+                    </td>
+                    <td > 
+                    <input type="button"  onclick="smazatUzivatele('<%= users[i].id_user %>')" style="color: red; padding: 5px; margin: 7px;" value="Smazat uživatele">
+                    </td>
+                    <% } else if(users[i].name === 'admin' ) {%>
+                    <td style="color: red;"> 
+                      <%= users[i].name %>
+                    </td>
+                    <% } %>
           </tr>
         <% } %>
       </tbody>
@@ -47,7 +66,40 @@
   
   
   
-  
+  <script>
+    document.getElementById("searchInput").addEventListener("keyup", searchFunction);
+
+    function searchFunction() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("searchInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("entriesTable");
+      tr = table.getElementsByTagName("tr");
+
+      // Zobrazení hlavičky
+      tr[0].style.display = "";
+
+      // Procházení všech řádků tabulky
+      for (i = 1; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td");
+        var match = false;
+        // Procházení všech sloupců v řádku
+        for (var j = 0; j < td.length; j++) {
+          txtValue = td[j].textContent || td[j].innerText;
+          // Pokud obsahuje hledaný řetězec, zobraz řádek
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            match = true;
+            break;
+          }
+        }
+        if (match) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  </script>
 
      
 <%-include("footer")-%>
