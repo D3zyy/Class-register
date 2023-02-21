@@ -15,7 +15,7 @@ function smazatUzivatele(id) {
     });
   }
   function smazatTridu(id) {
-    console.log(id);
+
 
     $.ajax({
         
@@ -30,4 +30,21 @@ function smazatUzivatele(id) {
       }
     });
   }
+  function smazatPredmet(id) {
+    console.log(id);
+
+    $.ajax({
+        
+      url: '/smazatPredmet',
+      type: 'POST',
+      data: { id_subject : id },
+      success: function () {
+        location.reload();
+      },
+      error: function (xhr, status, error) {
+        console.log(xhr.responseText);
+      }
+    });
+  }
+  
   

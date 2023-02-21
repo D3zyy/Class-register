@@ -412,6 +412,38 @@ app.post("/user/changePassword/:id_user", (req, res) => {
 }
 });
 
+app.get("/predmety", (req, res) => {
+  
+	if (req.session.loggedin )  {
+		if(roleID === 2 || roleID === 1){
+			
+			res.render("blockedAccess",{user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,class_id : hasClass})
+
+		} else {
+
+		
+		connection.query('SELECT jmeno,id_subject FROM subjects  ', (error, results) => {
+			if (error) throw error;
+		
+			// store the results in an array
+			const users = results;
+		
+			// render the HTML template and pass the array to the template
+			res.render("predmety", {user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,users: users,class_id : hasClass});
+		  });
+
+
+		}
+
+
+	  } else { 
+		  
+	  res.redirect('/');
+	  }
+	
+   });
+
+
  app.get("/uzivatele", (req, res) => {
   
 	if (req.session.loggedin )  {
@@ -442,6 +474,45 @@ app.post("/user/changePassword/:id_user", (req, res) => {
 	  }
 	
    });
+
+   app.post("/smazatPredmet", (req, res) => {
+	console.log(req.body.id_class);
+	if(req.session.loggedin === true && roleID === 3){
+		
+
+		console.log(req.body.id_class)
+		
+		connection.query('DELETE FROM entries WHERE id_subject = ? ' , [req.body.id_subject], function(error, results) {
+			console.log("tady")
+			connection.query('DELETE FROM subject_times WHERE id_subject = ? ' , [req.body.id_subject], function(error, results) {
+				console.log("tady")
+			connection.query('DELETE FROM subjects WHERE id_subject = ? ' , [req.body.id_subject], function(error, results) {
+				console.log("tdadada")
+				res.send();
+			});
+					});
+				});
+			
+		
+
+
+
+	
+
+
+
+
+	} else{
+      res.redirect("/");
+	};
+
+
+
+
+});
+
+
+
 
    app.post("/smazatTridu", (req, res) => {
 	console.log(req.body.id_class);

@@ -1,0 +1,91 @@
+<%-include("head")-%>
+
+<%-include("navigationGeneral")-%>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+<script src="../public/smazatUzivateleScript.js"></script>
+
+<style>
+    .box {
+      border: 1px solid black;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      position: absolute; top: 100px; left: 42%;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    table {
+      margin: 0 auto;
+    }
+  </style>
+  
+  <div class="box">
+    <input type="text" id="searchInput" placeholder="&#x1F50D; Vyhledat předmět" style="margin: 15px; padding: 10px; font-size: 16px; border-radius: 10px; border: 1px solid gray;">
+    <h2 style="margin: 4px;">Předměty</h2>
+    <table id="entriesTable">
+      <thead>
+        <tr>
+        
+          <th>Jméno předmětu</th>
+
+        </tr>
+      </thead>
+      <tbody >
+        <% for (var i = 0; i < users.length; i++) { %>
+          <tr>
+        
+           
+          
+             
+              
+              <td style="padding: 10px; ">
+                <%= users[i].jmeno %> 
+              </td>
+            </td>
+            <td > 
+              <input type="button" onclick="smazatPredmet('<%= users[i].id_subject %>')" style="color: red; padding: 5px; margin: 7px;" value="Smazat předmět">
+            </td>
+                  
+          </tr>
+          <% } %>
+      </tbody>
+    </table>
+  </div>
+  
+  
+  
+  <script>
+    document.getElementById("searchInput").addEventListener("keyup", searchFunction);
+
+    function searchFunction() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("searchInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("entriesTable");
+      tr = table.getElementsByTagName("tr");
+
+      // Zobrazení hlavičky
+      tr[0].style.display = "";
+
+      // Procházení všech řádků tabulky
+      for (i = 1; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td");
+        var match = false;
+        // Procházení všech sloupců v řádku
+        for (var j = 0; j < td.length; j++) {
+          txtValue = td[j].textContent || td[j].innerText;
+          // Pokud obsahuje hledaný řetězec, zobraz řádek
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            match = true;
+            break;
+          }
+        }
+        if (match) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  </script>
+
+     
+<%-include("footer")-%>
