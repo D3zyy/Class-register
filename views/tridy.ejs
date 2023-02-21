@@ -18,48 +18,36 @@
   </style>
   
   <div class="box">
-    <input type="text" id="searchInput" placeholder="&#x1F50D; Vyhledat uživatele" style="margin: 15px; padding: 10px; font-size: 16px; border-radius: 10px; border: 1px solid gray;">
-    <h2 style="margin: 4px;">Uživatelé</h2>
+    <input type="text" id="searchInput" placeholder="&#x1F50D; Vyhledat třídu" style="margin: 15px; padding: 10px; font-size: 16px; border-radius: 10px; border: 1px solid gray;">
+    <h2 style="margin: 4px;">Třídy</h2>
     <table id="entriesTable">
       <thead>
         <tr>
-          <th> </th>
-          <th>Jméno příjmení</th>
-          <th>role</th>
+        
+          <th>Třída</th>
+          <th>Třídní učitel</th>
         </tr>
       </thead>
       <tbody >
         <% for (var i = 0; i < users.length; i++) { %>
           <tr>
-            <td>
-              <i style="margin: 10px;" class="fa fa-user"></i>
-            </td>
-            <td style="padding: 2px; ">
-              <a style="display: inline-block; text-decoration:  underline; color: lightslategray; font-style: italic;" href="/user/<%= users[i].id_user %>"> <%= users[i].firstName %> <%= users[i].lastName %> </a> 
-            </td>
+        
+           
           
-              <% if(users[i].name === 'učitel') { %>
+             
                 <td style="color: orange;">
-                <%= users[i].name %>
+              <a style="display: inline-block; text-decoration:  underline; color: lightslategray; font-style: italic;" href="/class/<%= users[i].id_class %>"><%= users[i].name %></a>  
+              </td>
+              <td style="padding: 10px; ">
+                <%= users[i].firstName %> <%= users[i].lastName %>
               </td>
             </td>
             <td > 
-              <input type="button" onclick="smazatUzivatele('<%= users[i].id_user %>')" style="color: red; padding: 5px; margin: 7px;" value="Smazat uživatele">
+              <input type="button" onclick="smazatTridu('<%= users[i].id_class %>')" style="color: red; padding: 5px; margin: 7px;" value="Smazat třídu">
             </td>
-                  <% }  else if (users[i].name === 'student') {%>
-                    <td style="color: blue;"> 
-                      <%= users[i].name %>
-                    </td>
-                    <td > 
-                    <input type="button"  onclick="smazatUzivatele('<%= users[i].id_user %>')" style="color: red; padding: 5px; margin: 7px;" value="Smazat uživatele">
-                    </td>
-                    <% } else if(users[i].name === 'admin' ) {%>
-                    <td style="color: red;"> 
-                      <%= users[i].name %>
-                    </td>
-                    <% } %>
+                  
           </tr>
-        <% } %>
+          <% } %>
       </tbody>
     </table>
   </div>

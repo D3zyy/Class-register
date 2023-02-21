@@ -39,7 +39,7 @@ const connection  = mysql.createConnection({
 
 connection.connect(function(err) {
   if (err) throw err;
-  console.log("Connected to the database!");
+  console.log("Připojeno k databázi!");
 });
 
 
@@ -53,13 +53,13 @@ app.post("/smazatUzivatele", (req, res) => {
 		   } else {
 
 			connection.query('DELETE FROM absence WHERE id_user = ? ' , [req.body.id_user], function(error, results) {
-      console.log('smazana trida');
+      
 	  connection.query('DELETE FROM entries WHERE id_user = ? ' , [req.body.id_user], function(error, results) {
-		console.log('smazane zaznamy');
+		
 		connection.query('DELETE FROM subject_times WHERE id_user = ? ' , [req.body.id_user], function(error, results) {
-			console.log('smazane schedule');
+		
 			connection.query('DELETE FROM users WHERE id_user = ? ' , [req.body.id_user], function(error, results) {
-				console.log('smazany uzivatel');
+				
 				res.send();
 					  });
 				  });
@@ -406,13 +406,13 @@ app.post("/user/changePassword/:id_user", (req, res) => {
 		
 		
 		
-		res.render("success", {user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID, text : 'Password was succcessfully updated!',class_id : hasClass});	
+		res.render("success", {user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID, text : 'Heslo bylo úspěšně změněno',class_id : hasClass});	
 	req.session.loggedin = false;
 	});
 }
 });
 
- app.get("/manageClasses", (req, res) => {
+ app.get("/uzivatele", (req, res) => {
   
 	if (req.session.loggedin )  {
 		if(roleID === 2 || roleID === 1){
@@ -442,6 +442,76 @@ app.post("/user/changePassword/:id_user", (req, res) => {
 	  }
 	
    });
+
+   app.post("/smazatTridu", (req, res) => {
+	console.log(req.body.id_class);
+	if(req.session.loggedin === true && roleID === 3){
+		
+
+		console.log(req.body.id_class)
+		
+		connection.query('DELETE FROM subject_times WHERE id_class = ? ' , [req.body.id_class], function(error, results) {
+			console.log("tady")
+			connection.query('UPDATE users set id_class = ? WHERE id_class = ? ' , [null,req.body.id_class], function(error, results) {
+				console.log("tady")
+			connection.query('DELETE FROM classes WHERE id_class = ? ' , [req.body.id_class], function(error, results) {
+				console.log("tdadada")
+				res.send();
+					  });
+					});
+				});
+			
+		
+
+
+
+	
+
+
+
+
+	} else{
+      res.redirect("/");
+	};
+
+
+
+
+});
+
+
+   app.get("/tridy", (req, res) => {
+  
+	if (req.session.loggedin )  {
+		if(roleID === 2 || roleID === 1){
+			
+			res.render("blockedAccess",{user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,class_id : hasClass})
+
+		} else {
+
+		
+		connection.query('SELECT classes.name, users.firstName, users.lastName,classes.id_class FROM users INNER JOIN classes ON users.id_class = classes.id_class ', (error, results) => {
+			if (error) throw error;
+		
+			// store the results in an array
+			const users = results;
+	
+			// render the HTML template and pass the array to the template
+			res.render("tridy", {user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,users: users,class_id : hasClass});
+		  });
+
+
+		}
+
+
+	  } else { 
+		  
+	  res.redirect('/');
+	  }
+	
+   });
+
+
 
    app.listen(process.env.PORT ||200, function () {
     console.log('listening');
