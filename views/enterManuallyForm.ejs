@@ -20,41 +20,41 @@
     <form name="myForm" id="entry"  action="success"   method="POST"  >
       <table>
         <tr>
-          <th>Teacher's name</th>
+          <th>Učitelské jméno</th>
           <td>
             <input type="text" value="<%= teacherName %>" disabled>
           
           </td>
         </tr>
         <tr>
-          <th>Subject</th>
+          <th>Předmět</th>
           <td>
             <input type="text" value="<%- subjectJmeno %>" disabled>
             <input type="hidden" value="<%- subjectJmeno %>" name="subject">
           </td>
         </tr>
         <tr>
-          <th>Class</th>
+          <th>Třída</th>
           <td>
             <input type="text" value="<%= classNumber %>" disabled>
             <input type="hidden" name="classNumber" value="<%= classNumber %>">
           </td>
         </tr>
         <tr>
-          <th>Lesson number</th>
+          <th>Číslo hodiny</th>
           <td>
             <input type="text" value="<%= taughtHours %>" disabled>
             <input type="hidden" name="taughtHours" value="<%= taughtHours %>">
           </td>
         </tr>
         <tr>
-          <th>Topic</th>
+          <th>Téma</th>
           <td>
             <input type="text" name="topic" >
           </td>
         </tr>
         <tr>
-          <th>Notes</th>
+          <th>Poznámky</th>
           <td>
             <input type="text" name="notes" >
           </td>

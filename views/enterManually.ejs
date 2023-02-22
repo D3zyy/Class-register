@@ -19,7 +19,7 @@
 
 <div class="box">
 <form action="/teacher/enterManuallySubject"   method="post">
-    <label style="font-size: large;" >Select class :</label>
+    <label style="font-size: large;" >Vybrat třídu :</label>
     <select id="mySelect"  name="selectedOption" >
         <% users.forEach((user) => { %>
           <option style="font-size: large;" value="<%= user.id_class %>"><%= user.name %></option>

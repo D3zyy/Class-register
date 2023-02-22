@@ -20,7 +20,7 @@
     
     <div class="box">
     <form action="/teacher/enterManuallyForm"   method="post">
-        <label style="font-size: large;" >Select subject :</label>
+        <label style="font-size: large;" >Vybrat předmět :</label>
         <select id="mySelect"  name="selectedSubject" >
             <% users.forEach((user) => { %>
               <option style="font-size: large;" value="<%= user.id_subject %>"><%= user.jmeno %></option>

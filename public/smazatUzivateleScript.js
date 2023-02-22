@@ -31,7 +31,7 @@ function smazatUzivatele(id) {
     });
   }
   function smazatPredmet(id) {
-    console.log(id);
+
 
     $.ajax({
         

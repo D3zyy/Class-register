@@ -139,6 +139,30 @@ app.get("/download-student", (req, res) => {
 
 });
 
+app.get("/import", (req, res) => {
+
+	if (!req.session.loggedin){
+		res.redirect("/");
+			} else	if(roleID === 1 || roleID === 2){
+				
+		   res.redirect('/blockedAccess');
+		
+			} else {
+
+
+				res.render("import", {user_id : userID,stav : 'Odhlásit se' , name : req.session.username  , role : roleID,class_id : hasClass});	
+
+
+
+
+				
+			}
+
+	
+	
+
+});
+
 
 app.post("/download-student", (req, res) => {
 	if (!req.session.loggedin){
@@ -476,11 +500,11 @@ app.get("/predmety", (req, res) => {
    });
 
    app.post("/smazatPredmet", (req, res) => {
-	console.log(req.body.id_class);
+
 	if(req.session.loggedin === true && roleID === 3){
 		
 
-		console.log(req.body.id_class)
+	
 		
 		connection.query('DELETE FROM entries WHERE id_subject = ? ' , [req.body.id_subject], function(error, results) {
 			console.log("tady")
@@ -515,11 +539,10 @@ app.get("/predmety", (req, res) => {
 
 
    app.post("/smazatTridu", (req, res) => {
-	console.log(req.body.id_class);
+
 	if(req.session.loggedin === true && roleID === 3){
 		
 
-		console.log(req.body.id_class)
 		
 		connection.query('DELETE FROM subject_times WHERE id_class = ? ' , [req.body.id_class], function(error, results) {
 			console.log("tady")
