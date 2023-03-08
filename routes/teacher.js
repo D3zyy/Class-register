@@ -7,11 +7,11 @@ let hasClass;
 const mysql = require('mysql2');
 const { exit } = require("process");
 const connection  = mysql.createConnection({
-	host : "sql8.freemysqlhosting.net",
-	user : "sql8597540",
-	password : "JUmqiUcLHW",
-	port : "3306",
-	database :  "sql8597540",
+	host : "sql.freedb.tech",
+    user : "freedb_dezyy",
+    password : "hz5@&u%3&2DYZN#",
+    port : "3306",
+    database :  "freedb_Tridnice",
 
 });
     connection.connect(function(err) {
@@ -376,7 +376,7 @@ router.post("/download", (req, res) => {
 	 } else {
 				connection.query('SELECT id_user from users where username = ? ', req.session.username,(error, results) =>{
           idUSER = results[0].id_user;
-				
+		  console.log(results);
 	connection.query(
 	  `SELECT entries.datum , classes.name as Třída, subjects.jmeno as Předmět, entries.topic as Téma, entries.notes as Poznámky, entries.lessonNumber as ČísloHodinyVRoce, 
 			 users.firstName as Jméno, users.lastName as Příjmení , absence.duvod, absence.omluveno
@@ -385,7 +385,7 @@ router.post("/download", (req, res) => {
 	  INNER JOIN subjects ON entries.id_subject = subjects.id_subject 
 	  INNER JOIN absence ON absence.id_entry = entries.id_entry 
 	  INNER JOIN users ON absence.id_user = users.id_user 
-	  WHERE entries.datum BETWEEN ? AND ? AND absence.id_user = ?`,
+	  WHERE entries.datum BETWEEN ? AND ? `,
 	  [req.body.od, req.body.do,idUSER],
 	  (error, results) => {
 		if (error) {
@@ -399,7 +399,7 @@ router.post("/download", (req, res) => {
 		  var formattedDate = date.toLocaleDateString();
 		  results[i].datum = formattedDate;
 		}
-  
+		console.log(results);
 		const fileStream = fs.createWriteStream("data.csv");
   
 		csv

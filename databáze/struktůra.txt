@@ -1,0 +1,67 @@
+MYSQL
+
+create table roles(
+    id_role int AUTO_INCREMENT PRIMARY KEY ,
+    name varchar(30) not null UNIQUE
+)
+
+create table classes(
+    id_class int AUTO_INCREMENT PRIMARY KEY,
+    name NVARCHAR(20) not NULL
+)
+
+CREATE TABLE users (
+  id_user INT AUTO_INCREMENT PRIMARY KEY,
+  username NVARCHAR(50) NOT NULL UNIQUE,
+  password NVARCHAR(200) NOT NULL,
+  firstName NVARCHAR(30) NOT NULL,
+  lastName NVARCHAR(30) NOT NULL,
+  id_class INT,
+  id_role INT NOT NULL,
+  FOREIGN KEY (id_class) REFERENCES classes(id_class),
+  FOREIGN KEY (id_role) REFERENCES roles(id_role)
+);
+
+create table subjects(
+id_subject int AUTO_INCREMENT PRIMARY KEY,
+jmeno NVARCHAR(30) not null UNIQUE
+)
+
+create table absence(
+id_absence int AUTO_INCREMENT PRIMARY KEY,
+omluveno enum('ano','ne','cekani') not null UNIQUE,
+duvod NVARCHAR(50) ,
+id_user int not null,
+id_entry int not null,
+foreign KEY(id_user) REFERENCES users(id_user),
+foreign KEY(id_entry) REFERENCES entries(id_entry)
+)
+
+drop table absence
+create table entries(
+id_entry int AUTO_INCREMENT PRIMARY KEY,
+id_user int not null,
+id_subject int  not null ,
+id_class int not null,
+notes nvarchar(100) ,
+datum DATE not null,
+topic nvarchar(100) not null,
+lessonNumber int not null UNIQUE,
+foreign KEY(id_user) REFERENCES users(id_user),
+foreign KEY(id_subject) REFERENCES subjects(id_subject),
+foreign KEY(id_class) REFERENCES classes(id_class)
+)
+
+create table subject_times(
+id_schedule int AUTO_INCREMENT PRIMARY KEY,
+id_user int not null,
+id_subject int  not null ,
+day NVARCHAR(20) not null,
+id_class int not null,
+startTime TIME not null,
+endTime TIME not null,
+startDate DATE not null,
+endDate DATE not null,
+foreign KEY(id_user) REFERENCES users(id_user),
+foreign KEY(id_subject) REFERENCES subjects(id_subject),
+foreign KEY(id_class) REFERENCES classes(id_class)

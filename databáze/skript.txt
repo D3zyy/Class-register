@@ -1,0 +1,67 @@
+CREATE TABLE `roles` (
+  `id_role` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(30) NOT NULL,
+  PRIMARY KEY (`id_role`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4
+
+CREATE TABLE `classes` (
+  `id_class` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  PRIMARY KEY (`id_class`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 
+
+CREATE TABLE `users` (
+  `id_user` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `password` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `firstName` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `lastName` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `id_class` int DEFAULT NULL,
+  `id_role` int NOT NULL,
+  PRIMARY KEY (`id_user`),
+  UNIQUE KEY `username` (`username`),
+  KEY `id_class` (`id_class`),
+  KEY `id_role` (`id_role`),
+  CONSTRAINT `users_ibfk_1` FOREIGN KEY (`id_class`) REFERENCES `classes` (`id_class`),
+  CONSTRAINT `users_ibfk_2` FOREIGN KEY (`id_role`) REFERENCES `roles` (`id_role`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 
+
+CREATE TABLE `subjects` (
+  `id_subject` int NOT NULL AUTO_INCREMENT,
+  `jmeno` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  PRIMARY KEY (`id_subject`),
+  UNIQUE KEY `jmeno` (`jmeno`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 
+
+CREATE TABLE `absence` (
+  `id_absence` int NOT NULL AUTO_INCREMENT,
+  `omluveno` enum('ano','ne','cekani') DEFAULT 'cekani',
+  `duvod` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `id_user` int DEFAULT NULL,
+  `id_entry` int DEFAULT NULL,
+  PRIMARY KEY (`id_absence`),
+  KEY `id_user` (`id_user`),
+  KEY `id_entry` (`id_entry`),
+  CONSTRAINT `absence_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`),
+  CONSTRAINT `absence_ibfk_2` FOREIGN KEY (`id_entry`) REFERENCES `entries` (`id_entry`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 
+
+CREATE TABLE `subject_times` (
+  `id_schedule` int NOT NULL AUTO_INCREMENT,
+  `id_user` int NOT NULL,
+  `id_subject` int NOT NULL,
+  `day` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `id_class` int NOT NULL,
+  `startTime` time NOT NULL,
+  `endTime` time NOT NULL,
+  `startDate` date NOT NULL,
+  `endDate` date NOT NULL,
+  PRIMARY KEY (`id_schedule`),
+  KEY `id_user` (`id_user`),
+  KEY `id_subject` (`id_subject`),
+  KEY `id_class` (`id_class`),
+  CONSTRAINT `subject_times_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`),
+  CONSTRAINT `subject_times_ibfk_2` FOREIGN KEY (`id_subject`) REFERENCES `subjects` (`id_subject`),
+  CONSTRAINT `subject_times_ibfk_3` FOREIGN KEY (`id_class`) REFERENCES `classes` (`id_class`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 

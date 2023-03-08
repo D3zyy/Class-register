@@ -29,11 +29,11 @@ app.use("/teacher", teacher,);
 
 //Connect to database
 const connection  = mysql.createConnection({
-	host : "sql8.freemysqlhosting.net",
-	user : "sql8597540",
-	password : "JUmqiUcLHW",
-	port : "3306",
-	database :  "sql8597540",
+	host : "sql.freedb.tech",
+    user : "freedb_dezyy",
+    password : "hz5@&u%3&2DYZN#",
+    port : "3306",
+    database :  "freedb_Tridnice",
 
 });
 
@@ -272,9 +272,11 @@ app.get("/absence/:id_user", (req, res) => {
 		connection.query('SELECT firstName,lastName from users where id_user = ? ' ,[idUser],(error, results) =>{
 		 const firstNameUser = results[0].firstName;
 		 const lastNameUser = results[0].lastName;
-	
-			connection.query(`SELECT entries.datum, absence.omluveno,absence.duvod,COUNT(absence.id_absence) AS absence_count 	FROM entries INNER JOIN absence ON absence.id_entry = entries.id_entry 		WHERE absence.id_user = ? GROUP BY entries.datum`, [idUser], (error, results) => {
-	
+	     console.log(idUser);
+			connection.query(`SELECT entries.datum, absence.omluveno,absence.duvod,COUNT(absence.id_absence) AS absence_count 	FROM entries INNER JOIN absence ON absence.id_entry = entries.id_entry WHERE absence.id_user = ? GROUP BY entries.datum,absence.omluveno,absence.duvod`, [idUser], (error, results) => {
+	        
+		
+
 		
 				for(var j= 0; j < results.length; j++) {
 					var date = new Date(results[j].datum);
@@ -284,6 +286,7 @@ app.get("/absence/:id_user", (req, res) => {
 	
 					results[j].datum = formattedDate;
 				};
+			
 			absenceID = req.params.id_user;
 		    idUserPrihlasen = userID;
 			const users = results;
@@ -584,7 +587,7 @@ app.get("/predmety", (req, res) => {
 		} else {
 
 		
-		connection.query('SELECT classes.name, users.firstName, users.lastName,classes.id_class FROM users INNER JOIN classes ON users.id_class = classes.id_class ', (error, results) => {
+		connection.query('SELECT classes.name, users.firstName, users.lastName,classes.id_class FROM users INNER JOIN classes ON users.id_class = classes.id_class where users.id_role = 2 ', (error, results) => {
 			if (error) throw error;
 		
 			// store the results in an array
