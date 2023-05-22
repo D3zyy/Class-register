@@ -9,6 +9,7 @@ const session = require('express-session');
 const cookieParser = require("cookie-parser");
 const { query, Router } = require("express");
 const teacher = require("./routes/teacher");
+const { log } = require("console");
 global.roleID = 1;
 
 //Use a set
@@ -290,6 +291,7 @@ app.get("/absence/:id_user", (req, res) => {
 			absenceID = req.params.id_user;
 		    idUserPrihlasen = userID;
 			const users = results;
+			console.log(results);
 			res.render("absence", {
 				idUserPrihlasen : idUserPrihlasen,
 				absenceID : absenceID,
